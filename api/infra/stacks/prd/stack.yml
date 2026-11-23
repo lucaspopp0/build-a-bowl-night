@@ -1,4 +1,4 @@
-# Where and how the prd stack is applied. Replace the placeholder values before the first deployment.
-aws-account-id: "000000000000"
-assume-role-arn: arn:aws:iam::000000000000:role/REPLACE-ME-deploy-api
-states-bucket: REPLACE-ME-terraform-states
+# Where and how the prd stack is applied.
+aws-account-id: "280058387636"
+assume-role-arn: arn:aws:iam::280058387636:role/gha-build-a-bowl-night
+states-bucket: terraform-states-280058387636-us-east-1-an

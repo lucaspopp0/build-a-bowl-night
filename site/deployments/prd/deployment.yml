@@ -1,5 +1,5 @@
-# Where the prd build is uploaded. Fill these in from the outputs of the infra component after its first deployment.
-assume-role-arn: arn:aws:iam::000000000000:role/REPLACE-ME-deploy-site
+# Where the prd build is uploaded. cf-distribution and VITE_API_URL are filled in from stack outputs after the first deployments.
+assume-role-arn: arn:aws:iam::280058387636:role/gha-build-a-bowl-night
 s3-bucket: build-a-bowl-night-site-prd
 cf-distribution: REPLACE-ME-distribution-id
 
