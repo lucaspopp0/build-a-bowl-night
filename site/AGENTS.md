@@ -1,0 +1,17 @@
+# Site
+
+The frontend for Build-a-Bowl Night, built with Vite and deployed to GitHub Pages.
+See the root [AGENTS.md](../AGENTS.md) for the overall project requirements and code style.
+
+## Source layout
+
+- `src/main.tsx`: JS entry point, referenced by `index.html`. Mounts the app.
+- `src/App.tsx`: Root component. Wires together top-level layout and page selection.
+- `src/components/`: Reusable UI building blocks (e.g. an item card, a form field, a phone number input).
+  Components should be presentational and receive data via props, with no direct storage access.
+- `src/pages/`: Top-level screens, each composed from components (e.g. the list of items being brought,
+  the form to submit or edit an item, the sign-in by phone number). Pages own data loading and state.
+- `src/lib/`: Non-UI logic with no React dependency (e.g. the GitHub API client, event log reading/writing,
+  reducing events into current state, phone number normalization). Keep this easy to unit test.
+
+Empty directories are tracked with `.gitkeep` files. Remove the `.gitkeep` once a directory has real contents.
