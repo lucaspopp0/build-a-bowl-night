@@ -1,24 +1,7 @@
-# Append-only log of events; the full state is rebuilt by replaying events in order
-resource "aws_dynamodb_table" "events" {
-  name         = "${var.name}-events"
-  billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "stream_id"
-  range_key    = "event_id"
+# Used to build the events table ARN from its name, since the table is owned by the infra component
+data "aws_caller_identity" "current" {}
 
-  attribute {
-    name = "stream_id"
-    type = "S"
-  }
-
-  attribute {
-    name = "event_id"
-    type = "S"
-  }
-
-  point_in_time_recovery {
-    enabled = true
-  }
-}
+data "aws_region" "current" {}
 
 # Packages the compiled executable, which the provided.al2023 runtime expects to be named bootstrap
 data "archive_file" "function" {
@@ -51,11 +34,11 @@ resource "aws_iam_role_policy_attachment" "logs" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-# Limits the function to reading and appending events; there is deliberately no update or delete access
+# Limits the function to reading and appending events in the table; there is deliberately no update or delete access
 data "aws_iam_policy_document" "events_access" {
   statement {
     actions   = ["dynamodb:PutItem", "dynamodb:GetItem", "dynamodb:Query"]
-    resources = [aws_dynamodb_table.events.arn]
+    resources = ["arn:aws:dynamodb:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:table/${var.events_table_name}"]
   }
 }
 
@@ -86,7 +69,7 @@ resource "aws_lambda_function" "api" {
 
   environment {
     variables = {
-      EVENTS_TABLE = aws_dynamodb_table.events.name
+      EVENTS_TABLE = var.events_table_name
     }
   }
 

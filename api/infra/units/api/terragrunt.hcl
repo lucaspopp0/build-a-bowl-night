@@ -1,4 +1,4 @@
-# Deploys the API lambda, its Function URL and the DynamoDB events table.
+# Deploys the API lambda and its Function URL.
 
 include "root" {
   path = find_in_parent_folders("root.hcl")
@@ -11,6 +11,7 @@ terraform {
 # The build output is restored into api/dist by the deploy workflow before apply
 inputs = {
   name                 = values.name
+  events_table_name    = values.events_table_name
   cors_allowed_origins = values.cors_allowed_origins
   build_dir            = "${get_repo_root()}/api/dist"
 }

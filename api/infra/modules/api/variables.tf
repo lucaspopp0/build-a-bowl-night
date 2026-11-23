@@ -1,11 +1,22 @@
 variable "name" {
   type        = string
-  description = "Base name for the Lambda function, its role and the events table"
+  description = "Base name for the Lambda function and its role"
 
   # Lowercase letters, digits and hyphens only, so the name is valid for Lambda, IAM and DynamoDB alike
   validation {
     condition     = can(regex("^[a-z][a-z0-9-]{1,47}$", var.name))
     error_message = "name must be 2-48 characters: lowercase letters, digits and hyphens, starting with a letter."
+  }
+}
+
+variable "events_table_name" {
+  type        = string
+  description = "Name of the DynamoDB events table, which is created by the infra component"
+
+  # DynamoDB table names are 3-255 characters of letters, digits, underscores, hyphens and dots
+  validation {
+    condition     = can(regex("^[a-zA-Z0-9_.-]{3,255}$", var.events_table_name))
+    error_message = "events_table_name must be 3-255 characters: letters, digits, underscores, hyphens and dots."
   }
 }
 
