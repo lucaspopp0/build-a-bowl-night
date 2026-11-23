@@ -1,0 +1,11 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/slingshot-pipelines/jsonschemas/main/schemas/project/v1/project.schema.json
+
+project: build-a-bowl-night
+description: Website for the Build-a-Bowl Night event
+
+# A single production environment is enough for a one-off event site
+deployments:
+  environments:
+    prd: {}
+  sequence:
+    - environment: prd

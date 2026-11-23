@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/slingshot-pipelines/jsonschemas/main/schemas/component/v1/component.schema.json
+
+component: api
+type: lambda
+
+source-language: go
+
+path: api
+subpaths:
+  src: src
+  build: dist
+  infra: infra
