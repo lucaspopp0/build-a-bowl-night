@@ -7,9 +7,9 @@ Guests can see what others are bringing and submit their own items.
 
 | Path | Component | Description |
 |---|---|---|
-| `site/` | `site` | React + Vite frontend |
+| `site/` | `site` | React + Vite frontend; `site/infra` holds its hosting (S3 + CloudFront) |
 | `api/` | `api` | Go Lambda API (`api/src`); `api/infra` holds only the Lambda |
-| `infra/` | `infra` | All other infrastructure: site hosting (S3 + CloudFront) and the DynamoDB events table |
+| `infra/` | `infra` | Shared infrastructure: the DynamoDB events table |
 | `.components/` | | slingshot-pipelines component definitions |
 
 Deployments are driven by [slingshot-pipelines](https://slingshot-pipelines.github.io/docs/).
@@ -20,9 +20,10 @@ See [AGENTS.md](AGENTS.md) for the architecture and requirements.
 ```sh
 (cd api/src && make lint unit-test build)   # Go lint, tests, and the lambda executable
 (cd site && npm ci && npm run build)        # type-check and build the site
-terraform fmt -recursive infra api/infra    # format Terraform
+terraform fmt -recursive infra api/infra site/infra    # format Terraform
 (cd infra/stacks && terragrunt hcl validate --all --inputs --strict --tf-path terraform)
 (cd api/infra/stacks && terragrunt hcl validate --all --inputs --strict --tf-path terraform)
+(cd site/infra/stacks && terragrunt hcl validate --all --inputs --strict --tf-path terraform)
 ```
 
 ## One-time setup before the first deployment
@@ -35,7 +36,10 @@ These cannot be done from the repository and are needed before the pipeline can 
 4. Replace the `REPLACE-ME` and `000000000000` placeholders in:
    - `infra/stacks/prd/stack.yml`
    - `api/infra/stacks/prd/stack.yml`
+   - `site/infra/stacks/prd/stack.yml`
    - `site/deployments/prd/deployment.yml`
-5. Deploy `infra` and `api` first, then copy the outputs into `site/deployments/prd/deployment.yml`:
-   the bucket name, the CloudFront distribution ID, and the API `function_url` (as `VITE_API_URL`).
+5. Deploy `infra` and `api`, then the site. The first site deployment creates the bucket and CloudFront distribution,
+   and then stops at the upload step because `site/deployments/prd/deployment.yml` still has placeholders.
+   Copy the bucket name and CloudFront distribution ID from the `site/infra` outputs, and the API `function_url`
+   (as `VITE_API_URL`), into that file, then re-run the site deployment manually (the `deploy (s3-website)` workflow).
 6. Add a branch protection rule on `main` that requires the `pr-ready` check.

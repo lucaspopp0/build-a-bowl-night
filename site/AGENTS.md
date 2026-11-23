@@ -17,3 +17,7 @@ See the root [AGENTS.md](../AGENTS.md) for the overall project requirements and 
 Empty directories are tracked with `.gitkeep` files. Remove the `.gitkeep` once a directory has real contents.
 
 The API base URL comes from `VITE_API_URL`, set per environment in `deployments/<env>/deployment.yml`.
+
+The `.components/site/info.yml` `subpaths` are `src: .` (this directory), `build: dist` and `infra: infra`.
+`infra/` holds the Terragrunt units, stacks and Terraform modules for the S3 bucket and CloudFront distribution,
+and the slingshot deploy applies `infra/stacks/<env>` before uploading `dist/`.
