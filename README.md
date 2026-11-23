@@ -8,8 +8,8 @@ Guests can see what others are bringing and submit their own items.
 | Path | Component | Description |
 |---|---|---|
 | `site/` | `site` | React + Vite frontend |
-| `api/` | `api` | Go Lambda API (`api/src`), with its infrastructure in `api/infra` |
-| `infra/` | `infra` | Site hosting infrastructure (S3 + CloudFront) |
+| `api/` | `api` | Go Lambda API (`api/src`); `api/infra` holds only the Lambda |
+| `infra/` | `infra` | All other infrastructure: site hosting (S3 + CloudFront) and the DynamoDB events table |
 | `.components/` | | slingshot-pipelines component definitions |
 
 Deployments are driven by [slingshot-pipelines](https://slingshot-pipelines.github.io/docs/).
