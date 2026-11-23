@@ -26,3 +26,10 @@ The backend storage will also be hosted on GitHub, as raw text / CSV files
 1. Two concurrent edits to data by different users will not overwrite each other
    1. Data is stored as a log of events, which when combined forms the full state of the system
 2. Data is stored in a GitHub repository as raw text, and is read/written using the GitHub API
+
+
+## Code Style
+
+Every function should have a one-to-two-line comment above it, explaining what it does.
+
+Each block of code should have a one-to-two line comment above it, explaining what it does.
