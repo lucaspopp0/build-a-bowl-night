@@ -1,0 +1,3 @@
+{ "event": "add", "thing": "a"}
+{ "event": "add", "thing": "b"}
+{ "event": "remove", "thing": "a"}
