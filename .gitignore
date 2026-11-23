@@ -6,3 +6,4 @@ dist
 .terragrunt-cache
 .terragrunt-stack
 function.zip
+.tool-versions
