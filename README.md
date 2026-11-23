@@ -33,13 +33,11 @@ These cannot be done from the repository and are needed before the pipeline can 
 1. Repository variables `TERRAFORM_VERSION` and `TERRAGRUNT_VERSION`.
 2. A GitHub App for writing tags and releases, stored as secrets `WRITER_APP_CLIENT_ID` and `WRITER_APP_PRIVATE_KEY`.
 3. In AWS: an S3 bucket for Terraform state, and IAM roles that GitHub Actions can assume through OIDC.
-4. Replace the `REPLACE-ME` and `000000000000` placeholders in:
-   - `infra/stacks/prd/stack.yml`
-   - `api/infra/stacks/prd/stack.yml`
-   - `site/infra/stacks/prd/stack.yml`
-   - `site/deployments/prd/deployment.yml`
+4. The `stack.yml` files (`infra/`, `api/infra/` and `site/infra/` under `stacks/prd/`) hold the AWS account ID,
+   the deploy role ARN and the Terraform state bucket. `site/deployments/prd/deployment.yml` uses the same role for uploads.
+   The role must trust GitHub's OIDC provider for this repository.
 5. Deploy `infra` and `api`, then the site. The first site deployment creates the bucket and CloudFront distribution,
-   and then stops at the upload step because `site/deployments/prd/deployment.yml` still has placeholders.
-   Copy the bucket name and CloudFront distribution ID from the `site/infra` outputs, and the API `function_url`
+   and then stops at the upload step because `cf-distribution` in `site/deployments/prd/deployment.yml` is still a placeholder.
+   Copy the CloudFront distribution ID from the `site/infra` outputs, and the API `function_url`
    (as `VITE_API_URL`), into that file, then re-run the site deployment manually (the `deploy (s3-website)` workflow).
 6. Add a branch protection rule on `main` that requires the `pr-ready` check.
