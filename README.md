@@ -30,14 +30,15 @@ terraform fmt -recursive infra api/infra site/infra    # format Terraform
 
 These cannot be done from the repository and are needed before the pipeline can deploy:
 
-1. Repository variables `TERRAFORM_VERSION` and `TERRAGRUNT_VERSION`.
-2. A GitHub App for writing tags and releases, stored as secrets `WRITER_APP_CLIENT_ID` and `WRITER_APP_PRIVATE_KEY`.
-3. In AWS: an S3 bucket for Terraform state, and IAM roles that GitHub Actions can assume through OIDC.
-4. The `stack.yml` files (`infra/`, `api/infra/` and `site/infra/` under `stacks/prd/`) hold the AWS account ID,
+1. A GitHub App for writing tags and releases, stored as secrets `WRITER_APP_CLIENT_ID` and `WRITER_APP_PRIVATE_KEY`.
+2. In AWS: an S3 bucket for Terraform state, and IAM roles that GitHub Actions can assume through OIDC.
+3. The `stack.yml` files (`infra/`, `api/infra/` and `site/infra/` under `stacks/prd/`) hold the AWS account ID,
    the deploy role ARN and the Terraform state bucket. `site/deployments/prd/deployment.yml` uses the same role for uploads.
    The role must trust GitHub's OIDC provider for this repository.
-5. Deploy `infra` and `api`, then the site. The first site deployment creates the bucket and CloudFront distribution,
+4. Deploy `infra` and `api`, then the site. The first site deployment creates the bucket and CloudFront distribution,
    and then stops at the upload step because `cf-distribution` in `site/deployments/prd/deployment.yml` is still a placeholder.
    Copy the CloudFront distribution ID from the `site/infra` outputs, and the API `function_url`
    (as `VITE_API_URL`), into that file, then re-run the site deployment manually (the `deploy (s3-website)` workflow).
-6. Add a branch protection rule on `main` that requires the `pr-ready` check.
+5. Add a branch protection rule on `main` that requires the `pr-ready` check.
+
+The workflows install the latest Terraform and Terragrunt on every run (`latest` in `pr.yml` and the `deploy-*.yml` files), so there are no version variables to set.
