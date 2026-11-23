@@ -5,7 +5,7 @@ include "root" {
 }
 
 terraform {
-  source = "${get_repo_root()}/infra/modules/site-hosting"
+  source = "${get_repo_root()}/site/infra/modules/site-hosting"
 }
 
 # Inputs are supplied by the stack that instantiates this unit
