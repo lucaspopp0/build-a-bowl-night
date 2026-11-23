@@ -1,0 +1,8 @@
+# Where the prd build is uploaded. Fill these in from the outputs of the infra component after its first deployment.
+assume-role-arn: arn:aws:iam::000000000000:role/REPLACE-ME-deploy-site
+s3-bucket: build-a-bowl-night-site-prd
+cf-distribution: REPLACE-ME-distribution-id
+
+# Exported as environment variables for make build; set to the api component's function_url output
+env:
+  VITE_API_URL: https://REPLACE-ME.lambda-url.us-east-1.on.aws/
