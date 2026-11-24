@@ -10,9 +10,24 @@ The website will have two main purposes:
 
 ## Architecture
 
-The frontend will be hosted on GitHub pages
+The repository is a slingshot-pipelines project (see `.components/`), deployed to AWS from GitHub Actions.
 
-The backend storage will also be hosted on GitHub, as raw text / CSV files
+| Component | Type | Path | What it is |
+|---|---|---|---|
+| `site` | `s3-website` | `site/` | React + Vite frontend (`subpaths`: src `.`, build `dist`, infra `infra`), served from S3 through CloudFront |
+| `api` | `lambda` | `api/` | Go Lambda behind a Function URL |
+| `infra` | `terragrunt-infra` | `infra/` | Shared infrastructure: the DynamoDB events table |
+
+There is a single environment, `prd`.
+Merging to `main` starts a deployment sequence for each changed component.
+Pull requests check only the changed components, and the `pr-ready` job is the required status check.
+
+Infrastructure is written as Terragrunt `units/` and `stacks/` plus Terraform `modules/`.
+`site/infra/` contains the site hosting (S3 bucket and CloudFront distribution), applied by the site's own deployment.
+`api/infra/` contains only the Lambda (function, role, log group and Function URL).
+Everything else lives in the `infra` component, including the DynamoDB table.
+The Lambda finds the table by name (`events_table_name`), so the two stacks must agree on it.
+Each stack directory has a `stack.yml` with the AWS account, deploy role and Terraform state bucket.
 
 ## UI Requirements
 
@@ -25,8 +40,10 @@ The backend storage will also be hosted on GitHub, as raw text / CSV files
 
 1. Two concurrent edits to data by different users will not overwrite each other
    1. Data is stored as a log of events, which when combined forms the full state of the system
-2. Data is stored in a GitHub repository as raw text, and is read/written using the GitHub API
-
+2. Events are stored in a DynamoDB table owned by the `infra` component (partition key `stream_id`, sort key `event_id`) and are only ever appended
+   1. Writes use a condition that the `event_id` does not already exist, so an event is never overwritten
+   2. The Lambda's IAM role can put, get and query events, but cannot update or delete them
+3. The site reads and writes events through the API Lambda's Function URL, configured at build time as `VITE_API_URL`
 
 ## Code Style
 
