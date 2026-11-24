@@ -2,3 +2,8 @@
 .DS_Store
 node_modules
 dist
+.terraform
+.terragrunt-cache
+.terragrunt-stack
+function.zip
+.tool-versions
