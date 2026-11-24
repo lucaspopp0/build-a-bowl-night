@@ -1,8 +1,8 @@
-# Where the prd build is uploaded. cf-distribution and VITE_API_URL are filled in from stack outputs after the first deployments.
+# Where the prd build is uploaded. cf-distribution and VITE_API_URL come from the site and api stack outputs.
 assume-role-arn: arn:aws:iam::280058387636:role/gha-build-a-bowl-night
 s3-bucket: build-a-bowl-night-site-prd
-cf-distribution: REPLACE-ME-distribution-id
+cf-distribution: E31Y9T568HCG5S
 
 # Exported as environment variables for make build; set to the api component's function_url output
 env:
-  VITE_API_URL: https://REPLACE-ME.lambda-url.us-east-1.on.aws/
+  VITE_API_URL: https://svah563kzigv3pygzx2jwcrjmm0fsqre.lambda-url.us-east-1.on.aws/
