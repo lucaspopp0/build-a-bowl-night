@@ -53,3 +53,19 @@ func TestHandler(t *testing.T) {
 		})
 	}
 }
+
+// TestInvalidBody checks that an undecodable base64 body is rejected with a 400 instead of a 500.
+func TestInvalidBody(t *testing.T) {
+	req := newRequest(http.MethodPost, "/health")
+	req.Body = "!!not-base64!!"
+	req.IsBase64Encoded = true
+
+	resp, err := humaserverless.FunctionURLHandler(context.Background(), newAPI(), req)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if resp.StatusCode != http.StatusBadRequest {
+		t.Errorf("status = %d, want %d", resp.StatusCode, http.StatusBadRequest)
+	}
+}
