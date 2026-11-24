@@ -1,0 +1,4 @@
+# Where and how the prd stack is applied.
+aws-account-id: "280058387636"
+assume-role-arn: arn:aws:iam::280058387636:role/gha-build-a-bowl-night
+states-bucket: terraform-states-280058387636-us-east-1-an

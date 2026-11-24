@@ -4,3 +4,8 @@ component: site
 type: s3-website
 
 path: site
+subpaths:
+  # The Vite project (package.json, Makefile) is at the root of the component
+  src: .
+  build: dist
+  infra: infra
