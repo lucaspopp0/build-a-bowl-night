@@ -239,9 +239,9 @@ func Register(api huma.API, store db.Store) {
 		return &IngredientOutput{Body: i}, nil
 	})
 
-	// Create or update an ingredient of an existing user
+	// Update an ingredient of an existing user
 	huma.Register(api, huma.Operation{
-		OperationID: "put-ingredient", Method: http.MethodPut, Path: "/users/{phone}/ingredients/{id}", Summary: "Create or update an ingredient", Tags: []string{TagIngredients},
+		OperationID: "put-ingredient", Method: http.MethodPut, Path: "/users/{phone}/ingredients/{id}", Summary: "Update an ingredient", Tags: []string{TagIngredients},
 		Errors: []int{http.StatusNotFound},
 	}, func(ctx context.Context, in *PutIngredientInput) (*IngredientOutput, error) {
 		// Ingredients must belong to a user that exists
