@@ -68,7 +68,7 @@ export default function BringOneModal({ open, category, user, onClose, onCreated
       <DialogContent>
         <Box component="form" onSubmit={submit} noValidate sx={{ display: "grid", gap: 2, pt: 1 }}>
           <TextField
-            label="Ingredient"
+            label={category}
             fullWidth
             autoFocus
             value={name}
@@ -77,7 +77,7 @@ export default function BringOneModal({ open, category, user, onClose, onCreated
           />
           {failure && <Alert severity="error">{failure}</Alert>}
           <Button type="submit" variant="contained" disabled={loading || !name.trim()}>
-            Add ingredient
+            Add {category.toLowerCase()}
           </Button>
         </Box>
       </DialogContent>
