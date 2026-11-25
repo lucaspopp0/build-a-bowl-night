@@ -5,15 +5,11 @@ import { createRoot } from "react-dom/client";
 import "@fontsource/google-sans/400.css";
 import "@fontsource/google-sans/500.css";
 import "@fontsource/google-sans/700.css";
-import { ThemeProvider } from "@mui/material/styles";
 import App from "./App";
-import theme from "./theme";
 
 // Mounts the App component into the #root element defined in index.html.
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ThemeProvider theme={theme}>
-      <App />
-    </ThemeProvider>
+    <App />
   </StrictMode>,
 );
