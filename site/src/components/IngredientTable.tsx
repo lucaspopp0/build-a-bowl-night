@@ -40,7 +40,7 @@ const headerCellSx = {
 // Vertical stack of cards, one per category, each with a plain-text title above its table.
 export default function IngredientTable({ ingredients, currentPhone, onEdit, onDelete, onBringOne }: IngredientTableProps) {
   // Group the ingredients so each category gets its own table.
-  const groups = groupByCategory(ingredients);
+  const groups = groupByCategory(ingredients, currentPhone);
 
   // Render a titled table with small column headers for each group.
   return (
