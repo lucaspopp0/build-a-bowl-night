@@ -483,7 +483,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorModel"
           description: Internal Server Error
-      summary: Create or update an ingredient
+      summary: Update an ingredient
       tags:
         - Ingredients
 
