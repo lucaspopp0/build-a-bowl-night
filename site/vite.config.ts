@@ -6,10 +6,12 @@ import react from "@vitejs/plugin-react";
 // The site is served from the root of a CloudFront distribution, so no base path is needed.
 export default defineConfig({
   plugins: [react()],
-  // Resolves the SDK from source so the site build does not depend on the SDK being built first.
+  // Resolves the SDK from source so the site build does not depend on the SDK being built first,
+  // and its fetch polyfill from the site's own node_modules, since the SDK's are never installed here.
   resolve: {
     alias: {
       "@build-a-bowl-night/api-sdk": new URL("../api-sdk/src/index.ts", import.meta.url).pathname,
+      "whatwg-fetch": new URL("./node_modules/whatwg-fetch/fetch.js", import.meta.url).pathname,
     },
   },
   build: {

@@ -9,7 +9,10 @@
     "noEmit": true,
     "skipLibCheck": true,
     "isolatedModules": true,
-    "paths": { "@build-a-bowl-night/api-sdk": ["../api-sdk/src/index.ts"] },
+    "paths": {
+      "@build-a-bowl-night/api-sdk": ["../api-sdk/src/index.ts"],
+      "whatwg-fetch": ["./node_modules/whatwg-fetch/fetch.js"]
+    },
     "types": ["vite/client"]
   },
   "include": ["src", "vite.config.ts"]
