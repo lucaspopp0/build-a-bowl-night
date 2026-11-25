@@ -1,0 +1,11 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/slingshot-pipelines/jsonschemas/main/schemas/component/v1/component.schema.json
+
+component: api-sdk
+type: library
+
+source-language: node
+
+path: api-sdk
+
+# Release tags look like v0.0.0
+tag-prefix: v

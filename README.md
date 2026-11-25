@@ -11,6 +11,7 @@ Guests can see what others are bringing and submit their own items.
 |---|---|---|
 | `site/` | `site` | React + Vite frontend; `site/infra` holds its hosting (S3 + CloudFront) |
 | `api/` | `api` | Go Lambda API (`api/src`); `api/infra` holds only the Lambda |
+| `api-sdk/` | `api-sdk` | TypeScript SDK generated from the API's OpenAPI spec (see `api-sdk/README.md`) |
 | `infra/` | `infra` | Shared infrastructure: the DynamoDB events table |
 | `.components/` | | slingshot-pipelines component definitions |
 
@@ -21,6 +22,7 @@ See [AGENTS.md](AGENTS.md) for the architecture and requirements.
 
 ```sh
 (cd api/src && make lint unit-test build)   # Go lint, tests, and the lambda executable
+(cd api-sdk && make lint unit-test)         # regenerate the SDK from the OpenAPI spec (needs Java) and type-check it
 (cd site && npm ci && npm run build)        # type-check and build the site
 terraform fmt -recursive infra api/infra site/infra    # format Terraform
 (cd infra/stacks && terragrunt hcl validate --all --inputs --strict --tf-path terraform)
