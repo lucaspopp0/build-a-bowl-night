@@ -146,7 +146,7 @@ export default function SignInModal({ open, onClose, onSignedIn }: SignInModalPr
               Sign Up
             </Button>
             <Button onClick={changeNumber} disabled={loading}>
-              Change number
+              Back
             </Button>
             {/* Bottom cancel button that dismisses the dialog. */}
             <Button onClick={onClose} disabled={loading}>
