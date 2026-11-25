@@ -84,7 +84,11 @@ export default function IngredientTable({ ingredients, currentPhone, onEdit, onD
                   {items.map((item) => (
                     <TableRow key={item.id}>
                       <TableCell>{item.name}</TableCell>
-                      <TableCell>{item.broughtBy}</TableCell>
+                      {/* Brought-by name; the signed-in user's own rows get a slightly transparent " (you)" suffix. */}
+                      <TableCell>
+                        {item.broughtBy}
+                        {currentPhone && item.phone === currentPhone && <Box component="span" sx={{ opacity: 0.6 }}> (you)</Box>}
+                      </TableCell>
                       {currentPhone && (
                         // Pencil and red trash buttons, shown only on the signed-in user's own rows.
                         <TableCell align="right" sx={{ py: 0, textAlign: "right", whiteSpace: "nowrap" }}>
