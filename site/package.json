@@ -9,7 +9,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "postinstall": "npm ci --prefix ../api-sdk"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
