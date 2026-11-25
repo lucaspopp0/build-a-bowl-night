@@ -79,6 +79,10 @@ export default function BringOneModal({ open, category, user, onClose, onCreated
           <Button type="submit" variant="contained" disabled={loading || !name.trim()}>
             Add {category.toLowerCase()}
           </Button>
+          {/* Bottom cancel button that dismisses the dialog. */}
+          <Button onClick={onClose} disabled={loading}>
+            Cancel
+          </Button>
         </Box>
       </DialogContent>
     </Dialog>

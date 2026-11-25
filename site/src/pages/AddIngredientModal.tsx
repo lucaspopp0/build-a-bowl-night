@@ -95,6 +95,10 @@ export default function AddIngredientModal({ open, user, onClose, onCreated }: A
           <Button type="submit" variant="contained" disabled={loading || !category || !name.trim()}>
             Add ingredient
           </Button>
+          {/* Bottom cancel button that dismisses the dialog. */}
+          <Button onClick={onClose} disabled={loading}>
+            Cancel
+          </Button>
         </Box>
       </DialogContent>
     </Dialog>
