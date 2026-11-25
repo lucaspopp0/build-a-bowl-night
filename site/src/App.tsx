@@ -32,21 +32,27 @@ export default function App() {
   // The Radix Theme provides colors, fonts and base styles for everything inside it.
   return (
     <Theme appearance={prefersDark ? "dark" : "light"} accentColor="blue" radius="medium">
+      {/* Top bar with the sign-in button or user menu. */}
       <NavBar userName={user?.name} onSignIn={() => setSignInOpen(true)} onEditName={() => setEditNameOpen(true)} onLogOut={logOut} />
       <IngredientsPage user={user} />
       <SignInModal
         open={signInOpen}
+        // Closes the dialog without signing in.
         onClose={() => setSignInOpen(false)}
+        // Stores the signed-in user and closes the dialog.
         onSignedIn={(signedIn) => {
           setUser(signedIn);
           setSignInOpen(false);
         }}
       />
+      {/* Edit-name dialog: only available while someone is signed in. */}
       {user && (
         <EditNameModal
           user={user}
           open={editNameOpen}
+          // Closes the dialog without saving.
           onClose={() => setEditNameOpen(false)}
+          // Adopts the renamed user and closes the dialog.
           onSaved={(updated) => {
             setUser(updated);
             setEditNameOpen(false);

@@ -31,6 +31,7 @@ export default function AddIngredientModal({ open, user, onClose, onCreated }: A
 
   // Clears the form each time the dialog opens, so it never shows stale input.
   useEffect(() => {
+    // On open, clear the form so it never shows stale input.
     if (open) {
       resetForm();
     }

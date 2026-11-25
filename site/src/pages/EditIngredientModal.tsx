@@ -22,6 +22,7 @@ export default function EditIngredientModal({ ingredient, onClose, onSaved }: Ed
 
   // Fills the form with the ingredient's current values each time a different one is opened.
   useEffect(() => {
+    // Copy the ingredient's current values into the form fields.
     if (ingredient) {
       setCategory(ingredient.category);
       setName(ingredient.name);

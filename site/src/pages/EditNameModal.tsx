@@ -23,6 +23,7 @@ export default function EditNameModal({ user, open, onClose, onSaved }: EditName
 
   // Starts from the current name with no error each time the dialog opens.
   useEffect(() => {
+    // On open, start from the current name with no error.
     if (open) {
       setTyped(null);
       setFailure(undefined);

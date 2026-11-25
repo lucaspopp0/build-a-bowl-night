@@ -38,6 +38,7 @@ export default function DeleteIngredientModal({ ingredient, onClose, onDeleted }
 
   // Clears any earlier error each time the dialog opens.
   useEffect(() => {
+    // When a different ingredient is shown, drop any earlier error.
     if (ingredient) {
       setFailure(undefined);
     }
