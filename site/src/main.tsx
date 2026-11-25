@@ -1,16 +1,15 @@
 // React and DOM imports used to mount the app.
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-// Roboto font weights used by Material UI.
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
+import { ThemeProvider } from "@mui/material/styles";
 import App from "./App";
+import theme from "./theme";
 
 // Mounts the App component into the #root element defined in index.html.
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
   </StrictMode>,
 );
