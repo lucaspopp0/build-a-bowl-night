@@ -1,11 +1,13 @@
-// MUI table components and the ingredient helpers used to render the grouped table.
+// MUI components and the ingredient helpers used to render one table per category.
 import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import Typography from "@mui/material/Typography";
 import { groupByCategory, type Ingredient } from "../lib/ingredients";
 
 // Props: the full list of ingredients to display.
@@ -13,37 +15,41 @@ interface IngredientTableProps {
   ingredients: Ingredient[];
 }
 
-// Table of ingredients and who brought them, with a header row per category.
+// Vertical stack of tables, one per category, each titled with its category name.
 export default function IngredientTable({ ingredients }: IngredientTableProps) {
-  // Group the ingredients so each category gets its own section.
+  // Group the ingredients so each category gets its own table.
   const groups = groupByCategory(ingredients);
 
-  // Render the column headings, then a category header and rows for each group.
+  // Render a titled table with small column headers for each group.
   return (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Ingredient</TableCell>
-            <TableCell>Brought by</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {groups.map(([category, items]) => [
-            <TableRow key={`category-${category}`} sx={{ bgcolor: "action.hover" }}>
-              <TableCell colSpan={2} sx={{ fontWeight: "bold" }}>
-                {category}
-              </TableCell>
-            </TableRow>,
-            ...items.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell>{item.name}</TableCell>
-                <TableCell>{item.broughtBy}</TableCell>
+    <Stack spacing={3}>
+      {groups.map(([category, items]) => (
+        <TableContainer key={category} component={Paper}>
+          <Typography variant="h6" component="h2" sx={{ px: 2, pt: 2 }}>
+            {category}
+          </Typography>
+          <Table size="small" sx={{ tableLayout: "fixed" }}>
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ typography: "caption", color: "text.secondary" }}>
+                  Ingredient
+                </TableCell>
+                <TableCell sx={{ typography: "caption", color: "text.secondary" }}>
+                  Brought by
+                </TableCell>
               </TableRow>
-            )),
-          ])}
-        </TableBody>
-      </Table>
-    </TableContainer>
+            </TableHead>
+            <TableBody>
+              {items.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell>{item.name}</TableCell>
+                  <TableCell>{item.broughtBy}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ))}
+    </Stack>
   );
 }
