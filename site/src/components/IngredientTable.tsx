@@ -42,7 +42,8 @@ export default function IngredientTable({ ingredients }: IngredientTableProps) {
                   <TableCell sx={headerCellSx}>Brought by</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>
+              {/* No divider under the final row; the card edge closes the table. */}
+              <TableBody sx={{ "& tr:last-child td": { borderBottom: 0 } }}>
                 {items.map((item) => (
                   <TableRow key={item.id}>
                     <TableCell>{item.name}</TableCell>
