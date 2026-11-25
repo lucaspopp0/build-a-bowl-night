@@ -36,6 +36,12 @@ export default function DeleteIngredientModal({ ingredient, onClose, onDeleted }
     }
   };
 
+  // The most recent ingredient, kept so the dialog text doesn't go blank while it fades out.
+  const [lastIngredient, setLastIngredient] = useState<Ingredient | null>(null);
+  if (ingredient && ingredient !== lastIngredient) {
+    setLastIngredient(ingredient);
+  }
+
   // Clears any earlier error each time the dialog opens.
   useEffect(() => {
     // When a different ingredient is shown, drop any earlier error.
@@ -49,12 +55,12 @@ export default function DeleteIngredientModal({ ingredient, onClose, onDeleted }
     <AlertDialog.Root open={ingredient !== null} onOpenChange={(next) => !next && !loading && onClose()}>
       <AlertDialog.Content maxWidth="400px">
         <AlertDialog.Title>Delete ingredient?</AlertDialog.Title>
-        <AlertDialog.Description size="2">Are you sure you want to delete {ingredient?.name}?</AlertDialog.Description>
+        <AlertDialog.Description size="2">Are you sure you want to delete {(ingredient ?? lastIngredient)?.name}?</AlertDialog.Description>
         {failure && (
-              <Callout.Root color="red" size="1" mt="3">
-                <Callout.Text>{failure}</Callout.Text>
-              </Callout.Root>
-            )}
+          <Callout.Root color="red" size="1" mt="3">
+            <Callout.Text>{failure}</Callout.Text>
+          </Callout.Root>
+        )}
         <Flex gap="3" mt="4" justify="end">
           <Button variant="soft" color="gray" onClick={onClose} disabled={loading}>
             No

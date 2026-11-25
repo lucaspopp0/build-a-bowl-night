@@ -117,10 +117,10 @@ export default function SignInModal({ open, onClose, onSignedIn }: SignInModalPr
             <Flex direction="column" gap="4">
               <PhoneNumberField value={phoneInput} onChange={setPhoneInput} error={phoneError} disabled={loading} />
               {failure && (
-              <Callout.Root color="red" size="1">
-                <Callout.Text>{failure}</Callout.Text>
-              </Callout.Root>
-            )}
+                <Callout.Root color="red" size="1">
+                  <Callout.Text>{failure}</Callout.Text>
+                </Callout.Root>
+              )}
               <Button type="submit" size="3" loading={loading}>
                 Continue
               </Button>
@@ -140,10 +140,10 @@ export default function SignInModal({ open, onClose, onSignedIn }: SignInModalPr
                 <TextField.Root autoComplete="name" autoFocus value={name} disabled={loading} onChange={(e) => setName(e.target.value)} />
               </Field>
               {failure && (
-              <Callout.Root color="red" size="1">
-                <Callout.Text>{failure}</Callout.Text>
-              </Callout.Root>
-            )}
+                <Callout.Root color="red" size="1">
+                  <Callout.Text>{failure}</Callout.Text>
+                </Callout.Root>
+              )}
               <Button type="submit" size="3" loading={loading} disabled={!name.trim()}>
                 Sign Up
               </Button>
