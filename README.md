@@ -3,6 +3,8 @@
 A website for Build-a-Bowl Night, an event where everyone brings a component for a rice bowl.
 Guests can see what others are bringing and submit their own items.
 
+**Live site:** https://d1h3bq1xtdz6d1.cloudfront.net
+
 ## Layout
 
 | Path | Component | Description |
