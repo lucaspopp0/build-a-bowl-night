@@ -63,6 +63,20 @@ jobs:
       WRITER_APP_CLIENT_ID: ${{ secrets.WRITER_APP_CLIENT_ID }}
       WRITER_APP_PRIVATE_KEY: ${{ secrets.WRITER_APP_PRIVATE_KEY }}
 
+  release-libraries:
+    needs:
+      - detect-changes
+    if: ${{ contains(needs.detect-changes.outputs.changed-component-types, '"library"') }}
+    uses: slingshot-pipelines/workflows/.github/workflows/release-library.yml@release-library/v1
+    strategy:
+      matrix:
+        COMPONENT: ${{ fromJSON(needs.detect-changes.outputs.changed-components-by-type).library }}
+    with:
+      COMPONENT: ${{ matrix.COMPONENT }}
+    secrets:
+      WRITER_APP_CLIENT_ID: ${{ secrets.WRITER_APP_CLIENT_ID }}
+      WRITER_APP_PRIVATE_KEY: ${{ secrets.WRITER_APP_PRIVATE_KEY }}
+
   start-s3-websites:
     needs:
       - detect-changes
