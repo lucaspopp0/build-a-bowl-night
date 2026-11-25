@@ -39,7 +39,7 @@ Each stack directory has a `stack.yml` with the AWS account, deploy role and Ter
 
 1. The user identifies themself by phone number - new users should be keyed by phone number and have a name stored
 2. The user can view the full list of items bring brought
-3. The user can remove any item associated with them
+3. The user can edit or remove any item associated with them
 4. The user can submit a new item they plan to bring
 
 ## Backend Requirements
