@@ -1,5 +1,4 @@
 export * from '../models/CreateIngredientInputBody';
-export * from '../models/DietaryAttributes';
 export * from '../models/ErrorDetail';
 export * from '../models/ErrorModel';
 export * from '../models/Ingredient';
@@ -10,7 +9,6 @@ export * from '../models/User';
 export * from '../models/UsersOutputBody';
 
 import { CreateIngredientInputBody } from '../models/CreateIngredientInputBody';
-import { DietaryAttributes } from '../models/DietaryAttributes';
 import { ErrorDetail } from '../models/ErrorDetail';
 import { ErrorModel } from '../models/ErrorModel';
 import { Ingredient } from '../models/Ingredient';
@@ -37,7 +35,6 @@ let enumsMap: Set<string> = new Set<string>([
 
 let typeMap: {[index: string]: any} = {
     "CreateIngredientInputBody": CreateIngredientInputBody,
-    "DietaryAttributes": DietaryAttributes,
     "ErrorDetail": ErrorDetail,
     "ErrorModel": ErrorModel,
     "Ingredient": Ingredient,

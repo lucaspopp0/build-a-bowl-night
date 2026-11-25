@@ -3,7 +3,6 @@ import { Configuration, ConfigurationOptions } from '../configuration'
 import type { Middleware } from '../middleware';
 
 import { CreateIngredientInputBody } from '../models/CreateIngredientInputBody';
-import { DietaryAttributes } from '../models/DietaryAttributes';
 import { ErrorDetail } from '../models/ErrorDetail';
 import { ErrorModel } from '../models/ErrorModel';
 import { Ingredient } from '../models/Ingredient';
