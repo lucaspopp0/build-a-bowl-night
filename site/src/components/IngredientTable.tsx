@@ -42,7 +42,7 @@ export default function IngredientTable({ ingredients }: IngredientTableProps) {
                     "& .MuiBadge-badge": {
                       position: "static",
                       transform: "none",
-                      ml: 0.5,
+                      ml: 1,
                       bgcolor: "grey.600",
                       color: "common.white",
                     },
