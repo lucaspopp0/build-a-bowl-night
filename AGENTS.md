@@ -16,6 +16,7 @@ The repository is a slingshot-pipelines project (see `.components/`), deployed t
 |---|---|---|---|
 | `site` | `s3-website` | `site/` | React + Vite frontend (`subpaths`: src `.`, build `dist`, infra `infra`), served from S3 through CloudFront |
 | `api` | `lambda` | `api/` | Go Lambda behind a Function URL |
+| `api-sdk` | `library` | `api-sdk/` | TypeScript SDK generated from the API's OpenAPI spec with the openapi-generator `typescript` generator |
 | `infra` | `terragrunt-infra` | `infra/` | Shared infrastructure: the DynamoDB events table |
 
 There is a single environment, `prd`.

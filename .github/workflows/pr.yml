@@ -79,6 +79,18 @@ jobs:
       TERRAGRUNT_VERSION: latest
     secrets: inherit
 
+  check-libraries:
+    needs:
+      - detect-changes
+    if: ${{ contains(needs.detect-changes.outputs.changed-component-types, '"library"') }}
+    uses: slingshot-pipelines/workflows/.github/workflows/check-library.yml@check-library/v0
+    strategy:
+      matrix:
+        COMPONENT: ${{ fromJSON(needs.detect-changes.outputs.changed-components-by-type).library }}
+    with:
+      COMPONENT: ${{ matrix.COMPONENT }}
+    secrets: inherit
+
   check-s3-websites:
     needs:
       - detect-changes
@@ -101,6 +113,7 @@ jobs:
       - check-github-workflows
       - check-infra
       - check-lambdas
+      - check-libraries
       - check-s3-websites
     runs-on: ubuntu-latest
     if: ${{ always() }}

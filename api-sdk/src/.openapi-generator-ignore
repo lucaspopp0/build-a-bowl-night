@@ -1,0 +1,7 @@
+# Skip generator scaffolding; the package, tsconfig and README live in the component root
+package.json
+tsconfig.json
+README.md
+git_push.sh
+.gitignore
+docs/
