@@ -19,6 +19,7 @@ interface IngredientTableProps {
 // Style for the column header cells: small, bold, all-caps text at 80% opacity with a thicker bottom border.
 const headerCellSx = {
   typography: "caption",
+  fontSize: "0.65rem",
   fontWeight: "bold",
   textTransform: "uppercase",
   opacity: 0.8,
