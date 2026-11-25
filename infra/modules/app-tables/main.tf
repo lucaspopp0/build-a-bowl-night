@@ -15,11 +15,11 @@ resource "aws_dynamodb_table" "users" {
 }
 
 # Items guests bring, grouped under the owning user so a guest's items can be queried or edited together
-resource "aws_dynamodb_table" "components" {
-  name         = var.components_table_name
+resource "aws_dynamodb_table" "ingredients" {
+  name         = var.ingredients_table_name
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "user"
-  range_key    = "component_id"
+  range_key    = "ingredient_id"
 
   attribute {
     name = "user"
@@ -27,7 +27,7 @@ resource "aws_dynamodb_table" "components" {
   }
 
   attribute {
-    name = "component_id"
+    name = "ingredient_id"
     type = "S"
   }
 
