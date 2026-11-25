@@ -26,7 +26,7 @@ export default function IngredientTable({ ingredients }: IngredientTableProps) {
       {groups.map(([category, items]) => (
         <TableContainer key={category} component={Paper}>
           <Typography variant="h6" component="h2" sx={{ px: 2, pt: 2 }}>
-            {category}
+            {category}s
           </Typography>
           <Table size="small" sx={{ tableLayout: "fixed" }}>
             <TableHead>
