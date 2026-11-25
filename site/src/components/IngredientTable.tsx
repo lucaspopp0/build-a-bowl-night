@@ -15,6 +15,14 @@ interface IngredientTableProps {
   ingredients: Ingredient[];
 }
 
+// Style for the column header cells: small, bold, all-caps text.
+const headerCellSx = {
+  typography: "caption",
+  fontWeight: "bold",
+  textTransform: "uppercase",
+  color: "text.secondary",
+} as const;
+
 // Vertical stack of tables, one per category, each titled with its category name.
 export default function IngredientTable({ ingredients }: IngredientTableProps) {
   // Group the ingredients so each category gets its own table.
@@ -35,12 +43,12 @@ export default function IngredientTable({ ingredients }: IngredientTableProps) {
                   </Typography>
                 </TableCell>
               </TableRow>
-              {/* Small column headers. */}
-              <TableRow>
-                <TableCell sx={{ typography: "caption", color: "text.secondary" }}>
+              {/* Column headers: shaded, small, bold, all caps. */}
+              <TableRow sx={{ bgcolor: "action.hover" }}>
+                <TableCell sx={headerCellSx}>
                   Ingredient
                 </TableCell>
-                <TableCell sx={{ typography: "caption", color: "text.secondary" }}>
+                <TableCell sx={headerCellSx}>
                   Brought by
                 </TableCell>
               </TableRow>
