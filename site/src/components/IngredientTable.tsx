@@ -1,4 +1,5 @@
 // MUI table components and the ingredient helpers used to render the grouped table.
+import Badge from "@mui/material/Badge";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -32,7 +33,10 @@ export default function IngredientTable({ ingredients }: IngredientTableProps) {
           {groups.map(([category, items]) => [
             <TableRow key={`category-${category}`} sx={{ bgcolor: "action.hover" }}>
               <TableCell colSpan={2} sx={{ fontWeight: "bold" }}>
-                {category}
+                {/* Badge showing how many items are in this category. */}
+                <Badge badgeContent={items.length} color="primary" sx={{ pr: 2 }}>
+                  {category}
+                </Badge>
               </TableCell>
             </TableRow>,
             ...items.map((item) => (
