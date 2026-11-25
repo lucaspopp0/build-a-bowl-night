@@ -17,8 +17,6 @@ const (
 	TagUsers = "Users"
 	// TagIngredients groups the ingredient operations.
 	TagIngredients = "Ingredients"
-	// TagHealth groups the health check operation.
-	TagHealth = "Health"
 )
 
 // UsersOutput is the response body listing users.

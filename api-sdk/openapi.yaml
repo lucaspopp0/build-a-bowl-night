@@ -69,17 +69,6 @@ components:
           format: uri
           type: string
       type: object
-    HealthOutputBody:
-      additionalProperties: false
-      properties:
-        status:
-          description: Always ok when the API is reachable
-          examples:
-            - ok
-          type: string
-      required:
-        - status
-      type: object
     Ingredient:
       additionalProperties: false
       properties:
@@ -171,25 +160,6 @@ info:
   version: 1.0.0
 openapi: 3.1.0
 paths:
-  /health:
-    get:
-      operationId: health
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/HealthOutputBody"
-          description: OK
-        default:
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/ErrorModel"
-          description: Error
-      summary: Health check
-      tags:
-        - Health
   /ingredients:
     get:
       operationId: list-ingredients
