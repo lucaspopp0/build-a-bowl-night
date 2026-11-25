@@ -37,7 +37,6 @@ jobs:
       - detect-changes
     if: ${{ contains(needs.detect-changes.outputs.changed-component-types, '"components"') }}
     uses: slingshot-pipelines/workflows/.github/workflows/check-components.yml@check-components/v0
-    secrets: inherit
 
   check-github-workflows:
     needs:
@@ -49,7 +48,9 @@ jobs:
         COMPONENT: ${{ fromJSON(needs.detect-changes.outputs.changed-components-by-type).github-workflows }}
     with:
       COMPONENT: ${{ matrix.COMPONENT }}
-    secrets: inherit
+    secrets:
+      WRITER_APP_CLIENT_ID: ${{ secrets.WRITER_APP_CLIENT_ID }}
+      WRITER_APP_PRIVATE_KEY: ${{ secrets.WRITER_APP_PRIVATE_KEY }}
 
   check-infra:
     needs:
@@ -63,7 +64,11 @@ jobs:
       COMPONENT: ${{ matrix.COMPONENT }}
       TERRAFORM_VERSION: latest
       TERRAGRUNT_VERSION: latest
-    secrets: inherit
+    secrets:
+      WRITER_APP_CLIENT_ID: ${{ secrets.WRITER_APP_CLIENT_ID }}
+      WRITER_APP_PRIVATE_KEY: ${{ secrets.WRITER_APP_PRIVATE_KEY }}
+      READER_APP_CLIENT_ID: ${{ secrets.READER_APP_CLIENT_ID }}
+      READER_APP_PRIVATE_KEY: ${{ secrets.READER_APP_PRIVATE_KEY }}
 
   check-lambdas:
     needs:
@@ -77,7 +82,9 @@ jobs:
       COMPONENT: ${{ matrix.COMPONENT }}
       TERRAFORM_VERSION: latest
       TERRAGRUNT_VERSION: latest
-    secrets: inherit
+    secrets:
+      WRITER_APP_CLIENT_ID: ${{ secrets.WRITER_APP_CLIENT_ID }}
+      WRITER_APP_PRIVATE_KEY: ${{ secrets.WRITER_APP_PRIVATE_KEY }}
 
   check-libraries:
     needs:
@@ -89,7 +96,9 @@ jobs:
         COMPONENT: ${{ fromJSON(needs.detect-changes.outputs.changed-components-by-type).library }}
     with:
       COMPONENT: ${{ matrix.COMPONENT }}
-    secrets: inherit
+    secrets:
+      WRITER_APP_CLIENT_ID: ${{ secrets.WRITER_APP_CLIENT_ID }}
+      WRITER_APP_PRIVATE_KEY: ${{ secrets.WRITER_APP_PRIVATE_KEY }}
 
   check-s3-websites:
     needs:
@@ -103,7 +112,9 @@ jobs:
       COMPONENT: ${{ matrix.COMPONENT }}
       TERRAFORM_VERSION: latest
       TERRAGRUNT_VERSION: latest
-    secrets: inherit
+    secrets:
+      WRITER_APP_CLIENT_ID: ${{ secrets.WRITER_APP_CLIENT_ID }}
+      WRITER_APP_PRIVATE_KEY: ${{ secrets.WRITER_APP_PRIVATE_KEY }}
 
   # The single status check to require in branch protection
   pr-ready:
