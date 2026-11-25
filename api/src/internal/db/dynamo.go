@@ -2,8 +2,6 @@ package db
 
 import (
 	"context"
-	"errors"
-	"strconv"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
@@ -33,29 +31,12 @@ func key(pairs ...string) map[string]types.AttributeValue {
 	return k
 }
 
-// condition builds the condition expression and values enforcing an expected version on a put.
-// Version 0 requires that the item does not exist; a nil version applies no condition.
-func condition(expected *int, keyAttr string, values map[string]types.AttributeValue) *string {
-	if expected == nil {
-		return nil
-	}
-
-	// A brand-new item has no version attribute, so 0 means "must not exist"
-	if *expected == 0 {
-		return aws.String("attribute_not_exists(" + keyAttr + ")")
-	}
-
-	values[":expected"] = &types.AttributeValueMemberN{Value: strconv.Itoa(*expected)}
-
-	return aws.String("version = :expected")
-}
-
-// put upserts an item by setting the given fields and atomically bumping its version, returning the stored item.
+// put upserts an item by setting the given fields and returning the stored item.
 // Only the listed fields are touched, so concurrent writers of other fields are not overwritten.
-func (s *DynamoStore) put(ctx context.Context, table string, k map[string]types.AttributeValue, keyAttr string, fields map[string]string, expected *int, out any) error {
-	// Build "SET #f = :f, ... ADD version :one" for the supplied fields
+func (s *DynamoStore) put(ctx context.Context, table string, k map[string]types.AttributeValue, fields map[string]string, out any) error {
+	// Build "SET #f = :f, ..." for the supplied fields
 	names := map[string]string{}
-	values := map[string]types.AttributeValue{":one": &types.AttributeValueMemberN{Value: "1"}}
+	values := map[string]types.AttributeValue{}
 	set := ""
 	for f, v := range fields {
 		if set != "" {
@@ -66,23 +47,15 @@ func (s *DynamoStore) put(ctx context.Context, table string, k map[string]types.
 		values[":"+f] = &types.AttributeValueMemberS{Value: v}
 	}
 
-	cond := condition(expected, keyAttr, values)
-
 	res, err := s.db.UpdateItem(ctx, &dynamodb.UpdateItemInput{
 		TableName:                 aws.String(table),
 		Key:                       k,
-		UpdateExpression:          aws.String("SET " + set + " ADD version :one"),
-		ConditionExpression:       cond,
+		UpdateExpression:          aws.String("SET " + set),
 		ExpressionAttributeNames:  names,
 		ExpressionAttributeValues: values,
 		ReturnValues:              types.ReturnValueAllNew,
 	})
 	if err != nil {
-		var ccf *types.ConditionalCheckFailedException
-		if errors.As(err, &ccf) {
-			return ErrConflict
-		}
-
 		return err
 	}
 
@@ -149,9 +122,9 @@ func (s *DynamoStore) GetUser(ctx context.Context, phone string) (User, error) {
 }
 
 // PutUser creates or updates a user's name.
-func (s *DynamoStore) PutUser(ctx context.Context, u User, expected *int) (User, error) {
+func (s *DynamoStore) PutUser(ctx context.Context, u User) (User, error) {
 	var out User
-	err := s.put(ctx, s.usersTable, key("phone", u.Phone), "phone", map[string]string{"name": u.Name}, expected, &out)
+	err := s.put(ctx, s.usersTable, key("phone", u.Phone), map[string]string{"name": u.Name}, &out)
 
 	return out, err
 }
@@ -223,9 +196,9 @@ func (s *DynamoStore) GetIngredient(ctx context.Context, user, id string) (Ingre
 }
 
 // PutIngredient creates or updates an ingredient's category and name.
-func (s *DynamoStore) PutIngredient(ctx context.Context, i Ingredient, expected *int) (Ingredient, error) {
+func (s *DynamoStore) PutIngredient(ctx context.Context, i Ingredient) (Ingredient, error) {
 	var out Ingredient
-	err := s.put(ctx, s.ingredientTable, key("user", i.User, "ingredient_id", i.ID), "ingredient_id", map[string]string{"category": i.Category, "name": i.Name}, expected, &out)
+	err := s.put(ctx, s.ingredientTable, key("user", i.User, "ingredient_id", i.ID), map[string]string{"category": i.Category, "name": i.Name}, &out)
 
 	return out, err
 }

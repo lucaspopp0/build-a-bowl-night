@@ -42,8 +42,7 @@ type PhoneInput struct {
 type PutUserInput struct {
 	PhoneInput
 	Body struct {
-		Name    string `json:"name" minLength:"1" maxLength:"200" doc:"Display name"`
-		Version *int   `json:"version,omitempty" minimum:"0" doc:"Version last read, for optimistic concurrency; 0 means the user must not exist yet. Omit to overwrite."`
+		Name string `json:"name" minLength:"1" maxLength:"200" doc:"Display name"`
 	}
 }
 
@@ -71,7 +70,6 @@ type PutIngredientInput struct {
 	Body struct {
 		Category string `json:"category" minLength:"1" maxLength:"100" doc:"Kind of ingredient, such as protein or topping"`
 		Name     string `json:"name" minLength:"1" maxLength:"200" doc:"What is being brought"`
-		Version  *int   `json:"version,omitempty" minimum:"0" doc:"Version last read, for optimistic concurrency; 0 means the ingredient must not exist yet. Omit to overwrite."`
 	}
 }
 
@@ -99,8 +97,6 @@ func toHTTPError(err error) error {
 	switch {
 	case errors.Is(err, db.ErrNotFound):
 		return huma.Error404NotFound("not found")
-	case errors.Is(err, db.ErrConflict):
-		return huma.Error409Conflict("the item was changed by someone else; re-read it and retry")
 	default:
 		return huma.Error500InternalServerError("internal error")
 	}
@@ -138,9 +134,8 @@ func Register(api huma.API, store db.Store) {
 	// Create or update a user
 	huma.Register(api, huma.Operation{
 		OperationID: "put-user", Method: http.MethodPut, Path: "/users/{phone}", Summary: "Create or update a user", Tags: []string{TagUsers},
-		Errors: []int{http.StatusConflict},
 	}, func(ctx context.Context, in *PutUserInput) (*UserOutput, error) {
-		u, err := store.PutUser(ctx, db.User{Phone: in.Phone, Name: in.Body.Name}, in.Body.Version)
+		u, err := store.PutUser(ctx, db.User{Phone: in.Phone, Name: in.Body.Name})
 		if err != nil {
 			return nil, toHTTPError(err)
 		}
@@ -226,10 +221,7 @@ func Register(api huma.API, store db.Store) {
 			return nil, toHTTPError(err)
 		}
 
-		// Version 0 guarantees the new id is never an overwrite
-		none := 0
-
-		i, err := store.PutIngredient(ctx, db.Ingredient{User: in.Phone, ID: id, Category: in.Body.Category, Name: in.Body.Name}, &none)
+		i, err := store.PutIngredient(ctx, db.Ingredient{User: in.Phone, ID: id, Category: in.Body.Category, Name: in.Body.Name})
 		if err != nil {
 			return nil, toHTTPError(err)
 		}
@@ -252,14 +244,14 @@ func Register(api huma.API, store db.Store) {
 	// Create or update an ingredient of an existing user
 	huma.Register(api, huma.Operation{
 		OperationID: "put-ingredient", Method: http.MethodPut, Path: "/users/{phone}/ingredients/{id}", Summary: "Create or update an ingredient", Tags: []string{TagIngredients},
-		Errors: []int{http.StatusNotFound, http.StatusConflict},
+		Errors: []int{http.StatusNotFound},
 	}, func(ctx context.Context, in *PutIngredientInput) (*IngredientOutput, error) {
 		// Ingredients must belong to a user that exists
 		if _, err := store.GetUser(ctx, in.Phone); err != nil {
 			return nil, toHTTPError(err)
 		}
 
-		i, err := store.PutIngredient(ctx, db.Ingredient{User: in.Phone, ID: in.ID, Category: in.Body.Category, Name: in.Body.Name}, in.Body.Version)
+		i, err := store.PutIngredient(ctx, db.Ingredient{User: in.Phone, ID: in.ID, Category: in.Body.Category, Name: in.Body.Name})
 		if err != nil {
 			return nil, toHTTPError(err)
 		}
