@@ -6,6 +6,7 @@ import {
   ApiException,
   CreateIngredientInputBody,
   IngredientsApi,
+  PutIngredientInputBody,
   PutUserInputBody,
   ServerConfiguration,
   UsersApi,
@@ -72,6 +73,15 @@ export async function createIngredient(phone: string, category: string, name: st
   body.category = category;
   body.name = name;
   return ingredientsApi.createIngredient(phone, body);
+}
+
+// Replaces the category and name of an ingredient owned by the user with the given phone number.
+export async function updateIngredient(phone: string, id: string, category: string, name: string): Promise<Ingredient> {
+  // Build the request body the SDK expects and send it.
+  const body = new PutIngredientInputBody();
+  body.category = category;
+  body.name = name;
+  return ingredientsApi.putIngredient(phone, id, body);
 }
 
 // Deletes an ingredient owned by the user with the given phone number.
