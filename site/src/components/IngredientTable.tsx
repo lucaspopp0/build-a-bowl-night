@@ -68,8 +68,8 @@ export default function IngredientTable({ ingredients, currentPhone, onEdit, onD
           ) : (
             // Plain container (no Paper) so the table has no background or shadow.
             <TableContainer>
-              {/* First column has no left padding so its text lines up with the category title. */}
-              <Table sx={{ tableLayout: "fixed", "& th:first-of-type, & td:first-of-type": { pl: 0 } }}>
+              {/* First column has no left padding so its text lines up with the category title; the last has no right padding. */}
+              <Table sx={{ tableLayout: "fixed", "& th:first-of-type, & td:first-of-type": { pl: 0 }, "& th:last-of-type, & td:last-of-type": { pr: 0 } }}>
                 <TableHead>
                   {/* Column headers: small bold caps, set off by a thicker bottom border. */}
                   <TableRow>
@@ -84,16 +84,20 @@ export default function IngredientTable({ ingredients, currentPhone, onEdit, onD
                   {items.map((item) => (
                     <TableRow key={item.id}>
                       <TableCell>{item.name}</TableCell>
-                      <TableCell>{item.broughtBy}</TableCell>
+                      {/* Brought-by name; the signed-in user's own rows get a slightly transparent " (you)" suffix. */}
+                      <TableCell>
+                        {item.broughtBy}
+                        {currentPhone && item.phone === currentPhone && <Box component="span" sx={{ opacity: 0.6 }}> (you)</Box>}
+                      </TableCell>
                       {currentPhone && (
-                        // Pencil and red trash buttons, shown only on the signed-in user's own rows.
+                        // Pencil and trash buttons, shown only on the signed-in user's own rows.
                         <TableCell align="right" sx={{ py: 0, textAlign: "right", whiteSpace: "nowrap" }}>
                           {item.phone === currentPhone && (
                             <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                               <IconButton size="small" aria-label={`Edit ${item.name}`} onClick={() => onEdit?.(item)}>
                                 <EditIcon fontSize="small" />
                               </IconButton>
-                              <IconButton size="small" color="error" aria-label={`Delete ${item.name}`} onClick={() => onDelete?.(item)}>
+                              <IconButton size="small" aria-label={`Delete ${item.name}`} onClick={() => onDelete?.(item)}>
                                 <DeleteIcon fontSize="small" />
                               </IconButton>
                             </Box>
