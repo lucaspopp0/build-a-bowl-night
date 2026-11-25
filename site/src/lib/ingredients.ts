@@ -35,3 +35,6 @@ export function groupByCategory(ingredients: Ingredient[]): [string, Ingredient[
       [...list].sort((a, b) => a.name.localeCompare(b.name)),
     ]);
 }
+
+// The categories a new ingredient can be filed under.
+export const INGREDIENT_CATEGORIES = ["Protein", "Veggie", "Sauce", "Grain"] as const;
