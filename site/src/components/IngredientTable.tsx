@@ -3,6 +3,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
+import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Table from "@mui/material/Table";
@@ -21,6 +22,8 @@ interface IngredientTableProps {
   currentPhone?: string;
   onEdit?: (ingredient: Ingredient) => void;
   onDelete?: (ingredient: Ingredient) => void;
+  // Called with the category when the signed-in user clicks "Bring one?" on an empty category.
+  onBringOne?: (category: string) => void;
 }
 
 // Style for the column header cells: small, bold, all-caps text at 80% opacity with a thicker bottom border.
@@ -36,7 +39,7 @@ const headerCellSx = {
 } as const;
 
 // Vertical stack of cards, one per category, each with a plain-text title above its table.
-export default function IngredientTable({ ingredients, currentPhone, onEdit, onDelete }: IngredientTableProps) {
+export default function IngredientTable({ ingredients, currentPhone, onEdit, onDelete, onBringOne }: IngredientTableProps) {
   // Group the ingredients so each category gets its own table.
   const groups = groupByCategory(ingredients);
 
@@ -53,6 +56,15 @@ export default function IngredientTable({ ingredients, currentPhone, onEdit, onD
             // Fallback shown under the title when nobody has claimed this category yet; no table is rendered.
             <Typography variant="body2" sx={{ fontStyle: "italic", opacity: 0.6 }}>
               No {category.toLowerCase()}s yet
+              {/* Prompt to claim the category, offered only when a handler is provided (signed in). */}
+              {onBringOne && (
+                <>
+                  {" "}
+                  <Link component="button" type="button" variant="body2" onClick={() => onBringOne(category)} sx={{ fontStyle: "italic", verticalAlign: "baseline" }}>
+                    Bring one?
+                  </Link>
+                </>
+              )}
             </Typography>
           ) : (
             <TableContainer component={Paper}>
