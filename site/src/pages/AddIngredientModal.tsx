@@ -67,7 +67,7 @@ export default function AddIngredientModal({ open, user, onClose, onCreated }: A
       fullWidth
       maxWidth="xs"
     >
-      <DialogTitle>Add an ingredient</DialogTitle>
+      <DialogTitle>Bring something</DialogTitle>
       <DialogContent>
         <Box component="form" onSubmit={submit} noValidate sx={{ display: "grid", gap: 2, pt: 1 }}>
           <TextField
