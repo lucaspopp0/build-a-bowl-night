@@ -1,8 +1,46 @@
+// Which dietary restrictions an ingredient is suitable for.
+export interface DietaryAttributes {
+  glutenFree: boolean;
+  vegetarian: boolean;
+  vegan: boolean;
+}
+
+// The dietary flags in display order, with the label shown for each.
+export const DIETARY_ATTRIBUTES: { key: keyof DietaryAttributes; label: string }[] = [
+  { key: "glutenFree", label: "Gluten-free" },
+  { key: "vegetarian", label: "Vegetarian" },
+  { key: "vegan", label: "Vegan" },
+];
+
+// Dietary attributes with every flag off, used as the starting point for a new ingredient.
+export const NO_DIETARY_ATTRIBUTES: DietaryAttributes = { glutenFree: false, vegetarian: false, vegan: false };
+
+// Sets one flag, keeping them consistent: vegan implies vegetarian, so un-setting vegetarian also clears vegan.
+export function setDietaryAttribute(current: DietaryAttributes, key: keyof DietaryAttributes, value: boolean): DietaryAttributes {
+  const next = { ...current, [key]: value };
+  if (key === "vegan" && value) {
+    next.vegetarian = true;
+  }
+  if (key === "vegetarian" && !value) {
+    next.vegan = false;
+  }
+  return next;
+}
+
+// The fields of a freshly created ingredient that the add dialogs report back to the page.
+export interface CreatedIngredient {
+  id: string;
+  category: string;
+  name: string;
+  dietaryAttributes: DietaryAttributes;
+}
+
 // An ingredient a guest plans to bring, with its category and who is bringing it.
 export interface Ingredient {
   id: string;
   category: string;
   name: string;
+  dietaryAttributes: DietaryAttributes;
   broughtBy: string;
   // Phone number of the user bringing it, used to tell which ingredients the signed-in user owns.
   phone: string;

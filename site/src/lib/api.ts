@@ -1,5 +1,5 @@
 // The ingredient shape the UI renders, shared with the table.
-import type { Ingredient as IngredientWithOwner } from "./ingredients";
+import type { DietaryAttributes, Ingredient as IngredientWithOwner } from "./ingredients";
 
 // The generated API SDK: configuration helpers, the users client and its exception type.
 import {
@@ -49,6 +49,11 @@ const ingredientsApi = new IngredientsApi(
   }),
 );
 
+// Copies the SDK's dietary flags into the plain object the UI uses, treating missing flags as false.
+function toDietaryAttributes(attrs?: { glutenFree?: boolean; vegetarian?: boolean; vegan?: boolean }): DietaryAttributes {
+  return { glutenFree: !!attrs?.glutenFree, vegetarian: !!attrs?.vegetarian, vegan: !!attrs?.vegan };
+}
+
 // Fetches every ingredient and the users who bring them, resolving each ingredient's owner to a display name.
 export async function listIngredients(): Promise<IngredientWithOwner[]> {
   // Load both lists in parallel; the API only returns the owner's phone number on an ingredient.
@@ -60,17 +65,19 @@ export async function listIngredients(): Promise<IngredientWithOwner[]> {
     id: i.id,
     category: i.category,
     name: i.name,
+    dietaryAttributes: toDietaryAttributes(i.dietaryAttributes),
     broughtBy: names.get(i.user) ?? i.user,
     phone: i.user,
   }));
 }
 
 // Submits a new ingredient brought by the user with the given phone number.
-export async function createIngredient(phone: string, category: string, name: string): Promise<Ingredient> {
+export async function createIngredient(phone: string, category: string, name: string, dietaryAttributes: DietaryAttributes): Promise<Ingredient> {
   // Build the request body the SDK expects and send it.
   const body = new CreateIngredientInputBody();
   body.category = category;
   body.name = name;
+  body.dietaryAttributes = { ...dietaryAttributes };
   return ingredientsApi.createIngredient(phone, body);
 }
 

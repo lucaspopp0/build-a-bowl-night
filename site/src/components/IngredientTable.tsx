@@ -12,6 +12,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
+import DietaryChips from "./DietaryChips";
 import { groupByCategory, pluralizeCategory, type Ingredient } from "../lib/ingredients";
 
 // Props: the full list of ingredients to display.
@@ -80,7 +81,11 @@ export default function IngredientTable({ ingredients, currentPhone, onDelete, o
                 <TableBody sx={{ "& tr:last-child td": { borderBottom: 0 } }}>
                   {items.map((item) => (
                     <TableRow key={item.id}>
-                      <TableCell>{item.name}</TableCell>
+                      <TableCell>
+                        {item.name}
+                        {/* Small badges for each dietary flag that applies to this ingredient. */}
+                        <DietaryChips attributes={item.dietaryAttributes} />
+                      </TableCell>
                       <TableCell>{item.broughtBy}</TableCell>
                       {currentPhone && (
                         // Red trash button, shown only on the signed-in user's own rows.

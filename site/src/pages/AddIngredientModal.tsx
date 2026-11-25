@@ -9,15 +9,16 @@ import DialogTitle from "@mui/material/DialogTitle";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import { createIngredient } from "../lib/api";
-import { INGREDIENT_CATEGORIES } from "../lib/ingredients";
 import type { CurrentUser } from "../lib/session";
+import { INGREDIENT_CATEGORIES, NO_DIETARY_ATTRIBUTES, type CreatedIngredient } from "../lib/ingredients";
+import DietaryAttributesField from "../components/DietaryAttributesField";
 
 // Props: whether the dialog is open, who is submitting, how to close it, and what to do once saved.
 interface AddIngredientModalProps {
   open: boolean;
   user: CurrentUser;
   onClose: () => void;
-  onCreated: (ingredient: { id: string; category: string; name: string }) => void;
+  onCreated: (ingredient: CreatedIngredient) => void;
 }
 
 // Dialog for submitting a new ingredient the current user is bringing.
@@ -25,6 +26,7 @@ export default function AddIngredientModal({ open, user, onClose, onCreated }: A
   // Form state: the chosen category, the typed name, and request status.
   const [category, setCategory] = useState("");
   const [name, setName] = useState("");
+  const [dietary, setDietary] = useState(NO_DIETARY_ATTRIBUTES);
   const [loading, setLoading] = useState(false);
   const [failure, setFailure] = useState<string>();
 
@@ -32,6 +34,7 @@ export default function AddIngredientModal({ open, user, onClose, onCreated }: A
   const resetForm = () => {
     setCategory("");
     setName("");
+    setDietary(NO_DIETARY_ATTRIBUTES);
     setFailure(undefined);
   };
 
@@ -49,8 +52,8 @@ export default function AddIngredientModal({ open, user, onClose, onCreated }: A
     // Save it, then hand the result back to the page.
     setLoading(true);
     try {
-      const created = await createIngredient(user.phone, category, trimmed);
-      onCreated({ id: created.id, category: created.category, name: created.name });
+      const created = await createIngredient(user.phone, category, trimmed, dietary);
+      onCreated({ id: created.id, category: created.category, name: created.name, dietaryAttributes: dietary });
     } catch {
       setFailure("Something went wrong saving your ingredient. Please try again.");
     } finally {
@@ -91,6 +94,7 @@ export default function AddIngredientModal({ open, user, onClose, onCreated }: A
             disabled={loading}
             onChange={(e) => setName(e.target.value)}
           />
+          <DietaryAttributesField value={dietary} disabled={loading} onChange={setDietary} />
           {failure && <Alert severity="error">{failure}</Alert>}
           <Button type="submit" variant="contained" disabled={loading || !category || !name.trim()}>
             Add ingredient

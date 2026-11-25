@@ -9,6 +9,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import { createIngredient } from "../lib/api";
 import type { CurrentUser } from "../lib/session";
+import { NO_DIETARY_ATTRIBUTES, type CreatedIngredient } from "../lib/ingredients";
+import DietaryAttributesField from "../components/DietaryAttributesField";
 
 // Props: whether the dialog is open, the category it was opened for, who is submitting, and the close and saved callbacks.
 interface BringOneModalProps {
@@ -16,19 +18,21 @@ interface BringOneModalProps {
   category: string;
   user: CurrentUser;
   onClose: () => void;
-  onCreated: (ingredient: { id: string; category: string; name: string }) => void;
+  onCreated: (ingredient: CreatedIngredient) => void;
 }
 
 // Dialog for volunteering to bring an ingredient in a specific category, opened from that category's section.
 export default function BringOneModal({ open, category, user, onClose, onCreated }: BringOneModalProps) {
   // Form state: the typed name and request status; the category is fixed by the prop.
   const [name, setName] = useState("");
+  const [dietary, setDietary] = useState(NO_DIETARY_ATTRIBUTES);
   const [loading, setLoading] = useState(false);
   const [failure, setFailure] = useState<string>();
 
   // Clears the typed name and any error once the dialog has finished closing.
   const resetForm = () => {
     setName("");
+    setDietary(NO_DIETARY_ATTRIBUTES);
     setFailure(undefined);
   };
 
@@ -46,8 +50,8 @@ export default function BringOneModal({ open, category, user, onClose, onCreated
     // Save it, then hand the result back to the page.
     setLoading(true);
     try {
-      const created = await createIngredient(user.phone, category, trimmed);
-      onCreated({ id: created.id, category: created.category, name: created.name });
+      const created = await createIngredient(user.phone, category, trimmed, dietary);
+      onCreated({ id: created.id, category: created.category, name: created.name, dietaryAttributes: dietary });
     } catch {
       setFailure("Something went wrong saving your ingredient. Please try again.");
     } finally {
@@ -75,6 +79,7 @@ export default function BringOneModal({ open, category, user, onClose, onCreated
             disabled={loading}
             onChange={(e) => setName(e.target.value)}
           />
+          <DietaryAttributesField value={dietary} disabled={loading} onChange={setDietary} />
           {failure && <Alert severity="error">{failure}</Alert>}
           <Button type="submit" variant="contained" disabled={loading || !name.trim()}>
             Add ingredient
