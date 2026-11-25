@@ -28,7 +28,7 @@ func handle(api huma.API, req events.LambdaFunctionURLRequest) (events.LambdaFun
 
 // TestHandler checks the status code and body returned for known and unknown routes.
 func TestHandler(t *testing.T) {
-	api := newAPI()
+	api := newAPI(newMemStore())
 
 	tests := []struct {
 		name       string
@@ -66,7 +66,7 @@ func TestInvalidBody(t *testing.T) {
 	req.Body = "!!not-base64!!"
 	req.IsBase64Encoded = true
 
-	resp, err := handle(newAPI(), req)
+	resp, err := handle(newAPI(newMemStore()), req)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

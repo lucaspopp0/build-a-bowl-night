@@ -37,7 +37,7 @@ resource "aws_iam_role_policy_attachment" "logs" {
 # Limits the function to the users and ingredients tables, and only to the item operations the API needs
 data "aws_iam_policy_document" "tables_access" {
   statement {
-    actions   = ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:UpdateItem"]
+    actions   = ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:UpdateItem", "dynamodb:DeleteItem", "dynamodb:Scan"]
     resources = ["arn:aws:dynamodb:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:table/${var.users_table_name}"]
   }
 
