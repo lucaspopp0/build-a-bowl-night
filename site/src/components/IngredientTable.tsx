@@ -73,6 +73,7 @@ export default function IngredientTable({ ingredients, currentPhone, onDelete, o
                   <TableRow>
                     <TableCell sx={headerCellSx}>Ingredient</TableCell>
                     <TableCell sx={headerCellSx}>Brought by</TableCell>
+                    <TableCell sx={headerCellSx}>Restrictions</TableCell>
                     {/* Narrow column reserved for the delete button. */}
                     {currentPhone && <TableCell sx={{ ...headerCellSx, width: 56 }} />}
                   </TableRow>
@@ -81,12 +82,12 @@ export default function IngredientTable({ ingredients, currentPhone, onDelete, o
                 <TableBody sx={{ "& tr:last-child td": { borderBottom: 0 } }}>
                   {items.map((item) => (
                     <TableRow key={item.id}>
+                      <TableCell>{item.name}</TableCell>
+                      <TableCell>{item.broughtBy}</TableCell>
+                      {/* Small badges for each dietary flag that applies to this ingredient. */}
                       <TableCell>
-                        {item.name}
-                        {/* Small badges for each dietary flag that applies to this ingredient. */}
                         <DietaryChips attributes={item.dietaryAttributes} />
                       </TableCell>
-                      <TableCell>{item.broughtBy}</TableCell>
                       {currentPhone && (
                         // Red trash button, shown only on the signed-in user's own rows.
                         <TableCell align="right" sx={{ py: 0, textAlign: "right", whiteSpace: "nowrap" }}>

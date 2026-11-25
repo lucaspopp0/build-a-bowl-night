@@ -16,9 +16,9 @@ export default function DietaryChips({ attributes }: DietaryChipsProps) {
     return null;
   }
 
-  // Wrap the chips in a row beneath the ingredient name.
+  // Wrap the chips in a row within the restrictions cell.
   return (
-    <Stack direction="row" spacing={0.5} useFlexGap sx={{ flexWrap: "wrap", mt: 0.5 }}>
+    <Stack direction="row" spacing={0.5} useFlexGap sx={{ flexWrap: "wrap" }}>
       {active.map(({ key, label }) => (
         <Chip key={key} label={label} size="small" variant="outlined" color="success" sx={{ height: 20, fontSize: "0.65rem" }} />
       ))}
