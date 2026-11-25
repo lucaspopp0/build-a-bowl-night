@@ -5,6 +5,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import NavBar from "./components/NavBar";
 import IngredientsPage from "./pages/IngredientsPage";
+import EditNameModal from "./pages/EditNameModal";
 import SignInModal from "./pages/SignInModal";
 import { clearCurrentUser, loadCurrentUser, type CurrentUser } from "./lib/session";
 
@@ -15,6 +16,9 @@ export default function App() {
 
   // Whether the sign-in dialog is showing.
   const [signInOpen, setSignInOpen] = useState(false);
+
+  // Whether the edit-name dialog is showing.
+  const [editNameOpen, setEditNameOpen] = useState(false);
 
   // Forgets the signed-in user.
   const logOut = () => {
@@ -42,7 +46,7 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <NavBar userName={user?.name} onSignIn={() => setSignInOpen(true)} onLogOut={logOut} />
+      <NavBar userName={user?.name} onSignIn={() => setSignInOpen(true)} onEditName={() => setEditNameOpen(true)} onLogOut={logOut} />
       <IngredientsPage user={user} />
       <SignInModal
         open={signInOpen}
@@ -52,6 +56,17 @@ export default function App() {
           setSignInOpen(false);
         }}
       />
+      {user && (
+        <EditNameModal
+          user={user}
+          open={editNameOpen}
+          onClose={() => setEditNameOpen(false)}
+          onSaved={(updated) => {
+            setUser(updated);
+            setEditNameOpen(false);
+          }}
+        />
+      )}
     </ThemeProvider>
   );
 }
