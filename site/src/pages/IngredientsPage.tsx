@@ -49,6 +49,9 @@ export default function IngredientsPage({ user }: IngredientsPageProps) {
     };
   }, []);
 
+  // The user's own ingredients always show their current name, even right after a rename.
+  const shown = user ? ingredients.map((i) => (i.phone === user.phone ? { ...i, broughtBy: user.name } : i)) : ingredients;
+
   // Show the grouped table, plus a floating add button and its dialog when signed in.
   return (
     <Container maxWidth="md" sx={{ py: 3 }}>
@@ -61,7 +64,7 @@ export default function IngredientsPage({ user }: IngredientsPageProps) {
         <CircularProgress sx={{ display: "block", mx: "auto", my: 4 }} />
       ) : (
         <IngredientTable
-          ingredients={ingredients}
+          ingredients={shown}
           currentPhone={user?.phone}
           onEdit={setEditing}
           onDelete={setDeleting}
