@@ -23,6 +23,11 @@ There is a single environment, `prd`.
 Merging to `main` starts a deployment sequence for each changed component.
 Pull requests check only the changed components, and the `pr-ready` job is the required status check.
 
+Each component is declared in `.components/<component>/info.yml`.
+For `site`, the `subpaths` are `src: .` (the Vite project root, containing `package.json` and the Makefile), `build: dist` and `infra: infra`.
+The site's deployment applies `site/infra/stacks/<env>` before uploading `site/dist/`.
+The API base URL is set per environment in `site/deployments/<env>/deployment.yml`.
+
 Infrastructure is written as Terragrunt `units/` and `stacks/` plus Terraform `modules/`.
 `site/infra/` contains the site hosting (S3 bucket and CloudFront distribution), applied by the site's own deployment.
 `api/infra/` contains only the Lambda (function, role, log group and Function URL).
