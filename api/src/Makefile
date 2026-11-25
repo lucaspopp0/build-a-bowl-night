@@ -2,7 +2,7 @@
 # The build output directory must match subpaths.build in .components/api/info.yml (api/dist).
 
 BUILD_DIR := ../dist
-SPEC_DIR := ../spec
+SPEC_FILE := ../../api-sdk/openapi.yaml
 
 .PHONY: lint unit-test build spec clean
 
@@ -20,10 +20,9 @@ build:
 	mkdir -p $(BUILD_DIR)
 	GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -tags lambda.norpc -o $(BUILD_DIR)/bootstrap ./internal/cmd/main
 
-# Writes the OpenAPI spec (YAML) to api/spec/openapi.yaml
+# Writes the OpenAPI spec (YAML) to api-sdk/openapi.yaml
 spec:
-	mkdir -p $(SPEC_DIR)
-	go run ./internal/cmd/openapi > $(SPEC_DIR)/openapi.yaml
+	go run ./internal/cmd/openapi > $(SPEC_FILE)
 
 # Removes build output
 clean:
