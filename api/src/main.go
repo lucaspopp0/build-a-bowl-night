@@ -42,6 +42,7 @@ func newAPI(store db.Store) huma.API {
 		Method:      http.MethodGet,
 		Path:        "/health",
 		Summary:     "Health check",
+		Tags:        []string{handlers.TagHealth},
 	}, func(_ context.Context, _ *struct{}) (*HealthOutput, error) {
 		out := &HealthOutput{}
 		out.Body.Status = "ok"
