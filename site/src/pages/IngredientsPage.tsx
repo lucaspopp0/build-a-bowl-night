@@ -51,7 +51,7 @@ export default function IngredientsPage({ user }: IngredientsPageProps) {
 
   // Show the grouped table, plus a floating add button and its dialog when signed in.
   return (
-    <Container maxWidth="lg" sx={{ py: 3 }}>
+    <Container maxWidth="md" sx={{ py: 3 }}>
       {failed && (
         <Alert severity="error" sx={{ mb: 2 }}>
           Couldn't load the ingredients. Please refresh to try again.
