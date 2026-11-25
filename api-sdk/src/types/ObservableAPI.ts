@@ -14,20 +14,68 @@ import { PutUserInputBody } from '../models/PutUserInputBody';
 import { User } from '../models/User';
 import { UsersOutputBody } from '../models/UsersOutputBody';
 
-import { DefaultApiRequestFactory, DefaultApiResponseProcessor} from "../apis/DefaultApi";
-export class ObservableDefaultApi {
-    private requestFactory: DefaultApiRequestFactory;
-    private responseProcessor: DefaultApiResponseProcessor;
+import { HealthApiRequestFactory, HealthApiResponseProcessor} from "../apis/HealthApi";
+export class ObservableHealthApi {
+    private requestFactory: HealthApiRequestFactory;
+    private responseProcessor: HealthApiResponseProcessor;
     private configuration: Configuration;
 
     public constructor(
         configuration: Configuration,
-        requestFactory?: DefaultApiRequestFactory,
-        responseProcessor?: DefaultApiResponseProcessor
+        requestFactory?: HealthApiRequestFactory,
+        responseProcessor?: HealthApiResponseProcessor
     ) {
         this.configuration = configuration;
-        this.requestFactory = requestFactory || new DefaultApiRequestFactory(configuration);
-        this.responseProcessor = responseProcessor || new DefaultApiResponseProcessor();
+        this.requestFactory = requestFactory || new HealthApiRequestFactory(configuration);
+        this.responseProcessor = responseProcessor || new HealthApiResponseProcessor();
+    }
+
+    /**
+     * Health check
+     */
+    public healthWithHttpInfo(_options?: ConfigurationOptions): Observable<HttpInfo<HealthOutputBody>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.health(_config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.healthWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Health check
+     */
+    public health(_options?: ConfigurationOptions): Observable<HealthOutputBody> {
+        return this.healthWithHttpInfo(_options).pipe(map((apiResponse: HttpInfo<HealthOutputBody>) => apiResponse.data));
+    }
+
+}
+
+import { IngredientsApiRequestFactory, IngredientsApiResponseProcessor} from "../apis/IngredientsApi";
+export class ObservableIngredientsApi {
+    private requestFactory: IngredientsApiRequestFactory;
+    private responseProcessor: IngredientsApiResponseProcessor;
+    private configuration: Configuration;
+
+    public constructor(
+        configuration: Configuration,
+        requestFactory?: IngredientsApiRequestFactory,
+        responseProcessor?: IngredientsApiResponseProcessor
+    ) {
+        this.configuration = configuration;
+        this.requestFactory = requestFactory || new IngredientsApiRequestFactory(configuration);
+        this.responseProcessor = responseProcessor || new IngredientsApiResponseProcessor();
     }
 
     /**
@@ -99,38 +147,6 @@ export class ObservableDefaultApi {
     }
 
     /**
-     * Delete a user and their ingredients
-     * @param phone Phone number of the user
-     */
-    public deleteUserWithHttpInfo(phone: string, _options?: ConfigurationOptions): Observable<HttpInfo<void>> {
-        const _config = mergeConfiguration(this.configuration, _options);
-
-        const requestContextPromise = this.requestFactory.deleteUser(phone, _config);
-        // build promise chain
-        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
-        for (const middleware of _config.middleware) {
-            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
-        }
-
-        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
-            pipe(mergeMap((response: ResponseContext) => {
-                let middlewarePostObservable = of(response);
-                for (const middleware of _config.middleware.reverse()) {
-                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
-                }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.deleteUserWithHttpInfo(rsp)));
-            }));
-    }
-
-    /**
-     * Delete a user and their ingredients
-     * @param phone Phone number of the user
-     */
-    public deleteUser(phone: string, _options?: ConfigurationOptions): Observable<void> {
-        return this.deleteUserWithHttpInfo(phone, _options).pipe(map((apiResponse: HttpInfo<void>) => apiResponse.data));
-    }
-
-    /**
      * Get an ingredient
      * @param phone Phone number of the user
      * @param id Identifier of the ingredient, chosen by the client
@@ -162,68 +178,6 @@ export class ObservableDefaultApi {
      */
     public getIngredient(phone: string, id: string, _options?: ConfigurationOptions): Observable<Ingredient> {
         return this.getIngredientWithHttpInfo(phone, id, _options).pipe(map((apiResponse: HttpInfo<Ingredient>) => apiResponse.data));
-    }
-
-    /**
-     * Get a user
-     * @param phone Phone number of the user
-     */
-    public getUserWithHttpInfo(phone: string, _options?: ConfigurationOptions): Observable<HttpInfo<User>> {
-        const _config = mergeConfiguration(this.configuration, _options);
-
-        const requestContextPromise = this.requestFactory.getUser(phone, _config);
-        // build promise chain
-        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
-        for (const middleware of _config.middleware) {
-            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
-        }
-
-        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
-            pipe(mergeMap((response: ResponseContext) => {
-                let middlewarePostObservable = of(response);
-                for (const middleware of _config.middleware.reverse()) {
-                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
-                }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.getUserWithHttpInfo(rsp)));
-            }));
-    }
-
-    /**
-     * Get a user
-     * @param phone Phone number of the user
-     */
-    public getUser(phone: string, _options?: ConfigurationOptions): Observable<User> {
-        return this.getUserWithHttpInfo(phone, _options).pipe(map((apiResponse: HttpInfo<User>) => apiResponse.data));
-    }
-
-    /**
-     * Health check
-     */
-    public healthWithHttpInfo(_options?: ConfigurationOptions): Observable<HttpInfo<HealthOutputBody>> {
-        const _config = mergeConfiguration(this.configuration, _options);
-
-        const requestContextPromise = this.requestFactory.health(_config);
-        // build promise chain
-        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
-        for (const middleware of _config.middleware) {
-            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
-        }
-
-        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
-            pipe(mergeMap((response: ResponseContext) => {
-                let middlewarePostObservable = of(response);
-                for (const middleware of _config.middleware.reverse()) {
-                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
-                }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.healthWithHttpInfo(rsp)));
-            }));
-    }
-
-    /**
-     * Health check
-     */
-    public health(_options?: ConfigurationOptions): Observable<HealthOutputBody> {
-        return this.healthWithHttpInfo(_options).pipe(map((apiResponse: HttpInfo<HealthOutputBody>) => apiResponse.data));
     }
 
     /**
@@ -289,36 +243,6 @@ export class ObservableDefaultApi {
     }
 
     /**
-     * List users
-     */
-    public listUsersWithHttpInfo(_options?: ConfigurationOptions): Observable<HttpInfo<UsersOutputBody>> {
-        const _config = mergeConfiguration(this.configuration, _options);
-
-        const requestContextPromise = this.requestFactory.listUsers(_config);
-        // build promise chain
-        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
-        for (const middleware of _config.middleware) {
-            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
-        }
-
-        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
-            pipe(mergeMap((response: ResponseContext) => {
-                let middlewarePostObservable = of(response);
-                for (const middleware of _config.middleware.reverse()) {
-                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
-                }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.listUsersWithHttpInfo(rsp)));
-            }));
-    }
-
-    /**
-     * List users
-     */
-    public listUsers(_options?: ConfigurationOptions): Observable<UsersOutputBody> {
-        return this.listUsersWithHttpInfo(_options).pipe(map((apiResponse: HttpInfo<UsersOutputBody>) => apiResponse.data));
-    }
-
-    /**
      * Create or update an ingredient
      * @param phone Phone number of the user
      * @param id Identifier of the ingredient, chosen by the client
@@ -352,6 +276,118 @@ export class ObservableDefaultApi {
      */
     public putIngredient(phone: string, id: string, putIngredientInputBody: PutIngredientInputBody, _options?: ConfigurationOptions): Observable<Ingredient> {
         return this.putIngredientWithHttpInfo(phone, id, putIngredientInputBody, _options).pipe(map((apiResponse: HttpInfo<Ingredient>) => apiResponse.data));
+    }
+
+}
+
+import { UsersApiRequestFactory, UsersApiResponseProcessor} from "../apis/UsersApi";
+export class ObservableUsersApi {
+    private requestFactory: UsersApiRequestFactory;
+    private responseProcessor: UsersApiResponseProcessor;
+    private configuration: Configuration;
+
+    public constructor(
+        configuration: Configuration,
+        requestFactory?: UsersApiRequestFactory,
+        responseProcessor?: UsersApiResponseProcessor
+    ) {
+        this.configuration = configuration;
+        this.requestFactory = requestFactory || new UsersApiRequestFactory(configuration);
+        this.responseProcessor = responseProcessor || new UsersApiResponseProcessor();
+    }
+
+    /**
+     * Delete a user and their ingredients
+     * @param phone Phone number of the user
+     */
+    public deleteUserWithHttpInfo(phone: string, _options?: ConfigurationOptions): Observable<HttpInfo<void>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.deleteUser(phone, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.deleteUserWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Delete a user and their ingredients
+     * @param phone Phone number of the user
+     */
+    public deleteUser(phone: string, _options?: ConfigurationOptions): Observable<void> {
+        return this.deleteUserWithHttpInfo(phone, _options).pipe(map((apiResponse: HttpInfo<void>) => apiResponse.data));
+    }
+
+    /**
+     * Get a user
+     * @param phone Phone number of the user
+     */
+    public getUserWithHttpInfo(phone: string, _options?: ConfigurationOptions): Observable<HttpInfo<User>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.getUser(phone, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.getUserWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Get a user
+     * @param phone Phone number of the user
+     */
+    public getUser(phone: string, _options?: ConfigurationOptions): Observable<User> {
+        return this.getUserWithHttpInfo(phone, _options).pipe(map((apiResponse: HttpInfo<User>) => apiResponse.data));
+    }
+
+    /**
+     * List users
+     */
+    public listUsersWithHttpInfo(_options?: ConfigurationOptions): Observable<HttpInfo<UsersOutputBody>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.listUsers(_config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.listUsersWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * List users
+     */
+    public listUsers(_options?: ConfigurationOptions): Observable<UsersOutputBody> {
+        return this.listUsersWithHttpInfo(_options).pipe(map((apiResponse: HttpInfo<UsersOutputBody>) => apiResponse.data));
     }
 
     /**

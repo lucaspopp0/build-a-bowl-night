@@ -12,18 +12,55 @@ import { PutIngredientInputBody } from '../models/PutIngredientInputBody';
 import { PutUserInputBody } from '../models/PutUserInputBody';
 import { User } from '../models/User';
 import { UsersOutputBody } from '../models/UsersOutputBody';
-import { ObservableDefaultApi } from './ObservableAPI';
+import { ObservableHealthApi } from './ObservableAPI';
 
-import { DefaultApiRequestFactory, DefaultApiResponseProcessor} from "../apis/DefaultApi";
-export class PromiseDefaultApi {
-    private api: ObservableDefaultApi
+import { HealthApiRequestFactory, HealthApiResponseProcessor} from "../apis/HealthApi";
+export class PromiseHealthApi {
+    private api: ObservableHealthApi
 
     public constructor(
         configuration: Configuration,
-        requestFactory?: DefaultApiRequestFactory,
-        responseProcessor?: DefaultApiResponseProcessor
+        requestFactory?: HealthApiRequestFactory,
+        responseProcessor?: HealthApiResponseProcessor
     ) {
-        this.api = new ObservableDefaultApi(configuration, requestFactory, responseProcessor);
+        this.api = new ObservableHealthApi(configuration, requestFactory, responseProcessor);
+    }
+
+    /**
+     * Health check
+     */
+    public healthWithHttpInfo(_options?: PromiseConfigurationOptions): Promise<HttpInfo<HealthOutputBody>> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.healthWithHttpInfo(observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Health check
+     */
+    public health(_options?: PromiseConfigurationOptions): Promise<HealthOutputBody> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.health(observableOptions);
+        return result.toPromise();
+    }
+
+
+}
+
+
+
+import { ObservableIngredientsApi } from './ObservableAPI';
+
+import { IngredientsApiRequestFactory, IngredientsApiResponseProcessor} from "../apis/IngredientsApi";
+export class PromiseIngredientsApi {
+    private api: ObservableIngredientsApi
+
+    public constructor(
+        configuration: Configuration,
+        requestFactory?: IngredientsApiRequestFactory,
+        responseProcessor?: IngredientsApiResponseProcessor
+    ) {
+        this.api = new ObservableIngredientsApi(configuration, requestFactory, responseProcessor);
     }
 
     /**
@@ -71,26 +108,6 @@ export class PromiseDefaultApi {
     }
 
     /**
-     * Delete a user and their ingredients
-     * @param phone Phone number of the user
-     */
-    public deleteUserWithHttpInfo(phone: string, _options?: PromiseConfigurationOptions): Promise<HttpInfo<void>> {
-        const observableOptions = wrapOptions(_options);
-        const result = this.api.deleteUserWithHttpInfo(phone, observableOptions);
-        return result.toPromise();
-    }
-
-    /**
-     * Delete a user and their ingredients
-     * @param phone Phone number of the user
-     */
-    public deleteUser(phone: string, _options?: PromiseConfigurationOptions): Promise<void> {
-        const observableOptions = wrapOptions(_options);
-        const result = this.api.deleteUser(phone, observableOptions);
-        return result.toPromise();
-    }
-
-    /**
      * Get an ingredient
      * @param phone Phone number of the user
      * @param id Identifier of the ingredient, chosen by the client
@@ -109,44 +126,6 @@ export class PromiseDefaultApi {
     public getIngredient(phone: string, id: string, _options?: PromiseConfigurationOptions): Promise<Ingredient> {
         const observableOptions = wrapOptions(_options);
         const result = this.api.getIngredient(phone, id, observableOptions);
-        return result.toPromise();
-    }
-
-    /**
-     * Get a user
-     * @param phone Phone number of the user
-     */
-    public getUserWithHttpInfo(phone: string, _options?: PromiseConfigurationOptions): Promise<HttpInfo<User>> {
-        const observableOptions = wrapOptions(_options);
-        const result = this.api.getUserWithHttpInfo(phone, observableOptions);
-        return result.toPromise();
-    }
-
-    /**
-     * Get a user
-     * @param phone Phone number of the user
-     */
-    public getUser(phone: string, _options?: PromiseConfigurationOptions): Promise<User> {
-        const observableOptions = wrapOptions(_options);
-        const result = this.api.getUser(phone, observableOptions);
-        return result.toPromise();
-    }
-
-    /**
-     * Health check
-     */
-    public healthWithHttpInfo(_options?: PromiseConfigurationOptions): Promise<HttpInfo<HealthOutputBody>> {
-        const observableOptions = wrapOptions(_options);
-        const result = this.api.healthWithHttpInfo(observableOptions);
-        return result.toPromise();
-    }
-
-    /**
-     * Health check
-     */
-    public health(_options?: PromiseConfigurationOptions): Promise<HealthOutputBody> {
-        const observableOptions = wrapOptions(_options);
-        const result = this.api.health(observableOptions);
         return result.toPromise();
     }
 
@@ -189,24 +168,6 @@ export class PromiseDefaultApi {
     }
 
     /**
-     * List users
-     */
-    public listUsersWithHttpInfo(_options?: PromiseConfigurationOptions): Promise<HttpInfo<UsersOutputBody>> {
-        const observableOptions = wrapOptions(_options);
-        const result = this.api.listUsersWithHttpInfo(observableOptions);
-        return result.toPromise();
-    }
-
-    /**
-     * List users
-     */
-    public listUsers(_options?: PromiseConfigurationOptions): Promise<UsersOutputBody> {
-        const observableOptions = wrapOptions(_options);
-        const result = this.api.listUsers(observableOptions);
-        return result.toPromise();
-    }
-
-    /**
      * Create or update an ingredient
      * @param phone Phone number of the user
      * @param id Identifier of the ingredient, chosen by the client
@@ -227,6 +188,83 @@ export class PromiseDefaultApi {
     public putIngredient(phone: string, id: string, putIngredientInputBody: PutIngredientInputBody, _options?: PromiseConfigurationOptions): Promise<Ingredient> {
         const observableOptions = wrapOptions(_options);
         const result = this.api.putIngredient(phone, id, putIngredientInputBody, observableOptions);
+        return result.toPromise();
+    }
+
+
+}
+
+
+
+import { ObservableUsersApi } from './ObservableAPI';
+
+import { UsersApiRequestFactory, UsersApiResponseProcessor} from "../apis/UsersApi";
+export class PromiseUsersApi {
+    private api: ObservableUsersApi
+
+    public constructor(
+        configuration: Configuration,
+        requestFactory?: UsersApiRequestFactory,
+        responseProcessor?: UsersApiResponseProcessor
+    ) {
+        this.api = new ObservableUsersApi(configuration, requestFactory, responseProcessor);
+    }
+
+    /**
+     * Delete a user and their ingredients
+     * @param phone Phone number of the user
+     */
+    public deleteUserWithHttpInfo(phone: string, _options?: PromiseConfigurationOptions): Promise<HttpInfo<void>> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.deleteUserWithHttpInfo(phone, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Delete a user and their ingredients
+     * @param phone Phone number of the user
+     */
+    public deleteUser(phone: string, _options?: PromiseConfigurationOptions): Promise<void> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.deleteUser(phone, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Get a user
+     * @param phone Phone number of the user
+     */
+    public getUserWithHttpInfo(phone: string, _options?: PromiseConfigurationOptions): Promise<HttpInfo<User>> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.getUserWithHttpInfo(phone, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Get a user
+     * @param phone Phone number of the user
+     */
+    public getUser(phone: string, _options?: PromiseConfigurationOptions): Promise<User> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.getUser(phone, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * List users
+     */
+    public listUsersWithHttpInfo(_options?: PromiseConfigurationOptions): Promise<HttpInfo<UsersOutputBody>> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.listUsersWithHttpInfo(observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * List users
+     */
+    public listUsers(_options?: PromiseConfigurationOptions): Promise<UsersOutputBody> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.listUsers(observableOptions);
         return result.toPromise();
     }
 
