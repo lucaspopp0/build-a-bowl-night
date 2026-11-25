@@ -17,7 +17,7 @@ unit-test:
 # Compiles the Lambda executable for the provided.al2023 arm64 runtime
 build:
 	mkdir -p $(BUILD_DIR)
-	GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -tags lambda.norpc -o $(BUILD_DIR)/bootstrap .
+	GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -tags lambda.norpc -o $(BUILD_DIR)/bootstrap ./internal/cmd
 
 # Removes build output
 clean:
