@@ -4,7 +4,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
-import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -49,7 +48,7 @@ export default function IngredientTable({ ingredients, currentPhone, onEdit, onD
       {groups.map(([category, items]) => (
         <Box key={category}>
           {/* Category title: plain text sitting above the table, with a small gap before it. */}
-          <Typography variant="h6" component="h2" sx={{ mb: 1, fontFamily: '"Pacifico", cursive' }}>
+          <Typography variant="h6" component="h2" sx={{ mb: 1 }}>
             {pluralizeCategory(category)}
           </Typography>
           {items.length === 0 ? (
@@ -67,8 +66,10 @@ export default function IngredientTable({ ingredients, currentPhone, onEdit, onD
               )}
             </Typography>
           ) : (
-            <TableContainer component={Paper}>
-              <Table sx={{ tableLayout: "fixed" }}>
+            // Plain container (no Paper) so the table has no background or shadow.
+            <TableContainer>
+              {/* First column has no left padding so its text lines up with the category title. */}
+              <Table sx={{ tableLayout: "fixed", "& th:first-of-type, & td:first-of-type": { pl: 0 } }}>
                 <TableHead>
                   {/* Column headers: small bold caps, set off by a thicker bottom border. */}
                   <TableRow>
