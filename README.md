@@ -22,7 +22,7 @@ See [AGENTS.md](AGENTS.md) for the architecture and requirements.
 
 ```sh
 (cd api/src && make lint unit-test build)   # Go lint, tests, and the lambda executable
-(cd api-sdk && make lint unit-test)         # regenerate the SDK from the OpenAPI spec (needs Java) and type-check it
+(cd api-sdk && make lint unit-test)         # regenerate the SDK from the OpenAPI spec (needs docker) and type-check it
 (cd site && npm ci && npm run build)        # type-check and build the site
 terraform fmt -recursive infra api/infra site/infra    # format Terraform
 (cd infra/stacks && terragrunt hcl validate --all --inputs --strict --tf-path terraform)

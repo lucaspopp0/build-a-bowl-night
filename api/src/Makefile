@@ -6,8 +6,8 @@ SPEC_FILE := ../../api-sdk/openapi.yaml
 
 .PHONY: lint unit-test build spec clean
 
-# Formats and vets the source; the workflow fails if formatting produced changes
-lint:
+# Formats and vets the source, and regenerates the OpenAPI spec; the workflow fails if either produced changes
+lint: spec
 	go fmt ./...
 	go vet ./...
 
