@@ -58,7 +58,7 @@ export default function IngredientTable({ ingredients }: IngredientTableProps) {
                       colSpan={2}
                       sx={{ fontStyle: "italic", opacity: 0.6 }}
                     >
-                      Nobody's bringing a {category.toLowerCase()} yet
+                      No {category.toLowerCase()}s yet
                     </TableCell>
                   </TableRow>
                 )}
