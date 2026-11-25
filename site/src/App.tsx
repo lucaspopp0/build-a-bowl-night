@@ -1,20 +1,23 @@
-// MUI theme, baseline styles, the app's navbar and the page for the current sign-in state.
+// MUI theme, baseline styles, the app's navbar, page and sign-in dialog.
 import { useMemo, useState } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import NavBar from "./components/NavBar";
 import IngredientsPage from "./pages/IngredientsPage";
-import SignInPage from "./pages/SignInPage";
+import SignInModal from "./pages/SignInModal";
 import { clearCurrentUser, loadCurrentUser, type CurrentUser } from "./lib/session";
 
-// Root component: navbar on top, then the sign-in page or the ingredients page.
+// Root component: navbar on top, the ingredients page, and the sign-in dialog.
 export default function App() {
   // The signed-in user, restored from local storage on first load.
   const [user, setUser] = useState<CurrentUser | null>(loadCurrentUser);
 
-  // Forgets the signed-in user, which returns the app to the sign-in page.
-  const signOut = () => {
+  // Whether the sign-in dialog is showing.
+  const [signInOpen, setSignInOpen] = useState(false);
+
+  // Forgets the signed-in user.
+  const logOut = () => {
     clearCurrentUser();
     setUser(null);
   };
@@ -35,8 +38,16 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <NavBar userName={user?.name} onSignOut={signOut} />
-      {user ? <IngredientsPage /> : <SignInPage onSignedIn={setUser} />}
+      <NavBar userName={user?.name} onSignIn={() => setSignInOpen(true)} onLogOut={logOut} />
+      <IngredientsPage />
+      <SignInModal
+        open={signInOpen}
+        onClose={() => setSignInOpen(false)}
+        onSignedIn={(signedIn) => {
+          setUser(signedIn);
+          setSignInOpen(false);
+        }}
+      />
     </ThemeProvider>
   );
 }
