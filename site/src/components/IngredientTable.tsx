@@ -16,11 +16,12 @@ interface IngredientTableProps {
   ingredients: Ingredient[];
 }
 
-// Style for the column header cells: small, bold, all-caps text with a thicker bottom border.
+// Style for the column header cells: small, bold, all-caps text at 80% opacity with a thicker bottom border.
 const headerCellSx = {
   typography: "caption",
   fontWeight: "bold",
   textTransform: "uppercase",
+  opacity: 0.8,
   borderBottomWidth: 2,
 } as const;
 
