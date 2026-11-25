@@ -6,7 +6,7 @@ unit "app_tables" {
 
   values = {
     # The api component's prd stack refers to these tables by name, so keep the two in sync
-    users_table_name      = "build-a-bowl-night-users-prd"
-    components_table_name = "build-a-bowl-night-components-prd"
+    users_table_name       = "build-a-bowl-night-users-prd"
+    ingredients_table_name = "build-a-bowl-night-ingredients-prd"
   }
 }

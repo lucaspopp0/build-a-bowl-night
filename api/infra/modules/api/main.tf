@@ -34,7 +34,7 @@ resource "aws_iam_role_policy_attachment" "logs" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-# Limits the function to the users and components tables, and only to the item operations the API needs
+# Limits the function to the users and ingredients tables, and only to the item operations the API needs
 data "aws_iam_policy_document" "tables_access" {
   statement {
     actions   = ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:UpdateItem"]
@@ -43,7 +43,7 @@ data "aws_iam_policy_document" "tables_access" {
 
   statement {
     actions   = ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:UpdateItem", "dynamodb:DeleteItem", "dynamodb:Query", "dynamodb:Scan"]
-    resources = ["arn:aws:dynamodb:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:table/${var.components_table_name}"]
+    resources = ["arn:aws:dynamodb:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:table/${var.ingredients_table_name}"]
   }
 }
 
@@ -74,8 +74,8 @@ resource "aws_lambda_function" "api" {
 
   environment {
     variables = {
-      USERS_TABLE      = var.users_table_name
-      COMPONENTS_TABLE = var.components_table_name
+      USERS_TABLE       = var.users_table_name
+      INGREDIENTS_TABLE = var.ingredients_table_name
     }
   }
 
