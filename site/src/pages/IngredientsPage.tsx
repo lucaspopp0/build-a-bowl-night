@@ -10,6 +10,7 @@ import { listIngredients } from "../lib/api";
 import type { Ingredient } from "../lib/ingredients";
 import type { CurrentUser } from "../lib/session";
 import AddIngredientModal from "./AddIngredientModal";
+import BringOneModal from "./BringOneModal";
 import DeleteIngredientModal from "./DeleteIngredientModal";
 
 // Props: the signed-in user, if any; only signed-in users can add ingredients.
@@ -22,6 +23,10 @@ export default function IngredientsPage({ user }: IngredientsPageProps) {
   // The displayed ingredients and whether the add dialog is showing.
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [addOpen, setAddOpen] = useState(false);
+
+  // The category the bring-one dialog was opened for, and whether it is showing (kept separate so the title stays put while closing).
+  const [bringCategory, setBringCategory] = useState("");
+  const [bringOpen, setBringOpen] = useState(false);
 
   // The ingredient currently being deleted, if any.
   const [deleting, setDeleting] = useState<Ingredient | null>(null);
@@ -57,6 +62,14 @@ export default function IngredientsPage({ user }: IngredientsPageProps) {
           ingredients={ingredients}
           currentPhone={user?.phone}
           onDelete={setDeleting}
+          onBringOne={
+            user
+              ? (category) => {
+                  setBringCategory(category);
+                  setBringOpen(true);
+                }
+              : undefined
+          }
         />
       )}
       {user && (
@@ -78,6 +91,17 @@ export default function IngredientsPage({ user }: IngredientsPageProps) {
             onCreated={(created) => {
               setIngredients((prev) => [...prev, { ...created, broughtBy: user.name, phone: user.phone }]);
               setAddOpen(false);
+            }}
+          />
+          {/* Bring-one dialog: opened from an empty category, pre-filled with that category. */}
+          <BringOneModal
+            open={bringOpen}
+            category={bringCategory}
+            user={user}
+            onClose={() => setBringOpen(false)}
+            onCreated={(created) => {
+              setIngredients((prev) => [...prev, { ...created, broughtBy: user.name, phone: user.phone }]);
+              setBringOpen(false);
             }}
           />
           {/* Delete dialog: removes the ingredient from the local list once confirmed. */}
