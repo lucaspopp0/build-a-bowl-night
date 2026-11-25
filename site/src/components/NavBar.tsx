@@ -19,7 +19,7 @@ export default function NavBar({ userName, onSignIn, onLogOut }: NavBarProps) {
     <AppBar position="sticky" color="default">
       <Toolbar>
         <Typography variant="h6" component="h1" sx={{ flexGrow: 1 }}>
-          Build-a-Bowl Ingredients
+          Build-a-Bowl
         </Typography>
         {userName ? (
           // Signed in: one button showing the name with "Log Out" tightly stacked below it.

@@ -122,6 +122,10 @@ export default function SignInModal({ open, onClose, onSignedIn }: SignInModalPr
             <Button type="submit" variant="contained" disabled={loading}>
               Continue
             </Button>
+            {/* Bottom cancel button that dismisses the dialog. */}
+            <Button onClick={onClose} disabled={loading}>
+              Cancel
+            </Button>
           </Box>
         ) : (
           <Box component="form" onSubmit={submitName} noValidate sx={{ display: "grid", gap: 2, pt: 1 }}>
@@ -143,6 +147,10 @@ export default function SignInModal({ open, onClose, onSignedIn }: SignInModalPr
             </Button>
             <Button onClick={changeNumber} disabled={loading}>
               Change number
+            </Button>
+            {/* Bottom cancel button that dismisses the dialog. */}
+            <Button onClick={onClose} disabled={loading}>
+              Cancel
             </Button>
           </Box>
         )}
