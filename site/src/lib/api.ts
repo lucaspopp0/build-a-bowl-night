@@ -1,10 +1,13 @@
 // The generated API SDK: configuration helpers, the users client and its exception type.
 import {
   ApiException,
+  CreateIngredientInputBody,
+  IngredientsApi,
   PutUserInputBody,
   ServerConfiguration,
   UsersApi,
   createConfiguration,
+  type Ingredient,
   type User,
 } from "@build-a-bowl-night/api-sdk";
 
@@ -34,4 +37,20 @@ export async function createUser(phone: string, name: string): Promise<User> {
   const body = new PutUserInputBody();
   body.name = name;
   return usersApi.putUser(phone, body);
+}
+
+// Ingredients client sharing the same base URL configuration as the users client.
+const ingredientsApi = new IngredientsApi(
+  createConfiguration({
+    baseServer: new ServerConfiguration((import.meta.env.VITE_API_URL ?? "").replace(/\/+$/, ""), {}),
+  }),
+);
+
+// Submits a new ingredient brought by the user with the given phone number.
+export async function createIngredient(phone: string, category: string, name: string): Promise<Ingredient> {
+  // Build the request body the SDK expects and send it.
+  const body = new CreateIngredientInputBody();
+  body.category = category;
+  body.name = name;
+  return ingredientsApi.createIngredient(phone, body);
 }
