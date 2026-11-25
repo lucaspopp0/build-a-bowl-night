@@ -31,7 +31,7 @@ export default function NavBar({ userName, onSignIn, onLogOut }: NavBarProps) {
               {userName}
             </Typography>
             <Typography variant="caption" sx={{ lineHeight: 1.2, opacity: 0.8 }}>
-              Log Out
+              LOG OUT
             </Typography>
           </Button>
         ) : (
