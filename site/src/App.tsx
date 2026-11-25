@@ -1,10 +1,16 @@
-// Root component of the site; currently renders a placeholder page.
+// MUI baseline styles and the app's navbar and page.
+import CssBaseline from "@mui/material/CssBaseline";
+import NavBar from "./components/NavBar";
+import IngredientsPage from "./pages/IngredientsPage";
+
+// Root component: navbar on top, with the single page below it.
 export default function App() {
-  // Placeholder markup until the real UI is built.
+  // CssBaseline normalizes browser styles before rendering the layout.
   return (
-    <main>
-      <h1>Build-a-Bowl Night</h1>
-      <p>Coming soon.</p>
-    </main>
+    <>
+      <CssBaseline />
+      <NavBar />
+      <IngredientsPage />
+    </>
   );
 }
