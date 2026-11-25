@@ -1,12 +1,6 @@
-// React state and the MUI components that make up the delete-confirmation dialog.
-import { useState } from "react";
-import Alert from "@mui/material/Alert";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+// React state and the Radix components that make up the delete-confirmation dialog.
+import { useEffect, useState } from "react";
+import { AlertDialog, Button, Callout, Flex } from "@radix-ui/themes";
 import { deleteIngredient } from "../lib/api";
 import type { Ingredient } from "../lib/ingredients";
 
@@ -42,32 +36,34 @@ export default function DeleteIngredientModal({ ingredient, onClose, onDeleted }
     }
   };
 
+  // Clears any earlier error each time the dialog opens.
+  useEffect(() => {
+    if (ingredient) {
+      setFailure(undefined);
+    }
+  }, [ingredient]);
+
   // Confirmation question with No and Yes buttons.
   return (
-    <Dialog
-      open={ingredient !== null}
-      onClose={loading ? undefined : onClose}
-      slotProps={{ transition: { onExited: () => setFailure(undefined) } }}
-      fullWidth
-      maxWidth="xs"
-    >
-      <DialogTitle>Delete ingredient?</DialogTitle>
-      <DialogContent>
-        <DialogContentText>Are you sure you want to delete {ingredient?.name}?</DialogContentText>
+    <AlertDialog.Root open={ingredient !== null} onOpenChange={(next) => !next && !loading && onClose()}>
+      <AlertDialog.Content maxWidth="400px">
+        <AlertDialog.Title>Delete ingredient?</AlertDialog.Title>
+        <AlertDialog.Description size="2">Are you sure you want to delete {ingredient?.name}?</AlertDialog.Description>
         {failure && (
-          <Alert severity="error" sx={{ mt: 2 }}>
-            {failure}
-          </Alert>
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} disabled={loading}>
-          No
-        </Button>
-        <Button color="error" variant="contained" onClick={confirm} disabled={loading}>
-          Yes
-        </Button>
-      </DialogActions>
-    </Dialog>
+              <Callout.Root color="red" size="1" mt="3">
+                <Callout.Text>{failure}</Callout.Text>
+              </Callout.Root>
+            )}
+        <Flex gap="3" mt="4" justify="end">
+          <Button variant="soft" color="gray" onClick={onClose} disabled={loading}>
+            No
+          </Button>
+          {/* Confirm uses a plain Button (not AlertDialog.Action) so the dialog stays open while the request runs. */}
+          <Button color="red" onClick={confirm} loading={loading}>
+            Yes
+          </Button>
+        </Flex>
+      </AlertDialog.Content>
+    </AlertDialog.Root>
   );
 }

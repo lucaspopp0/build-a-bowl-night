@@ -1,13 +1,7 @@
-// React state and the MUI components that make up the sign-in dialog.
-import { useState, type FormEvent } from "react";
-import Alert from "@mui/material/Alert";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
+// React state and the Radix components that make up the sign-in dialog.
+import { useEffect, useState, type FormEvent } from "react";
+import { Button, Callout, Dialog, Flex, Select, Text, TextField } from "@radix-ui/themes";
+import Field from "../components/Field";
 import PhoneNumberField from "../components/PhoneNumberField";
 import { createUser, findUser } from "../lib/api";
 import { normalizePhone } from "../lib/phone";
@@ -104,57 +98,65 @@ export default function SignInModal({ open, onClose, onSignedIn }: SignInModalPr
     setFailure(undefined);
   };
 
+  // Clears the form each time the dialog opens, so it never shows stale input.
+  useEffect(() => {
+    if (open) {
+      resetForm();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
   // Phone step first; once the number is unknown, the name step replaces it.
   return (
-    <Dialog
-      open={open}
-      onClose={loading ? undefined : onClose}
-      slotProps={{ transition: { onExited: resetForm } }}
-      fullWidth
-      maxWidth="xs"
-    >
-      <DialogTitle>Sign in</DialogTitle>
-      <DialogContent>
+    <Dialog.Root open={open} onOpenChange={(next) => !next && !loading && onClose()}>
+      <Dialog.Content maxWidth="400px" aria-describedby={undefined}>
+        <Dialog.Title>Sign in</Dialog.Title>
         {newUserPhone === null ? (
-          <Box component="form" onSubmit={submitPhone} noValidate sx={{ display: "grid", gap: 2, pt: 1 }}>
-            <PhoneNumberField value={phoneInput} onChange={setPhoneInput} error={phoneError} disabled={loading} />
-            {failure && <Alert severity="error">{failure}</Alert>}
-            <Button type="submit" variant="contained" disabled={loading}>
-              Continue
-            </Button>
-            {/* Bottom cancel button that dismisses the dialog. */}
-            <Button onClick={onClose} disabled={loading}>
-              Cancel
-            </Button>
-          </Box>
+          <form onSubmit={submitPhone} noValidate>
+            <Flex direction="column" gap="4">
+              <PhoneNumberField value={phoneInput} onChange={setPhoneInput} error={phoneError} disabled={loading} />
+              {failure && (
+              <Callout.Root color="red" size="1">
+                <Callout.Text>{failure}</Callout.Text>
+              </Callout.Root>
+            )}
+              <Button type="submit" size="3" loading={loading}>
+                Continue
+              </Button>
+              {/* Bottom cancel button that dismisses the dialog. */}
+              <Button type="button" variant="soft" color="gray" size="3" onClick={onClose} disabled={loading}>
+                Cancel
+              </Button>
+            </Flex>
+          </form>
         ) : (
-          <Box component="form" onSubmit={submitName} noValidate sx={{ display: "grid", gap: 2, pt: 1 }}>
-            <Typography color="text.secondary">
-              We don't know {newUserPhone} yet. What's your name?
-            </Typography>
-            <TextField
-              label="Your name"
-              autoComplete="name"
-              autoFocus
-              fullWidth
-              value={name}
-              disabled={loading}
-              onChange={(e) => setName(e.target.value)}
-            />
-            {failure && <Alert severity="error">{failure}</Alert>}
-            <Button type="submit" variant="contained" disabled={loading || !name.trim()}>
-              Create account
-            </Button>
-            <Button onClick={changeNumber} disabled={loading}>
-              Change number
-            </Button>
-            {/* Bottom cancel button that dismisses the dialog. */}
-            <Button onClick={onClose} disabled={loading}>
-              Cancel
-            </Button>
-          </Box>
+          <form onSubmit={submitName} noValidate>
+            <Flex direction="column" gap="4">
+              <Text color="gray">
+                We don't know {newUserPhone} yet. What's your name?
+              </Text>
+              <Field label="Your name">
+                <TextField.Root autoComplete="name" autoFocus value={name} disabled={loading} onChange={(e) => setName(e.target.value)} />
+              </Field>
+              {failure && (
+              <Callout.Root color="red" size="1">
+                <Callout.Text>{failure}</Callout.Text>
+              </Callout.Root>
+            )}
+              <Button type="submit" size="3" loading={loading} disabled={!name.trim()}>
+                Create account
+              </Button>
+              <Button type="button" variant="soft" color="gray" size="3" onClick={changeNumber} disabled={loading}>
+                Change number
+              </Button>
+              {/* Bottom cancel button that dismisses the dialog. */}
+              <Button type="button" variant="soft" color="gray" size="3" onClick={onClose} disabled={loading}>
+                Cancel
+              </Button>
+            </Flex>
+          </form>
         )}
-      </DialogContent>
-    </Dialog>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 }

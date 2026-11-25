@@ -1,13 +1,7 @@
-// React state and the MUI components that make up the add-ingredient dialog.
-import { useState, type FormEvent } from "react";
-import Alert from "@mui/material/Alert";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import MenuItem from "@mui/material/MenuItem";
-import TextField from "@mui/material/TextField";
+// React state and the Radix components that make up the add-ingredient dialog.
+import { useEffect, useState, type FormEvent } from "react";
+import { Button, Callout, Dialog, Flex, Select, Text, TextField } from "@radix-ui/themes";
+import Field from "../components/Field";
 import { createIngredient } from "../lib/api";
 import { INGREDIENT_CATEGORIES } from "../lib/ingredients";
 import type { CurrentUser } from "../lib/session";
@@ -35,6 +29,14 @@ export default function AddIngredientModal({ open, user, onClose, onCreated }: A
     setFailure(undefined);
   };
 
+  // Clears the form each time the dialog opens, so it never shows stale input.
+  useEffect(() => {
+    if (open) {
+      resetForm();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
   // Sends the ingredient to the API on behalf of the current user, then reports it as created.
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -60,47 +62,41 @@ export default function AddIngredientModal({ open, user, onClose, onCreated }: A
 
   // Category dropdown, name field, and submit button inside a dialog.
   return (
-    <Dialog
-      open={open}
-      onClose={loading ? undefined : onClose}
-      slotProps={{ transition: { onExited: resetForm } }}
-      fullWidth
-      maxWidth="xs"
-    >
-      <DialogTitle>Bring something</DialogTitle>
-      <DialogContent>
-        <Box component="form" onSubmit={submit} noValidate sx={{ display: "grid", gap: 2, pt: 1 }}>
-          <TextField
-            select
-            label="Category"
-            fullWidth
-            value={category}
-            disabled={loading}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            {INGREDIENT_CATEGORIES.map((c) => (
-              <MenuItem key={c} value={c}>
-                {c}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            label="Ingredient"
-            fullWidth
-            value={name}
-            disabled={loading}
-            onChange={(e) => setName(e.target.value)}
-          />
-          {failure && <Alert severity="error">{failure}</Alert>}
-          <Button type="submit" variant="contained" disabled={loading || !category || !name.trim()}>
-            Add ingredient
-          </Button>
-          {/* Bottom cancel button that dismisses the dialog. */}
-          <Button onClick={onClose} disabled={loading}>
-            Cancel
-          </Button>
-        </Box>
-      </DialogContent>
-    </Dialog>
+    <Dialog.Root open={open} onOpenChange={(next) => !next && !loading && onClose()}>
+      <Dialog.Content maxWidth="400px" aria-describedby={undefined}>
+        <Dialog.Title>Bring something</Dialog.Title>
+        <form onSubmit={submit} noValidate>
+          <Flex direction="column" gap="4">
+            <Field label="Category">
+              <Select.Root value={category} onValueChange={setCategory} disabled={loading}>
+                <Select.Trigger placeholder="Choose a category" aria-label="Category" style={{ width: "100%" }} />
+                <Select.Content>
+                  {INGREDIENT_CATEGORIES.map((c) => (
+                    <Select.Item key={c} value={c}>
+                      {c}
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select.Root>
+            </Field>
+            <Field label="Ingredient">
+              <TextField.Root value={name} disabled={loading} onChange={(e) => setName(e.target.value)} />
+            </Field>
+            {failure && (
+              <Callout.Root color="red" size="1">
+                <Callout.Text>{failure}</Callout.Text>
+              </Callout.Root>
+            )}
+            <Button type="submit" size="3" loading={loading} disabled={!category || !name.trim()}>
+              Add ingredient
+            </Button>
+            {/* Bottom cancel button that dismisses the dialog. */}
+            <Button type="button" variant="soft" color="gray" size="3" onClick={onClose} disabled={loading}>
+              Cancel
+            </Button>
+          </Flex>
+        </form>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 }
