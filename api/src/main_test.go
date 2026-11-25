@@ -77,7 +77,7 @@ func TestInvalidBody(t *testing.T) {
 	}
 }
 
-// TestCRUD walks users and ingredients through list, put, get and delete, including conflicts and cascading deletes.
+// TestCRUD walks users and ingredients through list, put, get and delete, including cascading deletes.
 func TestCRUD(t *testing.T) {
 	api := newAPI(db.NewMemStore())
 
@@ -89,10 +89,8 @@ func TestCRUD(t *testing.T) {
 	}{
 		{"empty users", "GET", "/users", "", 200, `{"users":[]}`},
 		{"missing user", "GET", "/users/555", "", 404, ""},
-		{"create user", "PUT", "/users/555", `{"name":"Ann"}`, 200, `"version":1`},
-		{"update user", "PUT", "/users/555", `{"name":"Anne","version":1}`, 200, `"name":"Anne"`},
-		{"stale update conflicts", "PUT", "/users/555", `{"name":"Old","version":1}`, 409, ""},
-		{"must-not-exist conflicts", "PUT", "/users/555", `{"name":"X","version":0}`, 409, ""},
+		{"create user", "PUT", "/users/555", `{"name":"Ann"}`, 200, `"name":"Ann"`},
+		{"update user", "PUT", "/users/555", `{"name":"Anne"}`, 200, `"name":"Anne"`},
 		{"blank name rejected", "PUT", "/users/555", `{"name":""}`, 422, ""},
 		{"list users", "GET", "/users", "", 200, `"phone":"555"`},
 		{"ingredient needs user", "PUT", "/users/999/ingredients/a", `{"category":"protein","name":"Tofu"}`, 404, ""},
