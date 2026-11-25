@@ -53,13 +53,15 @@ export default function IngredientsPage({ user }: IngredientsPageProps) {
       )}
       {user && (
         <>
+          {/* Extended floating button labelled "Bring something" that opens the add dialog. */}
           <Fab
+            variant="extended"
             color="primary"
-            aria-label="Add ingredient"
             onClick={() => setAddOpen(true)}
-            sx={{ position: "fixed", right: 24, bottom: 24 }}
+            sx={{ position: "fixed", right: 24, bottom: 24, textTransform: "none" }}
           >
-            <AddIcon />
+            <AddIcon sx={{ mr: 1 }} />
+            Bring something
           </Fab>
           <AddIngredientModal
             open={addOpen}
