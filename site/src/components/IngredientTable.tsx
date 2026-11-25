@@ -48,7 +48,7 @@ export default function IngredientTable({ ingredients, currentPhone, onEdit, onD
       {groups.map(([category, items]) => (
         <Box key={category}>
           {/* Category title: plain text sitting above the table, with a small gap before it. */}
-          <Typography variant="h6" component="h2" sx={{ mb: 1, fontFamily: '"Pacifico", cursive' }}>
+          <Typography variant="h6" component="h2" sx={{ mb: 1 }}>
             {pluralizeCategory(category)}
           </Typography>
           {items.length === 0 ? (

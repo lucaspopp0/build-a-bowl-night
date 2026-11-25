@@ -18,7 +18,7 @@ export default function NavBar({ userName, onSignIn, onLogOut }: NavBarProps) {
     // Default (non-accent) app bar colors, following the light/dark theme.
     <AppBar position="sticky" color="default">
       <Toolbar>
-        <Typography variant="h6" component="h1" sx={{ flexGrow: 1, fontFamily: '"Pacifico", cursive' }}>
+        <Typography variant="h6" component="h1" sx={{ flexGrow: 1 }}>
           Build-a-Bowl Ingredients
         </Typography>
         {userName ? (
