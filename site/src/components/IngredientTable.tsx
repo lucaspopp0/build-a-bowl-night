@@ -15,12 +15,12 @@ interface IngredientTableProps {
   ingredients: Ingredient[];
 }
 
-// Style for the column header cells: small, bold, all-caps text.
+// Style for the column header cells: small, bold, all-caps text on the accent color.
 const headerCellSx = {
   typography: "caption",
   fontWeight: "bold",
   textTransform: "uppercase",
-  color: "text.secondary",
+  color: "primary.contrastText",
 } as const;
 
 // Vertical stack of tables, one per category, each titled with its category name.
@@ -35,16 +35,16 @@ export default function IngredientTable({ ingredients }: IngredientTableProps) {
         <TableContainer key={category} component={Paper}>
           <Table size="small" sx={{ tableLayout: "fixed" }}>
             <TableHead>
-              {/* Title row spanning both columns, separated from the column headers by a normal row border. */}
-              <TableRow>
-                <TableCell colSpan={2} sx={{ py: 1.5 }}>
+              {/* Title row in the accent color, spanning both columns. */}
+              <TableRow sx={{ bgcolor: "primary.main" }}>
+                <TableCell colSpan={2} sx={{ py: 1.5, color: "primary.contrastText" }}>
                   <Typography variant="h6" component="h2">
                     {category}s
                   </Typography>
                 </TableCell>
               </TableRow>
-              {/* Column headers: shaded, small, bold, all caps. */}
-              <TableRow sx={{ bgcolor: "action.hover" }}>
+              {/* Column headers: a darker shade of the accent color, small, bold, all caps. */}
+              <TableRow sx={{ bgcolor: "primary.dark" }}>
                 <TableCell sx={headerCellSx}>
                   Ingredient
                 </TableCell>
