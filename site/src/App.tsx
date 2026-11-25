@@ -29,6 +29,8 @@ export default function App() {
       createTheme({
         palette: {
           mode: prefersDark ? "dark" : "light",
+          // In light mode, a very slightly gray page background (cards stay white).
+          ...(prefersDark ? {} : { background: { default: "#f5f5f5" } }),
           // Dark green accent; dark mode uses a lighter shade of it so it stays readable on dark surfaces.
           primary: prefersDark
             ? { main: "#66bb6a", light: "#98ee99", dark: "#338a3e", contrastText: "#0b2410" }
