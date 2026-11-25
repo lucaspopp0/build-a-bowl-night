@@ -49,54 +49,50 @@ export default function IngredientTable({ ingredients, currentPhone, onEdit, onD
           <Typography variant="h6" component="h2" sx={{ mb: 1 }}>
             {category}s
           </Typography>
-          <TableContainer component={Paper}>
-            <Table sx={{ tableLayout: "fixed" }}>
-              <TableHead>
-                {/* Column headers: small bold caps, set off by a thicker bottom border. */}
-                <TableRow>
-                  <TableCell sx={headerCellSx}>Ingredient</TableCell>
-                  <TableCell sx={headerCellSx}>Brought by</TableCell>
-                  {/* Narrow column reserved for the edit and delete buttons. */}
-                  {currentPhone && <TableCell sx={{ ...headerCellSx, width: 96 }} />}
-                </TableRow>
-              </TableHead>
-              {/* No divider under the final row; the card edge closes the table. */}
-              <TableBody sx={{ "& tr:last-child td": { borderBottom: 0 } }}>
-                {items.length === 0 && (
-                  // Fallback row shown when nobody has claimed this category yet.
+          {items.length === 0 ? (
+            // Fallback shown under the title when nobody has claimed this category yet; no table is rendered.
+            <Typography variant="body2" sx={{ fontStyle: "italic", opacity: 0.6 }}>
+              No {category.toLowerCase()}s yet
+            </Typography>
+          ) : (
+            <TableContainer component={Paper}>
+              <Table sx={{ tableLayout: "fixed" }}>
+                <TableHead>
+                  {/* Column headers: small bold caps, set off by a thicker bottom border. */}
                   <TableRow>
-                    <TableCell
-                      colSpan={currentPhone ? 3 : 2}
-                      sx={{ fontStyle: "italic", opacity: 0.6 }}
-                    >
-                      No {category.toLowerCase()}s yet
-                    </TableCell>
+                    <TableCell sx={headerCellSx}>Ingredient</TableCell>
+                    <TableCell sx={headerCellSx}>Brought by</TableCell>
+                    {/* Narrow column reserved for the edit and delete buttons. */}
+                    {currentPhone && <TableCell sx={{ ...headerCellSx, width: 96 }} />}
                   </TableRow>
-                )}
-                {items.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell>{item.name}</TableCell>
-                    <TableCell>{item.broughtBy}</TableCell>
-                    {currentPhone && (
-                      // Pencil and red trash buttons, shown only on the signed-in user's own rows.
-                      <TableCell align="right" sx={{ py: 0, textAlign: "right", whiteSpace: "nowrap" }}>
-                        {item.phone === currentPhone && (
-                          <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-                            <IconButton size="small" aria-label={`Edit ${item.name}`} onClick={() => onEdit?.(item)}>
-                              <EditIcon fontSize="small" />
-                            </IconButton>
-                            <IconButton size="small" color="error" aria-label={`Delete ${item.name}`} onClick={() => onDelete?.(item)}>
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </Box>
-                        )}
-                      </TableCell>
-                    )}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                {/* No divider under the final row; the card edge closes the table. */}
+                <TableBody sx={{ "& tr:last-child td": { borderBottom: 0 } }}>
+                  {items.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell>{item.name}</TableCell>
+                      <TableCell>{item.broughtBy}</TableCell>
+                      {currentPhone && (
+                        // Pencil and red trash buttons, shown only on the signed-in user's own rows.
+                        <TableCell align="right" sx={{ py: 0, textAlign: "right", whiteSpace: "nowrap" }}>
+                          {item.phone === currentPhone && (
+                            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                              <IconButton size="small" aria-label={`Edit ${item.name}`} onClick={() => onEdit?.(item)}>
+                                <EditIcon fontSize="small" />
+                              </IconButton>
+                              <IconButton size="small" color="error" aria-label={`Delete ${item.name}`} onClick={() => onDelete?.(item)}>
+                                <DeleteIcon fontSize="small" />
+                              </IconButton>
+                            </Box>
+                          )}
+                        </TableCell>
+                      )}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
         </Box>
       ))}
     </Stack>
