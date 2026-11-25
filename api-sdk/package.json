@@ -9,14 +9,12 @@
     "dist"
   ],
   "scripts": {
-    "generate": "openapi-generator-cli generate -c openapitools.yaml",
     "build": "tsc"
   },
   "dependencies": {
     "whatwg-fetch": "^3.6.20"
   },
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "^2.31.0",
     "typescript": "^5.9.3"
   }
 }
