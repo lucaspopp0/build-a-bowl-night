@@ -3,33 +3,80 @@ package main
 
 import (
 	"context"
+	"errors"
 	"net/http"
+	"net/http/httptest"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/danielgtaylor/huma/v2"
+	"github.com/lucaspopp0/go-lambda/eventwrappers"
+	"github.com/lucaspopp0/go-lambda/humaserverless"
+	"github.com/lucaspopp0/go-lambda/middleware"
 )
 
-// handler routes a Function URL request to the matching API operation, currently only a health check.
-func handler(_ context.Context, req events.LambdaFunctionURLRequest) (events.LambdaFunctionURLResponse, error) {
+// HealthOutput is the response body of the health check operation.
+type HealthOutput struct {
+	Body struct {
+		Status string `json:"status" example:"ok" doc:"Always ok when the API is reachable"`
+	}
+}
+
+// newAPI builds the huma API and registers every operation the Lambda serves.
+func newAPI() huma.API {
+	// Create the API served through the Function URL
+	api := humaserverless.NewServerless(humaserverless.ApiOpts{
+		Name:    "Build-a-Bowl Night API",
+		Version: "1.0.0",
+	})
+
 	// Health check used to confirm the deployment is reachable
-	if req.RequestContext.HTTP.Method == http.MethodGet && req.RawPath == "/health" {
-		return jsonResponse(http.StatusOK, `{"status":"ok"}`), nil
-	}
+	huma.Register(api, huma.Operation{
+		OperationID: "health",
+		Method:      http.MethodGet,
+		Path:        "/health",
+		Summary:     "Health check",
+	}, func(_ context.Context, _ *struct{}) (*HealthOutput, error) {
+		out := &HealthOutput{}
+		out.Body.Status = "ok"
 
-	// Everything else is not built yet
-	return jsonResponse(http.StatusNotImplemented, `{"error":"not implemented"}`), nil
+		return out, nil
+	})
+
+	return api
 }
 
-// jsonResponse builds a Function URL response with a JSON body and the given status code.
-func jsonResponse(status int, body string) events.LambdaFunctionURLResponse {
-	return events.LambdaFunctionURLResponse{
-		StatusCode: status,
-		Headers:    map[string]string{"Content-Type": "application/json"},
-		Body:       body,
-	}
+// newHandler serves requests through the huma API, wrapped in request/response logging.
+// CORS is handled by the Function URL configuration, so no CORS middleware is used.
+func newHandler(api huma.API) middleware.HandlerFunc {
+	return middleware.WithLogger(func(ctx context.Context, req eventwrappers.HttpRequest) (eventwrappers.HttpResponse, error) {
+		// Convert the event into a standard HTTP request, rejecting bodies that can't be decoded
+		httpReq, err := req.ToHttpRequest()
+		if err != nil {
+			status := http.StatusInternalServerError
+			if errors.Is(err, eventwrappers.ErrInvalidBody) {
+				status = http.StatusBadRequest
+			}
+
+			resp := eventwrappers.NewFunctionURLResponse(nil)
+			resp.SetStatusCode(status)
+			resp.SetBody(err.Error())
+
+			return resp, nil
+		}
+
+		// Serve the request with the huma API and copy the result into a Function URL response
+		rec := httptest.NewRecorder()
+		api.Adapter().ServeHTTP(rec, httpReq.WithContext(ctx))
+
+		resp := eventwrappers.NewFunctionURLResponse(nil)
+		resp.FromHttpResponse(rec.Code, rec.Header(), rec.Body.Bytes())
+
+		return resp, nil
+	})
 }
 
-// main starts the Lambda runtime with the request handler.
+// main starts the Lambda runtime, serving Function URL requests through the huma API.
 func main() {
-	lambda.Start(handler)
+	lambda.Start(middleware.WithTypes[events.LambdaFunctionURLRequest, events.LambdaFunctionURLResponse](newHandler(newAPI())))
 }
