@@ -67,8 +67,8 @@ jobs:
     secrets:
       WRITER_APP_CLIENT_ID: ${{ secrets.WRITER_APP_CLIENT_ID }}
       WRITER_APP_PRIVATE_KEY: ${{ secrets.WRITER_APP_PRIVATE_KEY }}
-      READER_APP_CLIENT_ID: ${{ secrets.READER_APP_CLIENT_ID }}
-      READER_APP_PRIVATE_KEY: ${{ secrets.READER_APP_PRIVATE_KEY }}
+      READER_APP_CLIENT_ID: ${{ secrets.WRITER_APP_CLIENT_ID }}
+      READER_APP_PRIVATE_KEY: ${{ secrets.WRITER_APP_PRIVATE_KEY }}
 
   check-lambdas:
     needs:
