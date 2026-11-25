@@ -67,7 +67,7 @@ jobs:
     needs:
       - detect-changes
     if: ${{ contains(needs.detect-changes.outputs.changed-component-types, '"library"') }}
-    uses: slingshot-pipelines/workflows/.github/workflows/release-library.yml@release-library/v0
+    uses: slingshot-pipelines/workflows/.github/workflows/release-library.yml@release-library/v1
     strategy:
       matrix:
         COMPONENT: ${{ fromJSON(needs.detect-changes.outputs.changed-components-by-type).library }}
