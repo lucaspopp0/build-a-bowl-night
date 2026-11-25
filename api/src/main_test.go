@@ -6,9 +6,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lucaspopp0/go-lambda/humaserverless"
+	"github.com/lucaspopp0/go-lambda/middleware"
 
 	"github.com/aws/aws-lambda-go/events"
+	"github.com/danielgtaylor/huma/v2"
 )
 
 // newRequest builds a Function URL request for the given method and path.
@@ -18,6 +19,11 @@ func newRequest(method, path string) events.LambdaFunctionURLRequest {
 	req.RequestContext.HTTP.Path = path
 
 	return req
+}
+
+// handle runs a Function URL request through the same handler chain the Lambda uses.
+func handle(api huma.API, req events.LambdaFunctionURLRequest) (events.LambdaFunctionURLResponse, error) {
+	return middleware.WithTypes[events.LambdaFunctionURLRequest, events.LambdaFunctionURLResponse](newHandler(api))(context.Background(), req)
 }
 
 // TestHandler checks the status code and body returned for known and unknown routes.
@@ -38,7 +44,7 @@ func TestHandler(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			resp, err := humaserverless.FunctionURLHandler(context.Background(), api, newRequest(tt.method, tt.path))
+			resp, err := handle(api, newRequest(tt.method, tt.path))
 			if err != nil {
 				t.Fatalf("unexpected error: %v", err)
 			}
@@ -60,7 +66,7 @@ func TestInvalidBody(t *testing.T) {
 	req.Body = "!!not-base64!!"
 	req.IsBase64Encoded = true
 
-	resp, err := humaserverless.FunctionURLHandler(context.Background(), newAPI(), req)
+	resp, err := handle(newAPI(), req)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
