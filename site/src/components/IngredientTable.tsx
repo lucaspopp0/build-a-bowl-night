@@ -11,7 +11,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
-import { groupByCategory, type Ingredient } from "../lib/ingredients";
+import { groupByCategory, pluralizeCategory, type Ingredient } from "../lib/ingredients";
 
 // Props: the full list of ingredients to display.
 interface IngredientTableProps {
@@ -45,7 +45,7 @@ export default function IngredientTable({ ingredients, currentPhone, onDelete }:
         <Box key={category}>
           {/* Category title: plain text sitting above the table, with a small gap before it. */}
           <Typography variant="h6" component="h2" sx={{ mb: 1 }}>
-            {category}s
+            {pluralizeCategory(category)}
           </Typography>
           <TableContainer component={Paper}>
             <Table sx={{ tableLayout: "fixed" }}>
@@ -67,7 +67,7 @@ export default function IngredientTable({ ingredients, currentPhone, onDelete }:
                       colSpan={currentPhone ? 3 : 2}
                       sx={{ fontStyle: "italic", opacity: 0.6 }}
                     >
-                      No {category.toLowerCase()}s yet
+                      No {pluralizeCategory(category).toLowerCase()} yet
                     </TableCell>
                   </TableRow>
                 )}
