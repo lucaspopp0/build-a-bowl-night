@@ -12,7 +12,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
-import { groupByCategory, type Ingredient } from "../lib/ingredients";
+import { groupByCategory, pluralizeCategory, type Ingredient } from "../lib/ingredients";
 
 // Props: the full list of ingredients to display.
 interface IngredientTableProps {
@@ -48,12 +48,12 @@ export default function IngredientTable({ ingredients, currentPhone, onDelete, o
         <Box key={category}>
           {/* Category title: plain text sitting above the table, with a small gap before it. */}
           <Typography variant="h6" component="h2" sx={{ mb: 1 }}>
-            {category}s
+            {pluralizeCategory(category)}
           </Typography>
           {items.length === 0 ? (
             // Fallback shown under the title when nobody has claimed this category yet; no table is rendered.
             <Typography variant="body2" sx={{ fontStyle: "italic", opacity: 0.6 }}>
-              No {category.toLowerCase()}s yet.
+              No {pluralizeCategory(category).toLowerCase()} yet.
               {/* Prompt to claim the category, offered only when a handler is provided (signed in). */}
               {onBringOne && (
                 <>
