@@ -68,8 +68,6 @@ type PutIngredientInput struct {
 	Body struct {
 		Category string `json:"category" minLength:"1" maxLength:"100" doc:"Kind of ingredient, such as protein or topping"`
 		Name     string `json:"name" minLength:"1" maxLength:"200" doc:"What is being brought"`
-
-		DietaryAttributes db.DietaryAttributes `json:"dietaryAttributes,omitempty" doc:"Dietary restrictions the ingredient is suitable for; all false when omitted"`
 	}
 }
 
@@ -79,8 +77,6 @@ type CreateIngredientInput struct {
 	Body struct {
 		Category string `json:"category" minLength:"1" maxLength:"100" doc:"Kind of ingredient, such as protein or topping"`
 		Name     string `json:"name" minLength:"1" maxLength:"200" doc:"What is being brought"`
-
-		DietaryAttributes db.DietaryAttributes `json:"dietaryAttributes,omitempty" doc:"Dietary restrictions the ingredient is suitable for; all false when omitted"`
 	}
 }
 
@@ -223,7 +219,7 @@ func Register(api huma.API, store db.Store) {
 			return nil, toHTTPError(err)
 		}
 
-		i, err := store.PutIngredient(ctx, db.Ingredient{User: in.Phone, ID: id, Category: in.Body.Category, Name: in.Body.Name, DietaryAttributes: in.Body.DietaryAttributes})
+		i, err := store.PutIngredient(ctx, db.Ingredient{User: in.Phone, ID: id, Category: in.Body.Category, Name: in.Body.Name})
 		if err != nil {
 			return nil, toHTTPError(err)
 		}
@@ -253,7 +249,7 @@ func Register(api huma.API, store db.Store) {
 			return nil, toHTTPError(err)
 		}
 
-		i, err := store.PutIngredient(ctx, db.Ingredient{User: in.Phone, ID: in.ID, Category: in.Body.Category, Name: in.Body.Name, DietaryAttributes: in.Body.DietaryAttributes})
+		i, err := store.PutIngredient(ctx, db.Ingredient{User: in.Phone, ID: in.ID, Category: in.Body.Category, Name: in.Body.Name})
 		if err != nil {
 			return nil, toHTTPError(err)
 		}

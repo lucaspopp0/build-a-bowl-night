@@ -1,5 +1,4 @@
 export * from '../models/CreateIngredientInputBody'
-export * from '../models/DietaryAttributes'
 export * from '../models/ErrorDetail'
 export * from '../models/ErrorModel'
 export * from '../models/Ingredient'
