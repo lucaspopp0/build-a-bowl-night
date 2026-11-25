@@ -14,7 +14,8 @@ export default function PhoneNumberField({ value, onChange, error, disabled }: P
   // Telephone keyboard on mobile, with the error shown as helper text.
   return (
     <TextField
-      label="Phone number"
+      placeholder="(999) 999-9999"
+      slotProps={{ htmlInput: { "aria-label": "Phone number" } }}
       type="tel"
       autoComplete="tel"
       autoFocus
