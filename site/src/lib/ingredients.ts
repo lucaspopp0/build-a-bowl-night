@@ -6,24 +6,45 @@ export interface Ingredient {
   broughtBy: string;
 }
 
-// Groups ingredients by category, sorting categories and ingredients alphabetically.
-export function groupByCategory(ingredients: Ingredient[]): [string, Ingredient[]][] {
-  // Collect ingredients into a map keyed by category.
-  const groups = new Map<string, Ingredient[]>();
+// The categories a new ingredient can be filed under.
+export const INGREDIENT_CATEGORIES = [
+  "Protein",
+  "Veggie",
+  "Sauce",
+  "Grain",
+] as const;
+
+// Groups ingredients by category: every known category first (even if empty), then any others alphabetically.
+export function groupByCategory(
+  ingredients: Ingredient[],
+): [string, Ingredient[]][] {
+  // Seed the map with every known category so empty ones still appear, in their defined order.
+  const groups = new Map<string, Ingredient[]>(
+    INGREDIENT_CATEGORIES.map((c) => [c, []]),
+  );
+
+  // Collect ingredients into the map, adding any category not in the known list.
   for (const ingredient of ingredients) {
     const list = groups.get(ingredient.category) ?? [];
     list.push(ingredient);
     groups.set(ingredient.category, list);
   }
 
-  // Sort the categories, and the ingredients within each, by name.
+  // Keep known categories in order, sort unknown ones by name, and sort each category's ingredients by name.
+  const known: readonly string[] = INGREDIENT_CATEGORIES;
+  const rank = (category: string) => known.indexOf(category);
   return [...groups.entries()]
-    .sort(([a], [b]) => a.localeCompare(b))
+    .sort(([a], [b]) => {
+      if (rank(a) !== -1 || rank(b) !== -1) {
+        return (
+          (rank(a) === -1 ? Infinity : rank(a)) -
+          (rank(b) === -1 ? Infinity : rank(b))
+        );
+      }
+      return a.localeCompare(b);
+    })
     .map(([category, list]): [string, Ingredient[]] => [
       category,
       [...list].sort((a, b) => a.name.localeCompare(b.name)),
     ]);
 }
-
-// The categories a new ingredient can be filed under.
-export const INGREDIENT_CATEGORIES = ["Protein", "Veggie", "Sauce", "Grain"] as const;

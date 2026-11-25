@@ -51,6 +51,17 @@ export default function IngredientTable({ ingredients }: IngredientTableProps) {
               </TableHead>
               {/* No divider under the final row; the card edge closes the table. */}
               <TableBody sx={{ "& tr:last-child td": { borderBottom: 0 } }}>
+                {items.length === 0 && (
+                  // Fallback row shown when nobody has claimed this category yet.
+                  <TableRow>
+                    <TableCell
+                      colSpan={2}
+                      sx={{ fontStyle: "italic", opacity: 0.6 }}
+                    >
+                      Nobody's bringing a {category.toLowerCase()} yet
+                    </TableCell>
+                  </TableRow>
+                )}
                 {items.map((item) => (
                   <TableRow key={item.id}>
                     <TableCell>{item.name}</TableCell>
