@@ -8,10 +8,17 @@ http/http.ts
 http/isomorphic-fetch.ts
 index.ts
 middleware.ts
+models/CreateIngredientInputBody.ts
 models/ErrorDetail.ts
 models/ErrorModel.ts
 models/HealthOutputBody.ts
+models/Ingredient.ts
+models/IngredientsOutputBody.ts
 models/ObjectSerializer.ts
+models/PutIngredientInputBody.ts
+models/PutUserInputBody.ts
+models/User.ts
+models/UsersOutputBody.ts
 models/all.ts
 rxjsStub.ts
 servers.ts

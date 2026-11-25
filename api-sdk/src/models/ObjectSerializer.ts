@@ -1,10 +1,24 @@
+export * from '../models/CreateIngredientInputBody';
 export * from '../models/ErrorDetail';
 export * from '../models/ErrorModel';
 export * from '../models/HealthOutputBody';
+export * from '../models/Ingredient';
+export * from '../models/IngredientsOutputBody';
+export * from '../models/PutIngredientInputBody';
+export * from '../models/PutUserInputBody';
+export * from '../models/User';
+export * from '../models/UsersOutputBody';
 
+import { CreateIngredientInputBody } from '../models/CreateIngredientInputBody';
 import { ErrorDetail } from '../models/ErrorDetail';
 import { ErrorModel } from '../models/ErrorModel';
 import { HealthOutputBody } from '../models/HealthOutputBody';
+import { Ingredient } from '../models/Ingredient';
+import { IngredientsOutputBody } from '../models/IngredientsOutputBody';
+import { PutIngredientInputBody } from '../models/PutIngredientInputBody';
+import { PutUserInputBody } from '../models/PutUserInputBody';
+import { User } from '../models/User';
+import { UsersOutputBody } from '../models/UsersOutputBody';
 
 /* tslint:disable:no-unused-variable */
 let primitives = [
@@ -22,9 +36,16 @@ let enumsMap: Set<string> = new Set<string>([
 ]);
 
 let typeMap: {[index: string]: any} = {
+    "CreateIngredientInputBody": CreateIngredientInputBody,
     "ErrorDetail": ErrorDetail,
     "ErrorModel": ErrorModel,
     "HealthOutputBody": HealthOutputBody,
+    "Ingredient": Ingredient,
+    "IngredientsOutputBody": IngredientsOutputBody,
+    "PutIngredientInputBody": PutIngredientInputBody,
+    "PutUserInputBody": PutUserInputBody,
+    "User": User,
+    "UsersOutputBody": UsersOutputBody,
 }
 
 type MimeTypeDescriptor = {
