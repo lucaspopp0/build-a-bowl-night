@@ -64,7 +64,7 @@ export default function BringOneModal({ open, category, user, onClose, onCreated
       fullWidth
       maxWidth="xs"
     >
-      <DialogTitle>Bring a {category}</DialogTitle>
+      <DialogTitle>Bring a {category.toLowerCase()}</DialogTitle>
       <DialogContent>
         <Box component="form" onSubmit={submit} noValidate sx={{ display: "grid", gap: 2, pt: 1 }}>
           <TextField
