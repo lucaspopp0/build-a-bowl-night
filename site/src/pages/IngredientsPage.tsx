@@ -1,10 +1,7 @@
-// Layout components, the ingredient table, and the add, edit and delete flows.
+// Radix layout components, the ingredient table, and the add, edit and delete flows.
 import { useEffect, useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
-import Alert from "@mui/material/Alert";
-import CircularProgress from "@mui/material/CircularProgress";
-import Container from "@mui/material/Container";
-import Fab from "@mui/material/Fab";
+import { PlusIcon } from "@radix-ui/react-icons";
+import { Button, Callout, Container, Flex, Spinner } from "@radix-ui/themes";
 import IngredientTable from "../components/IngredientTable";
 import { listIngredients } from "../lib/api";
 import type { Ingredient } from "../lib/ingredients";
@@ -54,14 +51,16 @@ export default function IngredientsPage({ user }: IngredientsPageProps) {
 
   // Show the grouped table, plus a floating add button and its dialog when signed in.
   return (
-    <Container maxWidth="md" sx={{ py: 3 }}>
+    <Container size="3" px="4" py="5">
       {failed && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          Couldn't load the ingredients. Please refresh to try again.
-        </Alert>
+        <Callout.Root color="red" mb="4">
+          <Callout.Text>Couldn't load the ingredients. Please refresh to try again.</Callout.Text>
+        </Callout.Root>
       )}
       {loading ? (
-        <CircularProgress sx={{ display: "block", mx: "auto", my: 4 }} />
+        <Flex justify="center" my="6">
+          <Spinner size="3" />
+        </Flex>
       ) : (
         <IngredientTable
           ingredients={shown}
@@ -80,16 +79,10 @@ export default function IngredientsPage({ user }: IngredientsPageProps) {
       )}
       {user && (
         <>
-          {/* Extended floating button labelled "Bring something" that opens the add dialog. */}
-          <Fab
-            variant="extended"
-            color="primary"
-            onClick={() => setAddOpen(true)}
-            sx={{ position: "fixed", right: 24, bottom: 24, textTransform: "none" }}
-          >
-            <AddIcon sx={{ mr: 1 }} />
-            Bring something
-          </Fab>
+          {/* Floating button labelled "Bring something" that opens the add dialog. */}
+          <Button className="fab" size="3" radius="full" onClick={() => setAddOpen(true)}>
+            <PlusIcon /> Bring something
+          </Button>
           <AddIngredientModal
             open={addOpen}
             user={user}

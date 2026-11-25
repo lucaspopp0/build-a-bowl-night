@@ -1,0 +1,52 @@
+/* Remove the browser's default page margin so the navbar is flush with the edges. */
+body {
+  margin: 0;
+}
+
+/* Google Sans is bundled via @fontsource in main.tsx. */
+.radix-themes {
+  --default-font-family: "Google Sans", "Helvetica", "Arial", sans-serif;
+}
+
+/* In light mode, a very slightly gray page background (surfaces stay white). */
+.radix-themes.light {
+  --color-background: #f5f5f5;
+}
+
+/* Sticky top bar with a subtle shadow, following the theme's panel color. */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  height: 56px;
+  background: var(--color-panel-solid);
+  box-shadow: 0 1px 4px var(--black-a4);
+}
+
+/* Small, bold, all-caps table column headers at 80% opacity. */
+.header-cell {
+  font-size: 0.65rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+/* Floating "Bring something" button pinned to the bottom-right corner. */
+.fab {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  box-shadow: var(--shadow-5);
+}
+
+/* Fixed table layout with no padding on the outer columns, so text lines up with the category title. */
+.ingredient-table table {
+  table-layout: fixed;
+  width: 100%;
+}
+.ingredient-table :is(th, td):first-child {
+  padding-left: 0;
+}
+.ingredient-table :is(th, td):last-child {
+  padding-right: 0;
+}

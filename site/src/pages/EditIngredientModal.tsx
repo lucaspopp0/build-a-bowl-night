@@ -1,14 +1,7 @@
-// React state and the MUI components that make up the edit-ingredient dialog.
+// React state and the Radix components that make up the edit-ingredient dialog.
 import { useEffect, useState, type FormEvent } from "react";
-import Alert from "@mui/material/Alert";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import MenuItem from "@mui/material/MenuItem";
-import TextField from "@mui/material/TextField";
+import { Button, Callout, Dialog, Flex, Select, TextField } from "@radix-ui/themes";
+import Field from "../components/Field";
 import { updateIngredient } from "../lib/api";
 import { INGREDIENT_CATEGORIES, type Ingredient } from "../lib/ingredients";
 
@@ -29,6 +22,7 @@ export default function EditIngredientModal({ ingredient, onClose, onSaved }: Ed
 
   // Fills the form with the ingredient's current values each time a different one is opened.
   useEffect(() => {
+    // Copy the ingredient's current values into the form fields.
     if (ingredient) {
       setCategory(ingredient.category);
       setName(ingredient.name);
@@ -59,43 +53,42 @@ export default function EditIngredientModal({ ingredient, onClose, onSaved }: Ed
 
   // Category dropdown and name field, with cancel and save buttons.
   return (
-    <Dialog open={ingredient !== null} onClose={loading ? undefined : onClose} fullWidth maxWidth="xs">
-      <DialogTitle>Edit ingredient</DialogTitle>
-      <Box component="form" onSubmit={submit} noValidate>
-        <DialogContent sx={{ display: "grid", gap: 2 }}>
-          <TextField
-            select
-            label="Category"
-            fullWidth
-            value={category}
-            disabled={loading}
-            onChange={(e) => setCategory(e.target.value)}
-            sx={{ mt: 1 }}
-          >
-            {INGREDIENT_CATEGORIES.map((c) => (
-              <MenuItem key={c} value={c}>
-                {c}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            label="Ingredient"
-            fullWidth
-            value={name}
-            disabled={loading}
-            onChange={(e) => setName(e.target.value)}
-          />
-          {failure && <Alert severity="error">{failure}</Alert>}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={onClose} disabled={loading}>
-            Cancel
-          </Button>
-          <Button type="submit" variant="contained" disabled={loading || !category || !name.trim()}>
-            Save
-          </Button>
-        </DialogActions>
-      </Box>
-    </Dialog>
+    <Dialog.Root open={ingredient !== null} onOpenChange={(next) => !next && !loading && onClose()}>
+      <Dialog.Content maxWidth="400px" aria-describedby={undefined}>
+        <Dialog.Title>Edit ingredient</Dialog.Title>
+        <form onSubmit={submit} noValidate>
+          <Flex direction="column" gap="4">
+            <Field label="Category">
+              <Select.Root value={category} onValueChange={setCategory} disabled={loading}>
+                <Select.Trigger aria-label="Category" style={{ width: "100%" }} />
+                <Select.Content>
+                  {INGREDIENT_CATEGORIES.map((c) => (
+                    <Select.Item key={c} value={c}>
+                      {c}
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select.Root>
+            </Field>
+            <Field label="Ingredient">
+              <TextField.Root value={name} disabled={loading} onChange={(e) => setName(e.target.value)} />
+            </Field>
+            {failure && (
+              <Callout.Root color="red" size="1">
+                <Callout.Text>{failure}</Callout.Text>
+              </Callout.Root>
+            )}
+            <Flex gap="3" justify="end">
+              <Button type="button" variant="soft" color="gray" onClick={onClose} disabled={loading}>
+                Cancel
+              </Button>
+              <Button type="submit" loading={loading} disabled={!category || !name.trim()}>
+                Save
+              </Button>
+            </Flex>
+          </Flex>
+        </form>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 }

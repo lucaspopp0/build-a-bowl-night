@@ -1,12 +1,7 @@
-// React state and the MUI components that make up the edit-name dialog.
-import { useState, type FormEvent } from "react";
-import Alert from "@mui/material/Alert";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import TextField from "@mui/material/TextField";
+// React state and the Radix components that make up the edit-name dialog.
+import { useEffect, useState, type FormEvent } from "react";
+import { Button, Callout, Dialog, Flex, TextField } from "@radix-ui/themes";
+import Field from "../components/Field";
 import { createUser } from "../lib/api";
 import { saveCurrentUser, type CurrentUser } from "../lib/session";
 
@@ -25,6 +20,15 @@ export default function EditNameModal({ user, open, onClose, onSaved }: EditName
   const [loading, setLoading] = useState(false);
   const [failure, setFailure] = useState<string>();
   const name = typed ?? user.name;
+
+  // Starts from the current name with no error each time the dialog opens.
+  useEffect(() => {
+    // On open, start from the current name with no error.
+    if (open) {
+      setTyped(null);
+      setFailure(undefined);
+    }
+  }, [open]);
 
   // Saves the trimmed name to the API and local storage, then reports the updated user.
   const submit = async (e: FormEvent) => {
@@ -53,36 +57,30 @@ export default function EditNameModal({ user, open, onClose, onSaved }: EditName
     }
   };
 
-  // A single name field with save and cancel buttons; the field resets once the dialog has closed.
+  // A single name field with save and cancel buttons.
   return (
-    <Dialog
-      open={open}
-      onClose={loading ? undefined : onClose}
-      slotProps={{ transition: { onExited: () => { setTyped(null); setFailure(undefined); } } }}
-      fullWidth
-      maxWidth="xs"
-    >
-      <DialogTitle>Edit name</DialogTitle>
-      <DialogContent>
-        <Box component="form" onSubmit={submit} noValidate sx={{ display: "grid", gap: 2, pt: 1 }}>
-          <TextField
-            label="Your name"
-            autoComplete="name"
-            autoFocus
-            fullWidth
-            value={name}
-            disabled={loading}
-            onChange={(e) => setTyped(e.target.value)}
-          />
-          {failure && <Alert severity="error">{failure}</Alert>}
-          <Button type="submit" variant="contained" disabled={loading || !name.trim()}>
-            Save
-          </Button>
-          <Button onClick={onClose} disabled={loading}>
-            Cancel
-          </Button>
-        </Box>
-      </DialogContent>
-    </Dialog>
+    <Dialog.Root open={open} onOpenChange={(next) => !next && !loading && onClose()}>
+      <Dialog.Content maxWidth="400px" aria-describedby={undefined}>
+        <Dialog.Title>Edit name</Dialog.Title>
+        <form onSubmit={submit} noValidate>
+          <Flex direction="column" gap="4">
+            <Field label="Your name">
+              <TextField.Root autoComplete="name" autoFocus value={name} disabled={loading} onChange={(e) => setTyped(e.target.value)} />
+            </Field>
+            {failure && (
+              <Callout.Root color="red" size="1">
+                <Callout.Text>{failure}</Callout.Text>
+              </Callout.Root>
+            )}
+            <Button type="submit" size="3" loading={loading} disabled={!name.trim()}>
+              Save
+            </Button>
+            <Button type="button" variant="soft" color="gray" size="3" onClick={onClose} disabled={loading}>
+              Cancel
+            </Button>
+          </Flex>
+        </form>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 }
