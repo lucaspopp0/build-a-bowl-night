@@ -19,10 +19,11 @@ export default function App() {
   // Whether the edit-name dialog is showing.
   const [editNameOpen, setEditNameOpen] = useState(false);
 
-  // Forgets the signed-in user.
+  // Forgets the signed-in user and closes the edit-name dialog so it can't reappear for the next sign-in.
   const logOut = () => {
     clearCurrentUser();
     setUser(null);
+    setEditNameOpen(false);
   };
 
   // Follows the system light/dark preference and updates live when it changes.
