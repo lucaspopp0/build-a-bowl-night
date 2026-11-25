@@ -1,6 +1,5 @@
 // MUI components used to build the top navigation bar.
 import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -22,13 +21,19 @@ export default function NavBar({ userName, onSignIn, onLogOut }: NavBarProps) {
           Build-a-Bowl Night
         </Typography>
         {userName ? (
-          // Signed in: the name with a Log Out button underneath it.
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-            <Typography variant="body1">{userName}</Typography>
-            <Button color="inherit" size="small" onClick={onLogOut}>
-              Log Out
-            </Button>
-          </Box>
+          // Signed in: one button showing the name with "Log Out" tightly stacked below it.
+          <Button
+            color="inherit"
+            onClick={onLogOut}
+            sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end", textTransform: "none", lineHeight: 1.2 }}
+          >
+            <Typography variant="body1" sx={{ lineHeight: 1.2 }}>
+              {userName}
+            </Typography>
+            <Typography variant="caption" sx={{ lineHeight: 1.2, opacity: 0.8 }}>
+              LOG OUT
+            </Typography>
+          </Button>
         ) : (
           // Signed out: a single Sign In button.
           <Button color="inherit" onClick={onSignIn}>
