@@ -38,9 +38,9 @@ func TestHandler(t *testing.T) {
 		wantStatus int
 		wantBody   string
 	}{
-		{"health check", http.MethodGet, "/health", http.StatusOK, `{"status":"ok"}`},
+		{"list users", http.MethodGet, "/users", http.StatusOK, `{"users":[]}`},
 		{"unknown path", http.MethodGet, "/nope", http.StatusNotFound, ""},
-		{"wrong method", http.MethodPost, "/health", http.StatusMethodNotAllowed, ""},
+		{"wrong method", http.MethodPost, "/users", http.StatusMethodNotAllowed, ""},
 	}
 
 	for _, tt := range tests {
@@ -63,7 +63,7 @@ func TestHandler(t *testing.T) {
 
 // TestInvalidBody checks that an undecodable base64 body is rejected with a 400 instead of a 500.
 func TestInvalidBody(t *testing.T) {
-	req := newRequest(http.MethodPost, "/health")
+	req := newRequest(http.MethodPost, "/users")
 	req.Body = "!!not-base64!!"
 	req.IsBase64Encoded = true
 
