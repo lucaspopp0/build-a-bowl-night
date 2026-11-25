@@ -3,15 +3,15 @@
 A TypeScript SDK for the Build-a-Bowl Night API, generated from the API's OpenAPI spec.
 The code in `src/` is generated, so do not edit it by hand.
 
-- Spec: https://svah563kzigv3pygzx2jwcrjmm0fsqre.lambda-url.us-east-1.on.aws/openapi.json
+- Spec: `openapi.yaml`, written by `make spec` in `api/src` (run as part of its `make lint`)
 - Generator: [`typescript`](https://openapi-generator.tech/docs/generators/typescript/), configured in `openapitools.yaml`
 
 ## Regenerating
 
-Requires Node and Java (the generator runs on the JVM).
+Requires Node and Docker (the generator runs from the `openapitools/openapi-generator-cli` image).
 
 ```sh
-make generate    # re-fetch the spec and regenerate src/
+make generate    # regenerate src/ from openapi.yaml/
 make build       # compile to dist/
 ```
 
