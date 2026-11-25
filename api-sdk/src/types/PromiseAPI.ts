@@ -3,6 +3,7 @@ import { Configuration, PromiseConfigurationOptions, wrapOptions } from '../conf
 import { PromiseMiddleware, Middleware, PromiseMiddlewareWrapper } from '../middleware';
 
 import { CreateIngredientInputBody } from '../models/CreateIngredientInputBody';
+import { DietaryAttributes } from '../models/DietaryAttributes';
 import { ErrorDetail } from '../models/ErrorDetail';
 import { ErrorModel } from '../models/ErrorModel';
 import { Ingredient } from '../models/Ingredient';

@@ -4,6 +4,7 @@ import type { Middleware } from '../middleware';
 import { Observable, of, from } from '../rxjsStub';
 import {mergeMap, map} from  '../rxjsStub';
 import { CreateIngredientInputBody } from '../models/CreateIngredientInputBody';
+import { DietaryAttributes } from '../models/DietaryAttributes';
 import { ErrorDetail } from '../models/ErrorDetail';
 import { ErrorModel } from '../models/ErrorModel';
 import { Ingredient } from '../models/Ingredient';

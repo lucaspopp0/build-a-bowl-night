@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { DietaryAttributes } from '../models/DietaryAttributes';
 import { HttpFile } from '../http/http';
 
 export class Ingredient {
@@ -17,6 +18,10 @@ export class Ingredient {
     * Kind of ingredient, such as protein or topping
     */
     'category': string;
+    /**
+    * Dietary restrictions the ingredient is suitable for
+    */
+    'dietaryAttributes': DietaryAttributes;
     /**
     * Identifier of the ingredient, unique within its user
     */
@@ -39,6 +44,12 @@ export class Ingredient {
             "name": "category",
             "baseName": "category",
             "type": "string",
+            "format": ""
+        },
+        {
+            "name": "dietaryAttributes",
+            "baseName": "dietaryAttributes",
+            "type": "DietaryAttributes",
             "format": ""
         },
         {
