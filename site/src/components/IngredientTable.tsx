@@ -25,11 +25,17 @@ export default function IngredientTable({ ingredients }: IngredientTableProps) {
     <Stack spacing={3}>
       {groups.map(([category, items]) => (
         <TableContainer key={category} component={Paper}>
-          <Typography variant="h6" component="h2" sx={{ px: 2, pt: 2 }}>
-            {category}s
-          </Typography>
           <Table size="small" sx={{ tableLayout: "fixed" }}>
             <TableHead>
+              {/* Title row spanning both columns, separated from the column headers by a normal row border. */}
+              <TableRow>
+                <TableCell colSpan={2} sx={{ py: 1.5 }}>
+                  <Typography variant="h6" component="h2">
+                    {category}s
+                  </Typography>
+                </TableCell>
+              </TableRow>
+              {/* Small column headers. */}
               <TableRow>
                 <TableCell sx={{ typography: "caption", color: "text.secondary" }}>
                   Ingredient
