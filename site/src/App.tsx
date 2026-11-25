@@ -11,7 +11,12 @@ export default function App() {
   // Follows the system light/dark preference and updates live when it changes.
   const prefersDark = useMediaQuery("(prefers-color-scheme: dark)");
   const theme = useMemo(
-    () => createTheme({ palette: { mode: prefersDark ? "dark" : "light" } }),
+    () =>
+      createTheme({
+        palette: { mode: prefersDark ? "dark" : "light" },
+        // Google Sans is bundled via @fontsource in main.tsx.
+        typography: { fontFamily: '"Google Sans", "Helvetica", "Arial", sans-serif' },
+      }),
     [prefersDark],
   );
 
