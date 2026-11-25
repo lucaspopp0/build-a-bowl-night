@@ -27,8 +27,10 @@ export function pluralizeCategory(category: string): string {
 }
 
 // Groups ingredients by category: every known category first (even if empty), then any others alphabetically.
+// Within a category, the signed-in user's own ingredients (matched by currentPhone) come first, then by name.
 export function groupByCategory(
   ingredients: Ingredient[],
+  currentPhone?: string,
 ): [string, Ingredient[]][] {
   // Seed the map with every known category so empty ones still appear, in their defined order.
   const groups = new Map<string, Ingredient[]>(
@@ -42,7 +44,7 @@ export function groupByCategory(
     groups.set(ingredient.category, list);
   }
 
-  // Keep known categories in order, sort unknown ones by name, and sort each category's ingredients by name.
+  // Keep known categories in order, sort unknown ones by name, and sort each category's ingredients (own first, then by name).
   const known: readonly string[] = INGREDIENT_CATEGORIES;
   const rank = (category: string) => known.indexOf(category);
   return [...groups.entries()]
@@ -57,6 +59,11 @@ export function groupByCategory(
     })
     .map(([category, list]): [string, Ingredient[]] => [
       category,
-      [...list].sort((a, b) => a.name.localeCompare(b.name)),
+      [...list].sort((a, b) => {
+        const aMine = currentPhone !== undefined && a.phone === currentPhone;
+        const bMine = currentPhone !== undefined && b.phone === currentPhone;
+        if (aMine !== bMine) return aMine ? -1 : 1;
+        return a.name.localeCompare(b.name);
+      }),
     ]);
 }
