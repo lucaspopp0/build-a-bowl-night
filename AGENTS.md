@@ -39,11 +39,11 @@ Each stack directory has a `stack.yml` with the AWS account, deploy role and Ter
 ## Backend Requirements
 
 1. Two concurrent edits to data by different users will not overwrite each other
-   1. Data is stored as a log of events, which when combined forms the full state of the system
-2. Events are stored in a DynamoDB table owned by the `infra` component (partition key `stream_id`, sort key `event_id`) and are only ever appended
-   1. Writes use a condition that the `event_id` does not already exist, so an event is never overwritten
-   2. The Lambda's IAM role can put, get and query events, but cannot update or delete them
-3. The site reads and writes events through the API Lambda's Function URL, configured at build time as `VITE_API_URL`
+2. The site reads and writes events through the API Lambda's Function URL, configured at build time as `VITE_API_URL`
+3. Entities
+   1. Users (fields: phone, name)
+   2. Components (fields: user, category, name)
+4. Backend should be a REST api
 
 ## Code Style
 
