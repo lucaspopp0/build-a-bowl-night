@@ -39,7 +39,7 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <NavBar userName={user?.name} onSignIn={() => setSignInOpen(true)} onLogOut={logOut} />
-      <IngredientsPage />
+      <IngredientsPage user={user} />
       <SignInModal
         open={signInOpen}
         onClose={() => setSignInOpen(false)}
