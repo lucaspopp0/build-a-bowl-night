@@ -109,10 +109,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       -
+        name: Fetch app token
+        id: fetch-app-token
+        uses: slingshot-pipelines/action-optional-app-token@v0
+        with:
+          CLIENT_ID: ${{ secrets.WRITER_APP_CLIENT_ID }}
+          PRIVATE_KEY: ${{ secrets.WRITER_APP_PRIVATE_KEY }}
+      -
         uses: actions/checkout@v6
       -
         uses: slingshot-pipelines/action-promote-prerelease@v0
         with:
+          GITHUB_TOKEN: ${{ steps.fetch-app-token.outputs.token || github.token }}
           TAG: ${{ needs.parse-deployment-info.outputs.TAG }}
 
   # Otherwise, kick off the next environment (skipped for manual runs unless DISPATCH_NEXT is set)
@@ -124,12 +132,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       -
+        name: Fetch app token
+        id: fetch-app-token
+        uses: slingshot-pipelines/action-optional-app-token@v0
+        with:
+          CLIENT_ID: ${{ secrets.WRITER_APP_CLIENT_ID }}
+          PRIVATE_KEY: ${{ secrets.WRITER_APP_PRIVATE_KEY }}
+      -
         uses: actions/checkout@v6
         with:
           ref: ${{ needs.parse-deployment-info.outputs.TAG }}
       -
         uses: slingshot-pipelines/action-deployment-sequence/dispatch-next@v0
         with:
+          GITHUB_TOKEN: ${{ steps.fetch-app-token.outputs.token || github.token }}
           COMPONENT: ${{ needs.parse-deployment-info.outputs.COMPONENT }}
           TAG: ${{ needs.parse-deployment-info.outputs.TAG }}
           NEXT_ENVIRONMENT: ${{ needs.parse-deployment-info.outputs.NEXT_ENVIRONMENT }}
