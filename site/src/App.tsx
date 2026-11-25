@@ -36,8 +36,8 @@ export default function App() {
             ? { main: "#66bb6a", light: "#98ee99", dark: "#338a3e", contrastText: "#0b2410" }
             : { main: "#1b5e20", light: "#4c8c4a", dark: "#003300", contrastText: "#ffffff" },
         },
-        // Google Sans is bundled via @fontsource in main.tsx.
-        typography: { fontFamily: '"Google Sans", "Helvetica", "Arial", sans-serif' },
+        // Commissioner is bundled via @fontsource in main.tsx.
+        typography: { fontFamily: '"Commissioner", "Helvetica", "Arial", sans-serif' },
       }),
     [prefersDark],
   );
