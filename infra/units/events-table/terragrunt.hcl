@@ -1,4 +1,4 @@
-# Deploys the DynamoDB table that stores the event log.
+# Destroys the retired DynamoDB events table (the module only holds a removed block); the unit itself is deleted in a follow-up change.
 
 include "root" {
   path = find_in_parent_folders("root.hcl")
