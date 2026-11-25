@@ -7,5 +7,5 @@ source-language: node
 
 path: api-sdk
 
-# Release tags look like v0.0.0
-tag-prefix: v
+# Release tags look like api-sdk/v0.0.0
+tag-prefix: api-sdk/v
