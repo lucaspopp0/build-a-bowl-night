@@ -4,7 +4,6 @@ apis/baseapi.ts
 apis/exception.ts
 auth/auth.ts
 configuration.ts
-docs/DefaultApi.md
 http/http.ts
 http/isomorphic-fetch.ts
 index.ts

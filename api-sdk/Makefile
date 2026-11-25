@@ -8,7 +8,7 @@ install:
 
 # Regenerates src/ from the OpenAPI spec (needs Java for the generator)
 generate: install
-	rm -rf src/apis src/auth src/http src/models src/types src/docs
+	rm -rf src/apis src/auth src/http src/models src/types
 	npm run generate
 
 # Regenerates the SDK so the workflow can detect (and commit) drift from the spec
