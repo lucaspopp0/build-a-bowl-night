@@ -1,4 +1,4 @@
-// Layout components, the ingredient table, and the add, edit and delete flows.
+// Layout components, the ingredient table, and the add and delete flows.
 import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import Alert from "@mui/material/Alert";
@@ -11,7 +11,6 @@ import type { Ingredient } from "../lib/ingredients";
 import type { CurrentUser } from "../lib/session";
 import AddIngredientModal from "./AddIngredientModal";
 import DeleteIngredientModal from "./DeleteIngredientModal";
-import EditIngredientModal from "./EditIngredientModal";
 
 // Props: the signed-in user, if any; only signed-in users can add ingredients.
 interface IngredientsPageProps {
@@ -24,8 +23,7 @@ export default function IngredientsPage({ user }: IngredientsPageProps) {
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [addOpen, setAddOpen] = useState(false);
 
-  // The ingredient currently being edited or deleted, if any.
-  const [editing, setEditing] = useState<Ingredient | null>(null);
+  // The ingredient currently being deleted, if any.
   const [deleting, setDeleting] = useState<Ingredient | null>(null);
 
   // Loading and error state for the initial fetch.
@@ -58,7 +56,6 @@ export default function IngredientsPage({ user }: IngredientsPageProps) {
         <IngredientTable
           ingredients={ingredients}
           currentPhone={user?.phone}
-          onEdit={setEditing}
           onDelete={setDeleting}
         />
       )}
@@ -81,15 +78,6 @@ export default function IngredientsPage({ user }: IngredientsPageProps) {
             onCreated={(created) => {
               setIngredients((prev) => [...prev, { ...created, broughtBy: user.name, phone: user.phone }]);
               setAddOpen(false);
-            }}
-          />
-          {/* Edit dialog: applies the saved changes to the local list. */}
-          <EditIngredientModal
-            ingredient={editing}
-            onClose={() => setEditing(null)}
-            onSaved={(id, category, name) => {
-              setIngredients((prev) => prev.map((i) => (i.id === id ? { ...i, category, name } : i)));
-              setEditing(null);
             }}
           />
           {/* Delete dialog: removes the ingredient from the local list once confirmed. */}
