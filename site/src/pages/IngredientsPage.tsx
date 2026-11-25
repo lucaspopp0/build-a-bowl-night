@@ -1,10 +1,13 @@
-// Layout components, the ingredient table with its placeholder data, and the add-ingredient flow.
-import { useState } from "react";
+// Layout components, the ingredient table, and the add-ingredient flow.
+import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
+import Alert from "@mui/material/Alert";
+import CircularProgress from "@mui/material/CircularProgress";
 import Container from "@mui/material/Container";
 import Fab from "@mui/material/Fab";
 import IngredientTable from "../components/IngredientTable";
-import { sampleIngredients, type Ingredient } from "../lib/ingredients";
+import { listIngredients } from "../lib/api";
+import type { Ingredient } from "../lib/ingredients";
 import type { CurrentUser } from "../lib/session";
 import AddIngredientModal from "./AddIngredientModal";
 
@@ -13,16 +16,41 @@ interface IngredientsPageProps {
   user: CurrentUser | null;
 }
 
-// Page listing everything guests are bringing; will load from the API later.
+// Page listing everything guests are bringing; loaded from the API.
 export default function IngredientsPage({ user }: IngredientsPageProps) {
   // The displayed ingredients and whether the add dialog is showing.
-  const [ingredients, setIngredients] = useState<Ingredient[]>(sampleIngredients);
+  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [addOpen, setAddOpen] = useState(false);
+
+  // Loading and error state for the initial fetch.
+  const [loading, setLoading] = useState(true);
+  const [failed, setFailed] = useState(false);
+
+  // Fetches the ingredient list once on mount, ignoring the result if the page unmounts first.
+  useEffect(() => {
+    let cancelled = false;
+    listIngredients()
+      .then((list) => !cancelled && setIngredients(list))
+      .catch(() => !cancelled && setFailed(true))
+      .finally(() => !cancelled && setLoading(false));
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Show the grouped table, plus a floating add button and its dialog when signed in.
   return (
     <Container maxWidth="md" sx={{ py: 3 }}>
-      <IngredientTable ingredients={ingredients} />
+      {failed && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          Couldn't load the ingredients. Please refresh to try again.
+        </Alert>
+      )}
+      {loading ? (
+        <CircularProgress sx={{ display: "block", mx: "auto", my: 4 }} />
+      ) : (
+        <IngredientTable ingredients={ingredients} />
+      )}
       {user && (
         <>
           <Fab

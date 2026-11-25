@@ -1,3 +1,6 @@
+// The ingredient shape the UI renders, shared with the table.
+import type { Ingredient as IngredientWithOwner } from "./ingredients";
+
 // The generated API SDK: configuration helpers, the users client and its exception type.
 import {
   ApiException,
@@ -45,6 +48,21 @@ const ingredientsApi = new IngredientsApi(
     baseServer: new ServerConfiguration((import.meta.env.VITE_API_URL ?? "").replace(/\/+$/, ""), {}),
   }),
 );
+
+// Fetches every ingredient and the users who bring them, resolving each ingredient's owner to a display name.
+export async function listIngredients(): Promise<IngredientWithOwner[]> {
+  // Load both lists in parallel; the API only returns the owner's phone number on an ingredient.
+  const [ingredients, users] = await Promise.all([ingredientsApi.listIngredients(), usersApi.listUsers()]);
+
+  // Index user names by phone so each ingredient can be labeled with who brings it.
+  const names = new Map((users.users ?? []).map((u) => [u.phone, u.name]));
+  return (ingredients.ingredients ?? []).map((i) => ({
+    id: i.id,
+    category: i.category,
+    name: i.name,
+    broughtBy: names.get(i.user) ?? i.user,
+  }));
+}
 
 // Submits a new ingredient brought by the user with the given phone number.
 export async function createIngredient(phone: string, category: string, name: string): Promise<Ingredient> {
