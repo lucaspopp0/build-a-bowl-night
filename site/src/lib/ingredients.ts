@@ -6,17 +6,6 @@ export interface Ingredient {
   broughtBy: string;
 }
 
-// Placeholder data shown until the page is wired to the API.
-export const sampleIngredients: Ingredient[] = [
-  { id: "1", category: "Grains", name: "Jasmine rice", broughtBy: "Lucas" },
-  { id: "2", category: "Grains", name: "Brown rice", broughtBy: "Sam" },
-  { id: "3", category: "Proteins", name: "Teriyaki chicken", broughtBy: "Priya" },
-  { id: "4", category: "Proteins", name: "Marinated tofu", broughtBy: "Jordan" },
-  { id: "5", category: "Vegetables", name: "Pickled cucumbers", broughtBy: "Alex" },
-  { id: "6", category: "Vegetables", name: "Shredded carrots", broughtBy: "Sam" },
-  { id: "7", category: "Sauces", name: "Sriracha mayo", broughtBy: "Priya" },
-];
-
 // Groups ingredients by category, sorting categories and ingredients alphabetically.
 export function groupByCategory(ingredients: Ingredient[]): [string, Ingredient[]][] {
   // Collect ingredients into a map keyed by category.
