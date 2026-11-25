@@ -40,7 +40,7 @@ export default function IngredientTable({ ingredients }: IngredientTableProps) {
                   sx={{
                     alignItems: "center",
                     // Place the badge inline after the title, vertically centered with it.
-                    "& .MuiBadge-badge": { position: "static", transform: "none", ml: 1.5 },
+                    "& .MuiBadge-badge": { position: "static", transform: "none", ml: 0.5 },
                   }}
                 >
                   {category}
