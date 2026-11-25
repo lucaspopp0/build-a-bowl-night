@@ -6,7 +6,7 @@ import (
 	"sync"
 )
 
-// MemStore is an in-memory Store for tests, mirroring the DynamoDB store's versioning rules.
+// MemStore is an in-memory Store for tests, mirroring the DynamoDB store's behavior.
 type MemStore struct {
 	mu          sync.Mutex
 	users       map[string]User
@@ -16,19 +16,6 @@ type MemStore struct {
 // NewMemStore creates an empty in-memory store.
 func NewMemStore() *MemStore {
 	return &MemStore{users: map[string]User{}, ingredients: map[[2]string]Ingredient{}}
-}
-
-// check applies the optimistic-concurrency rule for a put against the stored version.
-func check(exists bool, stored int, expected *int) error {
-	if expected == nil {
-		return nil
-	}
-
-	if (*expected == 0 && exists) || (*expected != 0 && (!exists || stored != *expected)) {
-		return ErrConflict
-	}
-
-	return nil
 }
 
 // ListUsers returns all users sorted by phone.
@@ -59,17 +46,11 @@ func (m *MemStore) GetUser(_ context.Context, phone string) (User, error) {
 	return u, nil
 }
 
-// PutUser upserts a user, bumping its version.
-func (m *MemStore) PutUser(_ context.Context, u User, expected *int) (User, error) {
+// PutUser upserts a user.
+func (m *MemStore) PutUser(_ context.Context, u User) (User, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	old, ok := m.users[u.Phone]
-	if err := check(ok, old.Version, expected); err != nil {
-		return User{}, err
-	}
-
-	u.Version = old.Version + 1
 	m.users[u.Phone] = u
 
 	return u, nil
@@ -119,17 +100,11 @@ func (m *MemStore) GetIngredient(_ context.Context, user, id string) (Ingredient
 	return i, nil
 }
 
-// PutIngredient upserts an ingredient, bumping its version.
-func (m *MemStore) PutIngredient(_ context.Context, i Ingredient, expected *int) (Ingredient, error) {
+// PutIngredient upserts an ingredient.
+func (m *MemStore) PutIngredient(_ context.Context, i Ingredient) (Ingredient, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	old, ok := m.ingredients[[2]string{i.User, i.ID}]
-	if err := check(ok, old.Version, expected); err != nil {
-		return Ingredient{}, err
-	}
-
-	i.Version = old.Version + 1
 	m.ingredients[[2]string{i.User, i.ID}] = i
 
 	return i, nil
