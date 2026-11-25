@@ -17,10 +17,6 @@ export class PutUserInputBody {
     * Display name
     */
     'name': string;
-    /**
-    * Version last read, for optimistic concurrency; 0 means the user must not exist yet. Omit to overwrite.
-    */
-    'version'?: number;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -32,12 +28,6 @@ export class PutUserInputBody {
             "baseName": "name",
             "type": "string",
             "format": ""
-        },
-        {
-            "name": "version",
-            "baseName": "version",
-            "type": "number",
-            "format": "int64"
         }    ];
 
     static getAttributeTypeMap() {

@@ -29,10 +29,6 @@ export class Ingredient {
     * Phone number of the owning user
     */
     'user': string;
-    /**
-    * Incremented on every write, for optimistic concurrency
-    */
-    'version': number;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -62,12 +58,6 @@ export class Ingredient {
             "baseName": "user",
             "type": "string",
             "format": ""
-        },
-        {
-            "name": "version",
-            "baseName": "version",
-            "type": "number",
-            "format": "int64"
         }    ];
 
     static getAttributeTypeMap() {

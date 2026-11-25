@@ -777,13 +777,6 @@ export class DefaultApiResponseProcessor {
             ) as ErrorModel;
             throw new ApiException<ErrorModel>(response.httpStatusCode, "Not Found", body, response.headers);
         }
-        if (isCodeInRange("409", response.httpStatusCode)) {
-            const body: ErrorModel = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ErrorModel", ""
-            ) as ErrorModel;
-            throw new ApiException<ErrorModel>(response.httpStatusCode, "Conflict", body, response.headers);
-        }
         if (isCodeInRange("422", response.httpStatusCode)) {
             const body: ErrorModel = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
@@ -827,26 +820,12 @@ export class DefaultApiResponseProcessor {
             ) as User;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
-        if (isCodeInRange("409", response.httpStatusCode)) {
+        if (isCodeInRange("0", response.httpStatusCode)) {
             const body: ErrorModel = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "ErrorModel", ""
             ) as ErrorModel;
-            throw new ApiException<ErrorModel>(response.httpStatusCode, "Conflict", body, response.headers);
-        }
-        if (isCodeInRange("422", response.httpStatusCode)) {
-            const body: ErrorModel = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ErrorModel", ""
-            ) as ErrorModel;
-            throw new ApiException<ErrorModel>(response.httpStatusCode, "Unprocessable Entity", body, response.headers);
-        }
-        if (isCodeInRange("500", response.httpStatusCode)) {
-            const body: ErrorModel = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ErrorModel", ""
-            ) as ErrorModel;
-            throw new ApiException<ErrorModel>(response.httpStatusCode, "Internal Server Error", body, response.headers);
+            throw new ApiException<ErrorModel>(response.httpStatusCode, "Error", body, response.headers);
         }
 
         // Work around for missing responses in specification, e.g. for petstore.yaml

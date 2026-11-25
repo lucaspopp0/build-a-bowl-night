@@ -21,10 +21,6 @@ export class PutIngredientInputBody {
     * What is being brought
     */
     'name': string;
-    /**
-    * Version last read, for optimistic concurrency; 0 means the ingredient must not exist yet. Omit to overwrite.
-    */
-    'version'?: number;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -42,12 +38,6 @@ export class PutIngredientInputBody {
             "baseName": "name",
             "type": "string",
             "format": ""
-        },
-        {
-            "name": "version",
-            "baseName": "version",
-            "type": "number",
-            "format": "int64"
         }    ];
 
     static getAttributeTypeMap() {

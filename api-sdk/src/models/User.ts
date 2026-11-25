@@ -21,10 +21,6 @@ export class User {
     * Phone number the guest identifies themselves with
     */
     'phone': string;
-    /**
-    * Incremented on every write, for optimistic concurrency
-    */
-    'version': number;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -42,12 +38,6 @@ export class User {
             "baseName": "phone",
             "type": "string",
             "format": ""
-        },
-        {
-            "name": "version",
-            "baseName": "version",
-            "type": "number",
-            "format": "int64"
         }    ];
 
     static getAttributeTypeMap() {
