@@ -18,7 +18,7 @@ export default function NavBar({ userName, onSignIn, onLogOut }: NavBarProps) {
     // Always dark green with light text, regardless of light/dark mode.
     <AppBar position="sticky" enableColorOnDark sx={{ bgcolor: "#1b5e20", backgroundImage: "none", color: "#f1f8e9" }}>
       <Toolbar>
-        <Typography variant="h6" component="h1" sx={{ flexGrow: 1 }}>
+        <Typography variant="h6" component="h1" sx={{ flexGrow: 1, fontFamily: '"Pacifico", cursive' }}>
           Build-a-Bowl Ingredients
         </Typography>
         {userName ? (
