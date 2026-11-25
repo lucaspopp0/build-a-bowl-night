@@ -55,7 +55,7 @@ export default function IngredientTable({ ingredients, currentPhone, onEdit, onD
           {items.length === 0 ? (
             // Fallback shown under the title when nobody has claimed this category yet; no table is rendered.
             <Typography variant="body2" sx={{ fontStyle: "italic", opacity: 0.6 }}>
-              No {category.toLowerCase()}s yet
+              No {category.toLowerCase()}s yet.
               {/* Prompt to claim the category, offered only when a handler is provided (signed in). */}
               {onBringOne && (
                 <>
