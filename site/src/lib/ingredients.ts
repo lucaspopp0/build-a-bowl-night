@@ -4,6 +4,8 @@ export interface Ingredient {
   category: string;
   name: string;
   broughtBy: string;
+  // Phone number of the user bringing it, used to tell which ingredients the signed-in user owns.
+  phone: string;
 }
 
 // The categories a new ingredient can be filed under, in the order they are displayed.
