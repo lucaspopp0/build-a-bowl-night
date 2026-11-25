@@ -1,4 +1,4 @@
-// Layout components, the ingredient table, and the add-ingredient flow.
+// Layout components, the ingredient table, and the add, edit and delete flows.
 import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import Alert from "@mui/material/Alert";
@@ -10,6 +10,8 @@ import { listIngredients } from "../lib/api";
 import type { Ingredient } from "../lib/ingredients";
 import type { CurrentUser } from "../lib/session";
 import AddIngredientModal from "./AddIngredientModal";
+import DeleteIngredientModal from "./DeleteIngredientModal";
+import EditIngredientModal from "./EditIngredientModal";
 
 // Props: the signed-in user, if any; only signed-in users can add ingredients.
 interface IngredientsPageProps {
@@ -21,6 +23,10 @@ export default function IngredientsPage({ user }: IngredientsPageProps) {
   // The displayed ingredients and whether the add dialog is showing.
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [addOpen, setAddOpen] = useState(false);
+
+  // The ingredient currently being edited or deleted, if any.
+  const [editing, setEditing] = useState<Ingredient | null>(null);
+  const [deleting, setDeleting] = useState<Ingredient | null>(null);
 
   // Loading and error state for the initial fetch.
   const [loading, setLoading] = useState(true);
@@ -49,7 +55,12 @@ export default function IngredientsPage({ user }: IngredientsPageProps) {
       {loading ? (
         <CircularProgress sx={{ display: "block", mx: "auto", my: 4 }} />
       ) : (
-        <IngredientTable ingredients={ingredients} />
+        <IngredientTable
+          ingredients={ingredients}
+          currentPhone={user?.phone}
+          onEdit={setEditing}
+          onDelete={setDeleting}
+        />
       )}
       {user && (
         <>
@@ -68,8 +79,26 @@ export default function IngredientsPage({ user }: IngredientsPageProps) {
             user={user}
             onClose={() => setAddOpen(false)}
             onCreated={(created) => {
-              setIngredients((prev) => [...prev, { ...created, broughtBy: user.name }]);
+              setIngredients((prev) => [...prev, { ...created, broughtBy: user.name, phone: user.phone }]);
               setAddOpen(false);
+            }}
+          />
+          {/* Edit dialog: applies the saved changes to the local list. */}
+          <EditIngredientModal
+            ingredient={editing}
+            onClose={() => setEditing(null)}
+            onSaved={(id, category, name) => {
+              setIngredients((prev) => prev.map((i) => (i.id === id ? { ...i, category, name } : i)));
+              setEditing(null);
+            }}
+          />
+          {/* Delete dialog: removes the ingredient from the local list once confirmed. */}
+          <DeleteIngredientModal
+            ingredient={deleting}
+            onClose={() => setDeleting(null)}
+            onDeleted={(id) => {
+              setIngredients((prev) => prev.filter((i) => i.id !== id));
+              setDeleting(null);
             }}
           />
         </>
