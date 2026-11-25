@@ -7,7 +7,6 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
-import DialogCloseButton from "../components/DialogCloseButton";
 import { createIngredient } from "../lib/api";
 import type { CurrentUser } from "../lib/session";
 
@@ -66,8 +65,6 @@ export default function BringOneModal({ open, category, user, onClose, onCreated
       maxWidth="xs"
     >
       <DialogTitle>Bring a {category.toLowerCase()}</DialogTitle>
-      {/* Top-right x to dismiss the dialog without saving. */}
-      <DialogCloseButton onClose={onClose} disabled={loading} />
       <DialogContent>
         <Box component="form" onSubmit={submit} noValidate sx={{ display: "grid", gap: 2, pt: 1 }}>
           <TextField
@@ -81,6 +78,10 @@ export default function BringOneModal({ open, category, user, onClose, onCreated
           {failure && <Alert severity="error">{failure}</Alert>}
           <Button type="submit" variant="contained" disabled={loading || !name.trim()}>
             Add {category.toLowerCase()}
+          </Button>
+          {/* Bottom cancel button that dismisses the dialog. */}
+          <Button onClick={onClose} disabled={loading}>
+            Cancel
           </Button>
         </Box>
       </DialogContent>

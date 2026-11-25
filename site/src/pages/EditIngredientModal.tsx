@@ -9,7 +9,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
-import DialogCloseButton from "../components/DialogCloseButton";
 import { updateIngredient } from "../lib/api";
 import { INGREDIENT_CATEGORIES, type Ingredient } from "../lib/ingredients";
 
@@ -58,12 +57,10 @@ export default function EditIngredientModal({ ingredient, onClose, onSaved }: Ed
     }
   };
 
-  // Category dropdown and name field, with a save button and a close x.
+  // Category dropdown and name field, with cancel and save buttons.
   return (
     <Dialog open={ingredient !== null} onClose={loading ? undefined : onClose} fullWidth maxWidth="xs">
       <DialogTitle>Edit ingredient</DialogTitle>
-      {/* Top-right x to dismiss the dialog without saving. */}
-      <DialogCloseButton onClose={onClose} disabled={loading} />
       <Box component="form" onSubmit={submit} noValidate>
         <DialogContent sx={{ display: "grid", gap: 2 }}>
           <TextField
@@ -91,6 +88,9 @@ export default function EditIngredientModal({ ingredient, onClose, onSaved }: Ed
           {failure && <Alert severity="error">{failure}</Alert>}
         </DialogContent>
         <DialogActions>
+          <Button onClick={onClose} disabled={loading}>
+            Cancel
+          </Button>
           <Button type="submit" variant="contained" disabled={loading || !category || !name.trim()}>
             Save
           </Button>

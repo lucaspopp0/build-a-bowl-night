@@ -7,7 +7,6 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import DialogCloseButton from "../components/DialogCloseButton";
 import { deleteIngredient } from "../lib/api";
 import type { Ingredient } from "../lib/ingredients";
 
@@ -43,7 +42,7 @@ export default function DeleteIngredientModal({ ingredient, onClose, onDeleted }
     }
   };
 
-  // Confirmation question with a Yes button and a close x.
+  // Confirmation question with No and Yes buttons.
   return (
     <Dialog
       open={ingredient !== null}
@@ -53,8 +52,6 @@ export default function DeleteIngredientModal({ ingredient, onClose, onDeleted }
       maxWidth="xs"
     >
       <DialogTitle>Delete ingredient?</DialogTitle>
-      {/* Top-right x to dismiss the dialog without deleting. */}
-      <DialogCloseButton onClose={onClose} disabled={loading} />
       <DialogContent>
         <DialogContentText>Are you sure you want to delete {ingredient?.name}?</DialogContentText>
         {failure && (
@@ -64,6 +61,9 @@ export default function DeleteIngredientModal({ ingredient, onClose, onDeleted }
         )}
       </DialogContent>
       <DialogActions>
+        <Button onClick={onClose} disabled={loading}>
+          No
+        </Button>
         <Button color="error" variant="contained" onClick={confirm} disabled={loading}>
           Yes
         </Button>

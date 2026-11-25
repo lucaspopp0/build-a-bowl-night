@@ -8,7 +8,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
-import DialogCloseButton from "../components/DialogCloseButton";
 import { createIngredient } from "../lib/api";
 import { INGREDIENT_CATEGORIES } from "../lib/ingredients";
 import type { CurrentUser } from "../lib/session";
@@ -69,8 +68,6 @@ export default function AddIngredientModal({ open, user, onClose, onCreated }: A
       maxWidth="xs"
     >
       <DialogTitle>Bring something</DialogTitle>
-      {/* Top-right x to dismiss the dialog without saving. */}
-      <DialogCloseButton onClose={onClose} disabled={loading} />
       <DialogContent>
         <Box component="form" onSubmit={submit} noValidate sx={{ display: "grid", gap: 2, pt: 1 }}>
           <TextField
@@ -97,6 +94,10 @@ export default function AddIngredientModal({ open, user, onClose, onCreated }: A
           {failure && <Alert severity="error">{failure}</Alert>}
           <Button type="submit" variant="contained" disabled={loading || !category || !name.trim()}>
             Add ingredient
+          </Button>
+          {/* Bottom cancel button that dismisses the dialog. */}
+          <Button onClick={onClose} disabled={loading}>
+            Cancel
           </Button>
         </Box>
       </DialogContent>

@@ -8,7 +8,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import DialogCloseButton from "../components/DialogCloseButton";
 import PhoneNumberField from "../components/PhoneNumberField";
 import { createUser, findUser } from "../lib/api";
 import { normalizePhone } from "../lib/phone";
@@ -115,8 +114,6 @@ export default function SignInModal({ open, onClose, onSignedIn }: SignInModalPr
       maxWidth="xs"
     >
       <DialogTitle>Sign in</DialogTitle>
-      {/* Top-right x to dismiss the dialog without signing in. */}
-      <DialogCloseButton onClose={onClose} disabled={loading} />
       <DialogContent>
         {newUserPhone === null ? (
           <Box component="form" onSubmit={submitPhone} noValidate sx={{ display: "grid", gap: 2, pt: 1 }}>
@@ -124,6 +121,10 @@ export default function SignInModal({ open, onClose, onSignedIn }: SignInModalPr
             {failure && <Alert severity="error">{failure}</Alert>}
             <Button type="submit" variant="contained" disabled={loading}>
               Continue
+            </Button>
+            {/* Bottom cancel button that dismisses the dialog. */}
+            <Button onClick={onClose} disabled={loading}>
+              Cancel
             </Button>
           </Box>
         ) : (
@@ -146,6 +147,10 @@ export default function SignInModal({ open, onClose, onSignedIn }: SignInModalPr
             </Button>
             <Button onClick={changeNumber} disabled={loading}>
               Change number
+            </Button>
+            {/* Bottom cancel button that dismisses the dialog. */}
+            <Button onClick={onClose} disabled={loading}>
+              Cancel
             </Button>
           </Box>
         )}
