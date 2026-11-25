@@ -1,0 +1,2 @@
+# Mark the generated SDK so GitHub collapses it in diffs and excludes it from language stats
+src/** linguist-generated=true
