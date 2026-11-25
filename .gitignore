@@ -7,3 +7,6 @@ dist
 .terragrunt-stack
 function.zip
 .tool-versions
+
+# Binary produced by running go build in the api source directory
+/api/src/api

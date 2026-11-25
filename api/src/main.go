@@ -4,12 +4,18 @@ package main
 import (
 	"context"
 	"errors"
+	"log"
 	"net/http"
 	"net/http/httptest"
+	"os"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/danielgtaylor/huma/v2"
+	"github.com/lucaspopp0/build-a-bowl-night/api/internal/db"
+	"github.com/lucaspopp0/build-a-bowl-night/api/internal/handlers"
 	"github.com/lucaspopp0/go-lambda/eventwrappers"
 	"github.com/lucaspopp0/go-lambda/humaserverless"
 	"github.com/lucaspopp0/go-lambda/middleware"
@@ -23,7 +29,7 @@ type HealthOutput struct {
 }
 
 // newAPI builds the huma API and registers every operation the Lambda serves.
-func newAPI() huma.API {
+func newAPI(store db.Store) huma.API {
 	// Create the API served through the Function URL
 	api := humaserverless.NewServerless(humaserverless.ApiOpts{
 		Name:    "Build-a-Bowl Night API",
@@ -42,6 +48,9 @@ func newAPI() huma.API {
 
 		return out, nil
 	})
+
+	// Users and ingredients CRUD endpoints
+	handlers.Register(api, store)
 
 	return api
 }
@@ -78,5 +87,13 @@ func newHandler(api huma.API) middleware.HandlerFunc {
 
 // main starts the Lambda runtime, serving Function URL requests through the huma API.
 func main() {
-	lambda.Start(middleware.WithTypes[events.LambdaFunctionURLRequest, events.LambdaFunctionURLResponse](newHandler(newAPI())))
+	// Connect to the tables named by the Lambda's environment
+	cfg, err := config.LoadDefaultConfig(context.Background())
+	if err != nil {
+		log.Fatalf("loading AWS config: %v", err)
+	}
+
+	store := db.NewDynamoStore(dynamodb.NewFromConfig(cfg), os.Getenv("USERS_TABLE"), os.Getenv("INGREDIENTS_TABLE"))
+
+	lambda.Start(middleware.WithTypes[events.LambdaFunctionURLRequest, events.LambdaFunctionURLResponse](newHandler(newAPI(store))))
 }
