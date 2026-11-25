@@ -15,7 +15,7 @@ export default function PhoneNumberField({ value, onChange, error, disabled }: P
   return (
     <TextField
       placeholder="(999) 999-9999"
-      inputProps={{ "aria-label": "Phone number" }}
+      slotProps={{ htmlInput: { "aria-label": "Phone number" } }}
       type="tel"
       autoComplete="tel"
       autoFocus
