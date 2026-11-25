@@ -16,8 +16,13 @@ interface IngredientTableProps {
   ingredients: Ingredient[];
 }
 
-// Style for the column header cells: default text with a thicker bottom border.
-const headerCellSx = { borderBottomWidth: 2 } as const;
+// Style for the column header cells: small, bold, all-caps text with a thicker bottom border.
+const headerCellSx = {
+  typography: "caption",
+  fontWeight: "bold",
+  textTransform: "uppercase",
+  borderBottomWidth: 2,
+} as const;
 
 // Vertical stack of cards, one per category, each with a plain-text title above its table.
 export default function IngredientTable({ ingredients }: IngredientTableProps) {
@@ -36,7 +41,7 @@ export default function IngredientTable({ ingredients }: IngredientTableProps) {
           <TableContainer component={Paper}>
             <Table size="small" sx={{ tableLayout: "fixed" }}>
               <TableHead>
-                {/* Column headers: default text style, set off by a thicker bottom border. */}
+                {/* Column headers: small bold caps, set off by a thicker bottom border. */}
                 <TableRow>
                   <TableCell sx={headerCellSx}>Ingredient</TableCell>
                   <TableCell sx={headerCellSx}>Brought by</TableCell>
