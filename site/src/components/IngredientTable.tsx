@@ -51,7 +51,10 @@ export default function IngredientTable({ ingredients, currentPhone, onDelete }:
             <Table sx={{ tableLayout: "fixed" }}>
               <TableHead>
                 {/* Column headers: small bold caps, set off by a thicker bottom border. */}
-                <TableRow>
+                <TableRow
+                  // Header row background: gray in light mode, lighter than the cells in dark mode.
+                  sx={{ bgcolor: (theme) => (theme.palette.mode === "dark" ? "#2e2e2e" : "#eeeeee") }}
+                >
                   <TableCell sx={headerCellSx}>Ingredient</TableCell>
                   <TableCell sx={headerCellSx}>Brought by</TableCell>
                   {/* Narrow column reserved for the delete button. */}
