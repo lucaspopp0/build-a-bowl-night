@@ -1,6 +1,6 @@
 # build-a-bowl-night
 
-A website for Build-a-Bowl Night, an event where everyone brings a component for a rice bowl.
+A website for Build-a-Bowl Night, an event where everyone brings an ingredient for a rice bowl.
 Guests can see what others are bringing and submit their own items.
 
 **Live site:** https://d1h3bq1xtdz6d1.cloudfront.net
@@ -12,7 +12,7 @@ Guests can see what others are bringing and submit their own items.
 | `site/` | `site` | React + Vite frontend; `site/infra` holds its hosting (S3 + CloudFront) |
 | `api/` | `api` | Go Lambda API (`api/src`); `api/infra` holds only the Lambda |
 | `api-sdk/` | `api-sdk` | TypeScript SDK generated from the API's OpenAPI spec (see `api-sdk/README.md`) |
-| `infra/` | `infra` | Shared infrastructure: the DynamoDB events table |
+| `infra/` | `infra` | Shared infrastructure: the DynamoDB users and ingredients tables |
 | `.components/` | | slingshot-pipelines component definitions |
 
 Deployments are driven by [slingshot-pipelines](https://slingshot-pipelines.github.io/docs/).

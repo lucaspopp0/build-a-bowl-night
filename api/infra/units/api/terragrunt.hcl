@@ -10,8 +10,9 @@ terraform {
 
 # The build output is restored into api/dist by the deploy workflow before apply
 inputs = {
-  name                 = values.name
-  events_table_name    = values.events_table_name
-  cors_allowed_origins = values.cors_allowed_origins
-  build_dir            = "${get_repo_root()}/api/dist"
+  name                   = values.name
+  users_table_name       = values.users_table_name
+  ingredients_table_name = values.ingredients_table_name
+  cors_allowed_origins   = values.cors_allowed_origins
+  build_dir              = "${get_repo_root()}/api/dist"
 }

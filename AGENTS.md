@@ -2,7 +2,7 @@
 
 This project is a website for an event I'm hosting called "Build-a-Bowl Night".
 
-The premise of the event is that we are making our own rice bowls, and each guest brings one or more components that could be put into a rice bowl.
+The premise of the event is that we are making our own rice bowls, and each guest brings one or more ingredients that could be put into a rice bowl.
 
 The website will have two main purposes:
 1. View what others are bringing
@@ -17,7 +17,7 @@ The repository is a slingshot-pipelines project (see `.components/`), deployed t
 | `site` | `s3-website` | `site/` | React + Vite frontend (`subpaths`: src `.`, build `dist`, infra `infra`), served from S3 through CloudFront |
 | `api` | `lambda` | `api/` | Go Lambda behind a Function URL |
 | `api-sdk` | `library` | `api-sdk/` | TypeScript SDK generated from the API's OpenAPI spec with the openapi-generator `typescript` generator |
-| `infra` | `terragrunt-infra` | `infra/` | Shared infrastructure: the DynamoDB events table |
+| `infra` | `terragrunt-infra` | `infra/` | Shared infrastructure: the DynamoDB users and ingredients tables |
 
 There is a single environment, `prd`.
 Merging to `main` starts a deployment sequence for each changed component.
@@ -27,7 +27,7 @@ Infrastructure is written as Terragrunt `units/` and `stacks/` plus Terraform `m
 `site/infra/` contains the site hosting (S3 bucket and CloudFront distribution), applied by the site's own deployment.
 `api/infra/` contains only the Lambda (function, role, log group and Function URL).
 Everything else lives in the `infra` component, including the DynamoDB table.
-The Lambda finds the table by name (`events_table_name`), so the two stacks must agree on it.
+The Lambda finds the tables by name (`users_table_name` and `ingredients_table_name`), so the two stacks must agree on them.
 Each stack directory has a `stack.yml` with the AWS account, deploy role and Terraform state bucket.
 
 ## UI Requirements
@@ -43,7 +43,7 @@ Each stack directory has a `stack.yml` with the AWS account, deploy role and Ter
 2. The site reads and writes events through the API Lambda's Function URL, configured at build time as `VITE_API_URL`
 3. Entities
    1. Users (fields: phone, name)
-   2. Components (fields: user, category, name)
+   2. Ingredients (fields: user, category, name)
 4. Backend should be a REST api
 
 ## Code Style
