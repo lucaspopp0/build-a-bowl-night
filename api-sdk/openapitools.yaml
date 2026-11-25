@@ -1,6 +1,6 @@
 # Config for the typescript generator: https://openapi-generator.tech/docs/generators/typescript/
 generatorName: typescript
-inputSpec: https://svah563kzigv3pygzx2jwcrjmm0fsqre.lambda-url.us-east-1.on.aws/openapi.json
+inputSpec: openapi.yaml
 outputDir: src
 additionalProperties:
   npmName: "@build-a-bowl-night/api-sdk"

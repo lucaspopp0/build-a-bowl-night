@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/lucaspopp0/build-a-bowl-night/api/internal/api"
 	"github.com/lucaspopp0/build-a-bowl-night/api/internal/db"
 	"github.com/lucaspopp0/go-lambda/middleware"
 
@@ -29,7 +30,7 @@ func handle(api huma.API, req events.LambdaFunctionURLRequest) (events.LambdaFun
 
 // TestHandler checks the status code and body returned for known and unknown routes.
 func TestHandler(t *testing.T) {
-	api := newAPI(db.NewMemStore())
+	api := api.New(db.NewMemStore())
 
 	tests := []struct {
 		name       string
@@ -67,7 +68,7 @@ func TestInvalidBody(t *testing.T) {
 	req.Body = "!!not-base64!!"
 	req.IsBase64Encoded = true
 
-	resp, err := handle(newAPI(db.NewMemStore()), req)
+	resp, err := handle(api.New(db.NewMemStore()), req)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -79,7 +80,7 @@ func TestInvalidBody(t *testing.T) {
 
 // TestCRUD walks users and ingredients through list, put, get and delete, including cascading deletes.
 func TestCRUD(t *testing.T) {
-	api := newAPI(db.NewMemStore())
+	api := api.New(db.NewMemStore())
 
 	// Each step sends a request and checks the status and a fragment of the body
 	steps := []struct {
