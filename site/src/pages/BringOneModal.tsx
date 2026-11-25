@@ -1,6 +1,6 @@
 // React state and the Radix components that make up the bring-one dialog.
 import { useEffect, useState, type FormEvent } from "react";
-import { Button, Callout, Dialog, Flex, Select, Text, TextField } from "@radix-ui/themes";
+import { Button, Callout, Dialog, Flex, TextField } from "@radix-ui/themes";
 import Field from "../components/Field";
 import { createIngredient } from "../lib/api";
 import type { CurrentUser } from "../lib/session";

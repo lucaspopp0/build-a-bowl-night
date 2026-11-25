@@ -1,6 +1,6 @@
 // React state and the Radix components that make up the edit-name dialog.
 import { useEffect, useState, type FormEvent } from "react";
-import { Button, Callout, Dialog, Flex, Select, Text, TextField } from "@radix-ui/themes";
+import { Button, Callout, Dialog, Flex, TextField } from "@radix-ui/themes";
 import Field from "../components/Field";
 import { createUser } from "../lib/api";
 import { saveCurrentUser, type CurrentUser } from "../lib/session";

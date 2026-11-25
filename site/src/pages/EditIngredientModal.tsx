@@ -1,6 +1,6 @@
 // React state and the Radix components that make up the edit-ingredient dialog.
 import { useEffect, useState, type FormEvent } from "react";
-import { Button, Callout, Dialog, Flex, Select, Text, TextField } from "@radix-ui/themes";
+import { Button, Callout, Dialog, Flex, Select, TextField } from "@radix-ui/themes";
 import Field from "../components/Field";
 import { updateIngredient } from "../lib/api";
 import { INGREDIENT_CATEGORIES, type Ingredient } from "../lib/ingredients";
