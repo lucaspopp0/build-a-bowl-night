@@ -15,12 +15,13 @@ interface IngredientTableProps {
   ingredients: Ingredient[];
 }
 
-// Style for the column header cells: small, bold, all-caps text on the accent color.
+// Style for the column header cells: small, bold, all-caps text in the default text color at 40% opacity.
 const headerCellSx = {
   typography: "caption",
   fontWeight: "bold",
   textTransform: "uppercase",
-  color: "primary.contrastText",
+  color: "text.primary",
+  opacity: 0.4,
 } as const;
 
 // Vertical stack of tables, one per category, each titled with its category name.
