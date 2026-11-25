@@ -12,11 +12,15 @@
 
 import { HttpFile } from '../http/http';
 
-export class HealthOutputBody {
+export class CreateIngredientInputBody {
     /**
-    * Always ok when the API is reachable
+    * Kind of ingredient, such as protein or topping
     */
-    'status': string;
+    'category': string;
+    /**
+    * What is being brought
+    */
+    'name': string;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -24,14 +28,20 @@ export class HealthOutputBody {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "status",
-            "baseName": "status",
+            "name": "category",
+            "baseName": "category",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "name",
+            "baseName": "name",
             "type": "string",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return HealthOutputBody.attributeTypeMap;
+        return CreateIngredientInputBody.attributeTypeMap;
     }
 
     public constructor() {
