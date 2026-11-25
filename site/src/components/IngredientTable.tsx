@@ -34,7 +34,15 @@ export default function IngredientTable({ ingredients }: IngredientTableProps) {
             <TableRow key={`category-${category}`} sx={{ bgcolor: "action.hover" }}>
               <TableCell colSpan={2} sx={{ fontWeight: "bold" }}>
                 {/* Badge showing how many items are in this category. */}
-                <Badge badgeContent={items.length} color="primary" sx={{ pr: 2 }}>
+                <Badge
+                  badgeContent={items.length}
+                  color="primary"
+                  sx={{
+                    alignItems: "center",
+                    // Place the badge inline after the title, vertically centered with it.
+                    "& .MuiBadge-badge": { position: "static", transform: "none", ml: 1.5 },
+                  }}
+                >
                   {category}
                 </Badge>
               </TableCell>
