@@ -1,4 +1,4 @@
-# Used to build the events table ARN from its name, since the table is owned by the infra component
+# Used to build the table ARNs from their names, since the tables are owned by the infra component
 data "aws_caller_identity" "current" {}
 
 data "aws_region" "current" {}
@@ -34,19 +34,24 @@ resource "aws_iam_role_policy_attachment" "logs" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-# Limits the function to reading and appending events in the table; there is deliberately no update or delete access
-data "aws_iam_policy_document" "events_access" {
+# Limits the function to the users and components tables, and only to the item operations the API needs
+data "aws_iam_policy_document" "tables_access" {
   statement {
-    actions   = ["dynamodb:PutItem", "dynamodb:GetItem", "dynamodb:Query"]
-    resources = ["arn:aws:dynamodb:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:table/${var.events_table_name}"]
+    actions   = ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:UpdateItem"]
+    resources = ["arn:aws:dynamodb:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:table/${var.users_table_name}"]
+  }
+
+  statement {
+    actions   = ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:UpdateItem", "dynamodb:DeleteItem", "dynamodb:Query", "dynamodb:Scan"]
+    resources = ["arn:aws:dynamodb:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:table/${var.components_table_name}"]
   }
 }
 
-# Attaches the events table access to the function's role
-resource "aws_iam_role_policy" "events_access" {
-  name   = "events-access"
+# Attaches the table access to the function's role
+resource "aws_iam_role_policy" "tables_access" {
+  name   = "tables-access"
   role   = aws_iam_role.function.id
-  policy = data.aws_iam_policy_document.events_access.json
+  policy = data.aws_iam_policy_document.tables_access.json
 }
 
 # Keeps logs for a bounded time instead of forever
@@ -69,7 +74,8 @@ resource "aws_lambda_function" "api" {
 
   environment {
     variables = {
-      EVENTS_TABLE = var.events_table_name
+      USERS_TABLE      = var.users_table_name
+      COMPONENTS_TABLE = var.components_table_name
     }
   }
 

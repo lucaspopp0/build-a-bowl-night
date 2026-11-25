@@ -16,7 +16,7 @@ The repository is a slingshot-pipelines project (see `.components/`), deployed t
 |---|---|---|---|
 | `site` | `s3-website` | `site/` | React + Vite frontend (`subpaths`: src `.`, build `dist`, infra `infra`), served from S3 through CloudFront |
 | `api` | `lambda` | `api/` | Go Lambda behind a Function URL |
-| `infra` | `terragrunt-infra` | `infra/` | Shared infrastructure: the DynamoDB events table |
+| `infra` | `terragrunt-infra` | `infra/` | Shared infrastructure: the DynamoDB users and components tables |
 
 There is a single environment, `prd`.
 Merging to `main` starts a deployment sequence for each changed component.
@@ -26,7 +26,7 @@ Infrastructure is written as Terragrunt `units/` and `stacks/` plus Terraform `m
 `site/infra/` contains the site hosting (S3 bucket and CloudFront distribution), applied by the site's own deployment.
 `api/infra/` contains only the Lambda (function, role, log group and Function URL).
 Everything else lives in the `infra` component, including the DynamoDB table.
-The Lambda finds the table by name (`events_table_name`), so the two stacks must agree on it.
+The Lambda finds the tables by name (`users_table_name` and `components_table_name`), so the two stacks must agree on them.
 Each stack directory has a `stack.yml` with the AWS account, deploy role and Terraform state bucket.
 
 ## UI Requirements

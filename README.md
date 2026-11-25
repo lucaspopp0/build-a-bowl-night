@@ -11,7 +11,7 @@ Guests can see what others are bringing and submit their own items.
 |---|---|---|
 | `site/` | `site` | React + Vite frontend; `site/infra` holds its hosting (S3 + CloudFront) |
 | `api/` | `api` | Go Lambda API (`api/src`); `api/infra` holds only the Lambda |
-| `infra/` | `infra` | Shared infrastructure: the DynamoDB events table |
+| `infra/` | `infra` | Shared infrastructure: the DynamoDB users and components tables |
 | `.components/` | | slingshot-pipelines component definitions |
 
 Deployments are driven by [slingshot-pipelines](https://slingshot-pipelines.github.io/docs/).

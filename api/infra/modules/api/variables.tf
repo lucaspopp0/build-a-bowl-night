@@ -9,14 +9,25 @@ variable "name" {
   }
 }
 
-variable "events_table_name" {
+variable "users_table_name" {
   type        = string
-  description = "Name of the DynamoDB events table, which is created by the infra component"
+  description = "Name of the DynamoDB users table, which is created by the infra component"
 
   # DynamoDB table names are 3-255 characters of letters, digits, underscores, hyphens and dots
   validation {
-    condition     = can(regex("^[a-zA-Z0-9_.-]{3,255}$", var.events_table_name))
-    error_message = "events_table_name must be 3-255 characters: letters, digits, underscores, hyphens and dots."
+    condition     = can(regex("^[a-zA-Z0-9_.-]{3,255}$", var.users_table_name))
+    error_message = "users_table_name must be 3-255 characters: letters, digits, underscores, hyphens and dots."
+  }
+}
+
+variable "components_table_name" {
+  type        = string
+  description = "Name of the DynamoDB components table, which is created by the infra component"
+
+  # DynamoDB table names are 3-255 characters of letters, digits, underscores, hyphens and dots
+  validation {
+    condition     = can(regex("^[a-zA-Z0-9_.-]{3,255}$", var.components_table_name))
+    error_message = "components_table_name must be 3-255 characters: letters, digits, underscores, hyphens and dots."
   }
 }
 
