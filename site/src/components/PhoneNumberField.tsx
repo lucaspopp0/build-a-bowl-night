@@ -23,7 +23,7 @@ export default function PhoneNumberField({ value, onChange, error, disabled }: P
       value={value}
       disabled={disabled}
       error={Boolean(error)}
-      helperText={error ?? "This is how we know who you are"}
+      helperText={error}
       onChange={(e) => onChange(e.target.value)}
     />
   );

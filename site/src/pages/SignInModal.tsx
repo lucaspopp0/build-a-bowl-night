@@ -143,10 +143,10 @@ export default function SignInModal({ open, onClose, onSignedIn }: SignInModalPr
             />
             {failure && <Alert severity="error">{failure}</Alert>}
             <Button type="submit" variant="contained" disabled={loading || !name.trim()}>
-              Create account
+              Sign Up
             </Button>
             <Button onClick={changeNumber} disabled={loading}>
-              Change number
+              Back
             </Button>
             {/* Bottom cancel button that dismisses the dialog. */}
             <Button onClick={onClose} disabled={loading}>
