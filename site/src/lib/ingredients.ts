@@ -12,9 +12,19 @@ export interface Ingredient {
 export const INGREDIENT_CATEGORIES = [
   "Grain",
   "Protein",
-  "Veggie",
+  "Veggie / Fruit",
   "Sauce",
 ] as const;
+
+// Plurals that can't be formed by appending "s"; keyed by the lowercase singular category.
+const CUSTOM_PLURALS: Record<string, string> = {
+  "veggie / fruit": "Veggies / Fruits",
+};
+
+// Returns the plural form of a category, using the custom map and falling back to appending "s".
+export function pluralizeCategory(category: string): string {
+  return CUSTOM_PLURALS[category.toLowerCase()] ?? `${category}s`;
+}
 
 // Groups ingredients by category: every known category first (even if empty), then any others alphabetically.
 export function groupByCategory(
