@@ -36,11 +36,16 @@ export default function IngredientTable({ ingredients }: IngredientTableProps) {
                 {/* Badge showing how many items are in this category. */}
                 <Badge
                   badgeContent={items.length}
-                  color="primary"
                   sx={{
                     alignItems: "center",
                     // Place the badge inline after the title, vertically centered with it.
-                    "& .MuiBadge-badge": { position: "static", transform: "none", ml: 0.5 },
+                    "& .MuiBadge-badge": {
+                      position: "static",
+                      transform: "none",
+                      ml: 0.5,
+                      bgcolor: "grey.600",
+                      color: "common.white",
+                    },
                   }}
                 >
                   {category}
