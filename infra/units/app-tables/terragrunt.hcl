@@ -1,4 +1,4 @@
-# Deploys the DynamoDB tables that store users and the components they bring.
+# Deploys the DynamoDB tables that store users and the ingredients they bring.
 
 include "root" {
   path = find_in_parent_folders("root.hcl")
@@ -10,6 +10,6 @@ terraform {
 
 # Inputs are supplied by the stack that instantiates this unit
 inputs = {
-  users_table_name      = values.users_table_name
-  components_table_name = values.components_table_name
+  users_table_name       = values.users_table_name
+  ingredients_table_name = values.ingredients_table_name
 }
