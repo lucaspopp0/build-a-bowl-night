@@ -24,6 +24,8 @@ const headerCellSx = {
   textTransform: "uppercase",
   opacity: 0.8,
   borderBottomWidth: 2,
+  // Keep the compact (small-size) vertical padding on the header row.
+  py: "6px",
 } as const;
 
 // Vertical stack of cards, one per category, each with a plain-text title above its table.
@@ -41,7 +43,7 @@ export default function IngredientTable({ ingredients }: IngredientTableProps) {
             {category}s
           </Typography>
           <TableContainer component={Paper}>
-            <Table size="small" sx={{ tableLayout: "fixed" }}>
+            <Table sx={{ tableLayout: "fixed" }}>
               <TableHead>
                 {/* Column headers: small bold caps, set off by a thicker bottom border. */}
                 <TableRow>
