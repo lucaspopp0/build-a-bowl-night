@@ -7,6 +7,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { darken } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { groupByCategory, type Ingredient } from "../lib/ingredients";
 
@@ -38,7 +39,15 @@ export default function IngredientTable({ ingredients }: IngredientTableProps) {
             <TableHead>
               {/* Title row in the accent color, spanning both columns. */}
               <TableRow sx={{ bgcolor: "primary.main" }}>
-                <TableCell colSpan={2} sx={{ py: 1.5, color: "primary.contrastText" }}>
+                <TableCell
+                  colSpan={2}
+                  sx={(theme) => ({
+                    py: 1.5,
+                    color: "primary.contrastText",
+                    // Subtle divider: a slightly darker shade of the title's own color.
+                    borderBottomColor: darken(theme.palette.primary.main, 0.15),
+                  })}
+                >
                   <Typography variant="h6" component="h2">
                     {category}s
                   </Typography>
