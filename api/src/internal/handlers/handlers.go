@@ -1,4 +1,4 @@
-package main
+package handlers
 
 import (
 	"context"
@@ -8,18 +8,19 @@ import (
 	"net/http"
 
 	"github.com/danielgtaylor/huma/v2"
+	"github.com/lucaspopp0/build-a-bowl-night/api/internal/db"
 )
 
 // UsersOutput is the response body listing users.
 type UsersOutput struct {
 	Body struct {
-		Users []User `json:"users"`
+		Users []db.User `json:"users"`
 	}
 }
 
 // UserOutput is the response body for a single user.
 type UserOutput struct {
-	Body User
+	Body db.User
 }
 
 // PhoneInput carries the phone number path parameter.
@@ -39,13 +40,13 @@ type PutUserInput struct {
 // IngredientsOutput is the response body listing ingredients.
 type IngredientsOutput struct {
 	Body struct {
-		Ingredients []Ingredient `json:"ingredients"`
+		Ingredients []db.Ingredient `json:"ingredients"`
 	}
 }
 
 // IngredientOutput is the response body for a single ingredient.
 type IngredientOutput struct {
-	Body Ingredient
+	Body db.Ingredient
 }
 
 // IngredientInput carries the path parameters identifying an ingredient.
@@ -86,17 +87,17 @@ func newID() (string, error) {
 // toHTTPError maps store errors onto the matching HTTP error responses.
 func toHTTPError(err error) error {
 	switch {
-	case errors.Is(err, ErrNotFound):
+	case errors.Is(err, db.ErrNotFound):
 		return huma.Error404NotFound("not found")
-	case errors.Is(err, ErrConflict):
+	case errors.Is(err, db.ErrConflict):
 		return huma.Error409Conflict("the item was changed by someone else; re-read it and retry")
 	default:
 		return huma.Error500InternalServerError("internal error")
 	}
 }
 
-// registerRoutes registers the users and ingredients endpoints, backed by the given store.
-func registerRoutes(api huma.API, store Store) {
+// Register registers the users and ingredients endpoints, backed by the given store.
+func Register(api huma.API, store db.Store) {
 	// List all users
 	huma.Register(api, huma.Operation{
 		OperationID: "list-users", Method: http.MethodGet, Path: "/users", Summary: "List users",
@@ -129,7 +130,7 @@ func registerRoutes(api huma.API, store Store) {
 		OperationID: "put-user", Method: http.MethodPut, Path: "/users/{phone}", Summary: "Create or update a user",
 		Errors: []int{http.StatusConflict},
 	}, func(ctx context.Context, in *PutUserInput) (*UserOutput, error) {
-		u, err := store.PutUser(ctx, User{Phone: in.Phone, Name: in.Body.Name}, in.Body.Version)
+		u, err := store.PutUser(ctx, db.User{Phone: in.Phone, Name: in.Body.Name}, in.Body.Version)
 		if err != nil {
 			return nil, toHTTPError(err)
 		}
@@ -154,12 +155,12 @@ func registerRoutes(api huma.API, store Store) {
 		}
 
 		for _, i := range items {
-			if err := store.DeleteIngredient(ctx, i.User, i.ID); err != nil && !errors.Is(err, ErrNotFound) {
+			if err := store.DeleteIngredient(ctx, i.User, i.ID); err != nil && !errors.Is(err, db.ErrNotFound) {
 				return nil, toHTTPError(err)
 			}
 		}
 
-		if err := store.DeleteUser(ctx, in.Phone); err != nil && !errors.Is(err, ErrNotFound) {
+		if err := store.DeleteUser(ctx, in.Phone); err != nil && !errors.Is(err, db.ErrNotFound) {
 			return nil, toHTTPError(err)
 		}
 
@@ -218,7 +219,7 @@ func registerRoutes(api huma.API, store Store) {
 		// Version 0 guarantees the new id is never an overwrite
 		none := 0
 
-		i, err := store.PutIngredient(ctx, Ingredient{User: in.Phone, ID: id, Category: in.Body.Category, Name: in.Body.Name}, &none)
+		i, err := store.PutIngredient(ctx, db.Ingredient{User: in.Phone, ID: id, Category: in.Body.Category, Name: in.Body.Name}, &none)
 		if err != nil {
 			return nil, toHTTPError(err)
 		}
@@ -248,7 +249,7 @@ func registerRoutes(api huma.API, store Store) {
 			return nil, toHTTPError(err)
 		}
 
-		i, err := store.PutIngredient(ctx, Ingredient{User: in.Phone, ID: in.ID, Category: in.Body.Category, Name: in.Body.Name}, in.Body.Version)
+		i, err := store.PutIngredient(ctx, db.Ingredient{User: in.Phone, ID: in.ID, Category: in.Body.Category, Name: in.Body.Name}, in.Body.Version)
 		if err != nil {
 			return nil, toHTTPError(err)
 		}

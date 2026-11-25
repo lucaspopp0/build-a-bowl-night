@@ -14,6 +14,8 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/danielgtaylor/huma/v2"
+	"github.com/lucaspopp0/build-a-bowl-night/api/internal/db"
+	"github.com/lucaspopp0/build-a-bowl-night/api/internal/handlers"
 	"github.com/lucaspopp0/go-lambda/eventwrappers"
 	"github.com/lucaspopp0/go-lambda/humaserverless"
 	"github.com/lucaspopp0/go-lambda/middleware"
@@ -27,7 +29,7 @@ type HealthOutput struct {
 }
 
 // newAPI builds the huma API and registers every operation the Lambda serves.
-func newAPI(store Store) huma.API {
+func newAPI(store db.Store) huma.API {
 	// Create the API served through the Function URL
 	api := humaserverless.NewServerless(humaserverless.ApiOpts{
 		Name:    "Build-a-Bowl Night API",
@@ -48,7 +50,7 @@ func newAPI(store Store) huma.API {
 	})
 
 	// Users and ingredients CRUD endpoints
-	registerRoutes(api, store)
+	handlers.Register(api, store)
 
 	return api
 }
@@ -91,7 +93,7 @@ func main() {
 		log.Fatalf("loading AWS config: %v", err)
 	}
 
-	store := NewDynamoStore(dynamodb.NewFromConfig(cfg), os.Getenv("USERS_TABLE"), os.Getenv("INGREDIENTS_TABLE"))
+	store := db.NewDynamoStore(dynamodb.NewFromConfig(cfg), os.Getenv("USERS_TABLE"), os.Getenv("INGREDIENTS_TABLE"))
 
 	lambda.Start(middleware.WithTypes[events.LambdaFunctionURLRequest, events.LambdaFunctionURLResponse](newHandler(newAPI(store))))
 }

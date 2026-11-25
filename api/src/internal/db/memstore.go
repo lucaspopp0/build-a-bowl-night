@@ -1,4 +1,4 @@
-package main
+package db
 
 import (
 	"context"
@@ -6,16 +6,16 @@ import (
 	"sync"
 )
 
-// memStore is an in-memory Store used by tests, mirroring the DynamoDB store's versioning rules.
-type memStore struct {
+// MemStore is an in-memory Store for tests, mirroring the DynamoDB store's versioning rules.
+type MemStore struct {
 	mu          sync.Mutex
 	users       map[string]User
 	ingredients map[[2]string]Ingredient
 }
 
-// newMemStore creates an empty in-memory store.
-func newMemStore() *memStore {
-	return &memStore{users: map[string]User{}, ingredients: map[[2]string]Ingredient{}}
+// NewMemStore creates an empty in-memory store.
+func NewMemStore() *MemStore {
+	return &MemStore{users: map[string]User{}, ingredients: map[[2]string]Ingredient{}}
 }
 
 // check applies the optimistic-concurrency rule for a put against the stored version.
@@ -32,7 +32,7 @@ func check(exists bool, stored int, expected *int) error {
 }
 
 // ListUsers returns all users sorted by phone.
-func (m *memStore) ListUsers(context.Context) ([]User, error) {
+func (m *MemStore) ListUsers(context.Context) ([]User, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
@@ -47,7 +47,7 @@ func (m *memStore) ListUsers(context.Context) ([]User, error) {
 }
 
 // GetUser returns a user or ErrNotFound.
-func (m *memStore) GetUser(_ context.Context, phone string) (User, error) {
+func (m *MemStore) GetUser(_ context.Context, phone string) (User, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
@@ -60,7 +60,7 @@ func (m *memStore) GetUser(_ context.Context, phone string) (User, error) {
 }
 
 // PutUser upserts a user, bumping its version.
-func (m *memStore) PutUser(_ context.Context, u User, expected *int) (User, error) {
+func (m *MemStore) PutUser(_ context.Context, u User, expected *int) (User, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
@@ -76,7 +76,7 @@ func (m *memStore) PutUser(_ context.Context, u User, expected *int) (User, erro
 }
 
 // DeleteUser removes a user or returns ErrNotFound.
-func (m *memStore) DeleteUser(_ context.Context, phone string) error {
+func (m *MemStore) DeleteUser(_ context.Context, phone string) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
@@ -90,7 +90,7 @@ func (m *memStore) DeleteUser(_ context.Context, phone string) error {
 }
 
 // ListIngredients returns one user's ingredients, or all when user is empty, sorted by user and id.
-func (m *memStore) ListIngredients(_ context.Context, user string) ([]Ingredient, error) {
+func (m *MemStore) ListIngredients(_ context.Context, user string) ([]Ingredient, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
@@ -107,7 +107,7 @@ func (m *memStore) ListIngredients(_ context.Context, user string) ([]Ingredient
 }
 
 // GetIngredient returns an ingredient or ErrNotFound.
-func (m *memStore) GetIngredient(_ context.Context, user, id string) (Ingredient, error) {
+func (m *MemStore) GetIngredient(_ context.Context, user, id string) (Ingredient, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
@@ -120,7 +120,7 @@ func (m *memStore) GetIngredient(_ context.Context, user, id string) (Ingredient
 }
 
 // PutIngredient upserts an ingredient, bumping its version.
-func (m *memStore) PutIngredient(_ context.Context, i Ingredient, expected *int) (Ingredient, error) {
+func (m *MemStore) PutIngredient(_ context.Context, i Ingredient, expected *int) (Ingredient, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
@@ -136,7 +136,7 @@ func (m *memStore) PutIngredient(_ context.Context, i Ingredient, expected *int)
 }
 
 // DeleteIngredient removes an ingredient or returns ErrNotFound.
-func (m *memStore) DeleteIngredient(_ context.Context, user, id string) error {
+func (m *MemStore) DeleteIngredient(_ context.Context, user, id string) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
