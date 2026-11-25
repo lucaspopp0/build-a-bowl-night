@@ -16,12 +16,12 @@ interface IngredientTableProps {
   ingredients: Ingredient[];
 }
 
-// Style for the column header cells: small, bold, all-caps text in white at 40% opacity.
+// Style for the column header cells: small, bold, all-caps text in the default text color at 40% opacity.
 const headerCellSx = {
   typography: "caption",
   fontWeight: "bold",
   textTransform: "uppercase",
-  color: "common.white",
+  color: "text.primary",
   opacity: 0.4,
 } as const;
 
@@ -42,8 +42,15 @@ export default function IngredientTable({ ingredients }: IngredientTableProps) {
           <TableContainer component={Paper}>
             <Table size="small" sx={{ tableLayout: "fixed" }}>
               <TableHead>
-                {/* Column headers: a darker shade of the accent color, small, bold, all caps. */}
-                <TableRow sx={{ bgcolor: "primary.dark" }}>
+                {/* Column headers: light gray in light mode, dark gray in dark mode. */}
+                <TableRow
+                  sx={(theme) => ({
+                    bgcolor:
+                      theme.palette.mode === "dark"
+                        ? theme.palette.grey[800]
+                        : theme.palette.grey[200],
+                  })}
+                >
                   <TableCell sx={headerCellSx}>Ingredient</TableCell>
                   <TableCell sx={headerCellSx}>Brought by</TableCell>
                 </TableRow>
