@@ -8,10 +8,10 @@ export interface Ingredient {
 
 // The categories a new ingredient can be filed under, in the order they are displayed.
 export const INGREDIENT_CATEGORIES = [
+  "Grain",
   "Protein",
   "Veggie",
   "Sauce",
-  "Grain",
 ] as const;
 
 // Groups ingredients by category: every known category first (even if empty), then any others alphabetically.
