@@ -144,10 +144,10 @@ export default function SignInModal({ open, onClose, onSignedIn }: SignInModalPr
               </Callout.Root>
             )}
               <Button type="submit" size="3" loading={loading} disabled={!name.trim()}>
-                Create account
+                Sign Up
               </Button>
               <Button type="button" variant="soft" color="gray" size="3" onClick={changeNumber} disabled={loading}>
-                Change number
+                Back
               </Button>
               {/* Bottom cancel button that dismisses the dialog. */}
               <Button type="button" variant="soft" color="gray" size="3" onClick={onClose} disabled={loading}>

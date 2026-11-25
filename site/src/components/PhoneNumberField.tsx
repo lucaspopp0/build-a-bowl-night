@@ -12,9 +12,9 @@ interface PhoneNumberFieldProps {
 
 // Controlled phone number input that shows a validation error when one is given.
 export default function PhoneNumberField({ value, onChange, error, disabled }: PhoneNumberFieldProps) {
-  // Telephone keyboard on mobile, with the error shown as the hint line.
+  // Telephone keyboard on mobile, with any error shown as a hint line.
   return (
-    <Field hint={error ?? "This is how we know who you are"} error={Boolean(error)}>
+    <Field hint={error} error={Boolean(error)}>
       <TextField.Root
         placeholder="(999) 999-9999"
         aria-label="Phone number"
