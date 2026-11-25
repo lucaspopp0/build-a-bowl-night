@@ -1,4 +1,4 @@
-// MUI theme: uses Google Sans (loaded from Google Fonts in index.html) for all UI text.
+// MUI theme: uses Google Sans (bundled via @fontsource in main.tsx) for all UI text.
 import { createTheme } from "@mui/material/styles";
 
 export default createTheme({
