@@ -1,8 +1,0 @@
-{
-  "name": "build-a-bowl-night",
-  "private": true,
-  "workspaces": [
-    "site",
-    "api-sdk"
-  ]
-}

@@ -9,10 +9,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "postinstall": "npm ci --prefix ../api-sdk"
   },
   "dependencies": {
-    "@build-a-bowl-night/api-sdk": "*",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@fontsource/google-sans": "^5.3.2",
