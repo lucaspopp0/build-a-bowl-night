@@ -5,4 +5,4 @@ outputDir: src
 additionalProperties:
   npmName: "@build-a-bowl-night/api-sdk"
   supportsES6: true
-  platform: node
+  platform: browser

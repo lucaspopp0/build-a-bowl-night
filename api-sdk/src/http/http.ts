@@ -1,7 +1,3 @@
-// TODO: evaluate if we can easily get rid of this library
-import  FormData from "form-data";
-import { URL, URLSearchParams } from 'url';
-import { type Dispatcher } from 'undici';
 import { Observable, from } from '../rxjsStub';
 
 export * from './isomorphic-fetch';
@@ -24,10 +20,7 @@ export enum HttpMethod {
 /**
  * Represents an HTTP file which will be transferred from or to a server.
  */
-export type HttpFile = {
-    data: Buffer,
-    name: string
-};
+export type HttpFile = Blob & { readonly name: string };
 
 export class HttpException extends Error {
     public constructor(msg: string) {
@@ -46,7 +39,7 @@ function ensureAbsoluteUrl(url: string) {
     if (url.startsWith("http://") || url.startsWith("https://")) {
         return url;
     }
-    throw new Error("You need to define an absolute base url for the server.");
+    return window.location.origin + url;
 }
 
 /**
@@ -57,7 +50,6 @@ export class RequestContext {
     private body: RequestBody = undefined;
     private url: URL;
     private signal: AbortSignal | undefined = undefined;
-    private dispatcher: Dispatcher | undefined = undefined;
 
     /**
      * Creates the request context using a http method and request resource url
@@ -150,39 +142,39 @@ export class RequestContext {
         return this.signal;
     }
 
-    public setDispatcher(dispatcher: Dispatcher): void {
-        this.dispatcher = dispatcher;
-    }
-
-    public getDispatcher(): Dispatcher | undefined {
-        return this.dispatcher;
-    }
 }
 
 export interface ResponseBody {
     text(): Promise<string>;
-    binary(): Promise<Buffer>;
-    stream(): ReadableStream<Uint8Array> | null;
+    binary(): Promise<Blob>;
 }
 
 /**
  * Helper class to generate a `ResponseBody` from binary data
  */
 export class SelfDecodingBody implements ResponseBody {
-    constructor(private dataSource: Promise<Buffer>) {}
+    constructor(private dataSource: Promise<Blob>) {}
 
-    binary(): Promise<Buffer> {
+    binary(): Promise<Blob> {
         return this.dataSource;
     }
 
     async text(): Promise<string> {
-        const data: Buffer = await this.dataSource;
-        return data.toString();
+        const data: Blob = await this.dataSource;
+        // @ts-ignore
+        if (data.text) {
+            // @ts-ignore
+            return data.text();
+        }
+
+        return new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.addEventListener("load", () => resolve(reader.result as string));
+            reader.addEventListener("error", () => reject(reader.error));
+            reader.readAsText(data);
+        });
     }
 
-    stream(): ReadableStream<Uint8Array> | null {
-        return null;
-    }
 }
 
 export class ResponseContext {
@@ -228,14 +220,23 @@ export class ResponseContext {
     public async getBodyAsFile(): Promise<HttpFile> {
         const data = await this.body.binary();
         const fileName = this.getParsedHeader("content-disposition")["filename"] || "";
-        return { data, name: fileName };
+        const contentType = this.headers["content-type"] || "";
+        try {
+            return new File([data], fileName, { type: contentType });
+        } catch (error) {
+            /** Fallback for when the File constructor is not available */
+            return Object.assign(data, {
+                name: fileName,
+                type: contentType
+            });
+        }
     }
 
     /**
      * Use a heuristic to get a body of unknown data structure.
      * Return as string if possible, otherwise as binary.
      */
-    public getBodyAsAny(): Promise<string | Buffer | undefined> {
+    public getBodyAsAny(): Promise<string | Blob | undefined> {
         try {
             return this.body.text();
         } catch {}
