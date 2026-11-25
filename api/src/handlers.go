@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"crypto/rand"
+	"encoding/hex"
 	"errors"
 	"net/http"
 
@@ -60,6 +62,25 @@ type PutIngredientInput struct {
 		Name     string `json:"name" minLength:"1" maxLength:"200" doc:"What is being brought"`
 		Version  *int   `json:"version,omitempty" minimum:"0" doc:"Version last read, for optimistic concurrency; 0 means the ingredient must not exist yet. Omit to overwrite."`
 	}
+}
+
+// CreateIngredientInput is the request of the ingredient create operation.
+type CreateIngredientInput struct {
+	PhoneInput
+	Body struct {
+		Category string `json:"category" minLength:"1" maxLength:"100" doc:"Kind of ingredient, such as protein or topping"`
+		Name     string `json:"name" minLength:"1" maxLength:"200" doc:"What is being brought"`
+	}
+}
+
+// newID returns a random 128-bit hex identifier for a new ingredient.
+func newID() (string, error) {
+	b := make([]byte, 16)
+	if _, err := rand.Read(b); err != nil {
+		return "", err
+	}
+
+	return hex.EncodeToString(b), nil
 }
 
 // toHTTPError maps store errors onto the matching HTTP error responses.
@@ -177,6 +198,32 @@ func registerRoutes(api huma.API, store Store) {
 		out.Body.Ingredients = items
 
 		return out, nil
+	})
+
+	// Create an ingredient with a server-generated id
+	huma.Register(api, huma.Operation{
+		OperationID: "create-ingredient", Method: http.MethodPost, Path: "/users/{phone}/ingredients", Summary: "Create an ingredient",
+		DefaultStatus: http.StatusCreated, Errors: []int{http.StatusNotFound},
+	}, func(ctx context.Context, in *CreateIngredientInput) (*IngredientOutput, error) {
+		// Ingredients must belong to a user that exists
+		if _, err := store.GetUser(ctx, in.Phone); err != nil {
+			return nil, toHTTPError(err)
+		}
+
+		id, err := newID()
+		if err != nil {
+			return nil, toHTTPError(err)
+		}
+
+		// Version 0 guarantees the new id is never an overwrite
+		none := 0
+
+		i, err := store.PutIngredient(ctx, Ingredient{User: in.Phone, ID: id, Category: in.Body.Category, Name: in.Body.Name}, &none)
+		if err != nil {
+			return nil, toHTTPError(err)
+		}
+
+		return &IngredientOutput{Body: i}, nil
 	})
 
 	// Get one ingredient of a user

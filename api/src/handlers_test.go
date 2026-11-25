@@ -25,6 +25,8 @@ func TestCRUD(t *testing.T) {
 		{"list users", "GET", "/users", "", 200, `"phone":"555"`},
 		{"ingredient needs user", "PUT", "/users/999/ingredients/a", `{"category":"protein","name":"Tofu"}`, 404, ""},
 		{"create ingredient", "PUT", "/users/555/ingredients/a", `{"category":"protein","name":"Tofu"}`, 200, `"id":"a"`},
+		{"post needs user", "POST", "/users/999/ingredients", `{"category":"x","name":"y"}`, 404, ""},
+		{"post ingredient", "POST", "/users/555/ingredients", `{"category":"sauce","name":"Sriracha"}`, 201, `"name":"Sriracha"`},
 		{"create second ingredient", "PUT", "/users/555/ingredients/b", `{"category":"topping","name":"Nori"}`, 200, ""},
 		{"get ingredient", "GET", "/users/555/ingredients/a", "", 200, `"name":"Tofu"`},
 		{"list all ingredients", "GET", "/ingredients", "", 200, `"name":"Nori"`},
