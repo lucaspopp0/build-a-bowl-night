@@ -15,8 +15,8 @@ interface NavBarProps {
 export default function NavBar({ userName, onSignIn, onLogOut }: NavBarProps) {
   // Renders a sticky app bar with the title pushing the user section to the right.
   return (
-    // Always dark green with light text, regardless of light/dark mode.
-    <AppBar position="sticky" enableColorOnDark sx={{ bgcolor: "#1b5e20", backgroundImage: "none", color: "#f1f8e9" }}>
+    // Default (non-accent) app bar colors, following the light/dark theme.
+    <AppBar position="sticky" color="default">
       <Toolbar>
         <Typography variant="h6" component="h1" sx={{ flexGrow: 1, fontFamily: '"Pacifico", cursive' }}>
           Build-a-Bowl Ingredients
