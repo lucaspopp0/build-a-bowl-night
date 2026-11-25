@@ -189,7 +189,7 @@ export class ObjectIngredientsApi {
     }
 
     /**
-     * Create or update an ingredient
+     * Update an ingredient
      * @param param the request object
      */
     public putIngredientWithHttpInfo(param: IngredientsApiPutIngredientRequest, options?: ConfigurationOptions): Promise<HttpInfo<Ingredient>> {
@@ -197,7 +197,7 @@ export class ObjectIngredientsApi {
     }
 
     /**
-     * Create or update an ingredient
+     * Update an ingredient
      * @param param the request object
      */
     public putIngredient(param: IngredientsApiPutIngredientRequest, options?: ConfigurationOptions): Promise<Ingredient> {

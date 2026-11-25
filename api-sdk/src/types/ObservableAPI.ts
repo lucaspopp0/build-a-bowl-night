@@ -194,7 +194,7 @@ export class ObservableIngredientsApi {
     }
 
     /**
-     * Create or update an ingredient
+     * Update an ingredient
      * @param phone Phone number of the user
      * @param id Identifier of the ingredient, chosen by the client
      * @param putIngredientInputBody
@@ -220,7 +220,7 @@ export class ObservableIngredientsApi {
     }
 
     /**
-     * Create or update an ingredient
+     * Update an ingredient
      * @param phone Phone number of the user
      * @param id Identifier of the ingredient, chosen by the client
      * @param putIngredientInputBody
