@@ -10,6 +10,7 @@ http/isomorphic-fetch.ts
 index.ts
 middleware.ts
 models/CreateIngredientInputBody.ts
+models/DietaryAttributes.ts
 models/ErrorDetail.ts
 models/ErrorModel.ts
 models/Ingredient.ts

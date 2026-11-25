@@ -8,6 +8,9 @@ components:
           maxLength: 100
           minLength: 1
           type: string
+        dietaryAttributes:
+          $ref: "#/components/schemas/DietaryAttributes"
+          description: Dietary restrictions the ingredient is suitable for; all false when omitted
         name:
           description: What is being brought
           maxLength: 200
@@ -16,6 +19,23 @@ components:
       required:
         - category
         - name
+      type: object
+    DietaryAttributes:
+      additionalProperties: false
+      properties:
+        glutenFree:
+          description: Contains no gluten
+          type: boolean
+        vegan:
+          description: Contains no animal products
+          type: boolean
+        vegetarian:
+          description: Contains no meat or fish
+          type: boolean
+      required:
+        - glutenFree
+        - vegetarian
+        - vegan
       type: object
     ErrorDetail:
       additionalProperties: false
@@ -75,6 +95,9 @@ components:
         category:
           description: Kind of ingredient, such as protein or topping
           type: string
+        dietaryAttributes:
+          $ref: "#/components/schemas/DietaryAttributes"
+          description: Dietary restrictions the ingredient is suitable for
         id:
           description: Identifier of the ingredient, unique within its user
           type: string
@@ -89,6 +112,7 @@ components:
         - id
         - category
         - name
+        - dietaryAttributes
       type: object
     IngredientsOutputBody:
       additionalProperties: false
@@ -110,6 +134,9 @@ components:
           maxLength: 100
           minLength: 1
           type: string
+        dietaryAttributes:
+          $ref: "#/components/schemas/DietaryAttributes"
+          description: Dietary restrictions the ingredient is suitable for; all false when omitted
         name:
           description: What is being brought
           maxLength: 200
