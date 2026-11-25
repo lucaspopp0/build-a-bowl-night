@@ -6,7 +6,7 @@ export interface Ingredient {
   broughtBy: string;
 }
 
-// The categories a new ingredient can be filed under.
+// The categories a new ingredient can be filed under, in the order they are displayed.
 export const INGREDIENT_CATEGORIES = [
   "Protein",
   "Veggie",
