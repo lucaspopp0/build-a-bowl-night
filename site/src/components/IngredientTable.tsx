@@ -1,4 +1,5 @@
 // MUI components and the ingredient helpers used to render one table per category.
+import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Table from "@mui/material/Table";
@@ -24,7 +25,7 @@ const headerCellSx = {
   opacity: 0.4,
 } as const;
 
-// Vertical stack of cards, one per category, each with a title heading above its table.
+// Vertical stack of cards, one per category, each with a plain-text title above its table.
 export default function IngredientTable({ ingredients }: IngredientTableProps) {
   // Group the ingredients so each category gets its own table.
   const groups = groupByCategory(ingredients);
@@ -33,37 +34,31 @@ export default function IngredientTable({ ingredients }: IngredientTableProps) {
   return (
     <Stack spacing={3}>
       {groups.map(([category, items]) => (
-        <TableContainer key={category} component={Paper}>
-          {/* Category title, a heading above the table in the accent color. */}
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{ px: 2, py: 1.5, bgcolor: "primary.main", color: "primary.contrastText" }}
-          >
+        <Box key={category}>
+          {/* Category title: plain text sitting above the table, with a small gap before it. */}
+          <Typography variant="h6" component="h2" sx={{ mb: 1 }}>
             {category}s
           </Typography>
-          <Table size="small" sx={{ tableLayout: "fixed" }}>
-            <TableHead>
-              {/* Column headers: a darker shade of the accent color, small, bold, all caps. */}
-              <TableRow sx={{ bgcolor: "primary.dark" }}>
-                <TableCell sx={headerCellSx}>
-                  Ingredient
-                </TableCell>
-                <TableCell sx={headerCellSx}>
-                  Brought by
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {items.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell>{item.broughtBy}</TableCell>
+          <TableContainer component={Paper}>
+            <Table size="small" sx={{ tableLayout: "fixed" }}>
+              <TableHead>
+                {/* Column headers: a darker shade of the accent color, small, bold, all caps. */}
+                <TableRow sx={{ bgcolor: "primary.dark" }}>
+                  <TableCell sx={headerCellSx}>Ingredient</TableCell>
+                  <TableCell sx={headerCellSx}>Brought by</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {items.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell>{item.name}</TableCell>
+                    <TableCell>{item.broughtBy}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
       ))}
     </Stack>
   );
