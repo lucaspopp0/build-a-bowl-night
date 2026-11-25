@@ -1,6 +1,5 @@
 // MUI components and the ingredient helpers used to render one table per category.
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
@@ -18,9 +17,8 @@ import { groupByCategory, type Ingredient } from "../lib/ingredients";
 // Props: the full list of ingredients to display.
 interface IngredientTableProps {
   ingredients: Ingredient[];
-  // Phone of the signed-in user; their ingredients get edit and delete buttons. Omit when signed out.
+  // Phone of the signed-in user; their ingredients get a delete button. Omit when signed out.
   currentPhone?: string;
-  onEdit?: (ingredient: Ingredient) => void;
   onDelete?: (ingredient: Ingredient) => void;
   // Called with the category when the signed-in user clicks "Bring one?" on an empty category.
   onBringOne?: (category: string) => void;
@@ -39,7 +37,7 @@ const headerCellSx = {
 } as const;
 
 // Vertical stack of cards, one per category, each with a plain-text title above its table.
-export default function IngredientTable({ ingredients, currentPhone, onEdit, onDelete, onBringOne }: IngredientTableProps) {
+export default function IngredientTable({ ingredients, currentPhone, onDelete, onBringOne }: IngredientTableProps) {
   // Group the ingredients so each category gets its own table.
   const groups = groupByCategory(ingredients);
 
@@ -74,8 +72,8 @@ export default function IngredientTable({ ingredients, currentPhone, onEdit, onD
                   <TableRow>
                     <TableCell sx={headerCellSx}>Ingredient</TableCell>
                     <TableCell sx={headerCellSx}>Brought by</TableCell>
-                    {/* Narrow column reserved for the edit and delete buttons. */}
-                    {currentPhone && <TableCell sx={{ ...headerCellSx, width: 96 }} />}
+                    {/* Narrow column reserved for the delete button. */}
+                    {currentPhone && <TableCell sx={{ ...headerCellSx, width: 56 }} />}
                   </TableRow>
                 </TableHead>
                 {/* No divider under the final row; the card edge closes the table. */}
@@ -85,13 +83,10 @@ export default function IngredientTable({ ingredients, currentPhone, onEdit, onD
                       <TableCell>{item.name}</TableCell>
                       <TableCell>{item.broughtBy}</TableCell>
                       {currentPhone && (
-                        // Pencil and red trash buttons, shown only on the signed-in user's own rows.
+                        // Red trash button, shown only on the signed-in user's own rows.
                         <TableCell align="right" sx={{ py: 0, textAlign: "right", whiteSpace: "nowrap" }}>
                           {item.phone === currentPhone && (
                             <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-                              <IconButton size="small" aria-label={`Edit ${item.name}`} onClick={() => onEdit?.(item)}>
-                                <EditIcon fontSize="small" />
-                              </IconButton>
                               <IconButton size="small" color="error" aria-label={`Delete ${item.name}`} onClick={() => onDelete?.(item)}>
                                 <DeleteIcon fontSize="small" />
                               </IconButton>
