@@ -146,13 +146,13 @@ export default function SignInModal({ open, onClose, onSignedIn }: SignInModalPr
                   <Callout.Text>{failure}</Callout.Text>
                 </Callout.Root>
               )}
-              {/* Side-by-side action buttons: back and cancel on the left, sign up on the right. */}
+              {/* Side-by-side action buttons: cancel and back on the left, sign up on the right. */}
               <Flex gap="3" justify="end">
-                <Button type="button" variant="soft" color="gray" size="3" onClick={changeNumber} disabled={loading}>
-                  Back
-                </Button>
                 <Button type="button" variant="soft" color="gray" size="3" onClick={onClose} disabled={loading}>
                   Cancel
+                </Button>
+                <Button type="button" variant="soft" color="gray" size="3" onClick={changeNumber} disabled={loading}>
+                  Back
                 </Button>
                 <Button type="submit" size="3" loading={loading} disabled={!name.trim()}>
                   Sign Up
