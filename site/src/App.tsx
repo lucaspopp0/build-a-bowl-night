@@ -1,14 +1,14 @@
-// Radix theme, the app's navbar, page and sign-in dialog.
+// Radix theme, the app's header, page and sign-in dialog.
 import { useState } from "react";
 import { Theme } from "@radix-ui/themes";
 import useMediaQuery from "./hooks/useMediaQuery";
-import NavBar from "./components/NavBar";
+import PageHeader from "./components/PageHeader";
 import IngredientsPage from "./pages/IngredientsPage";
 import EditNameModal from "./pages/EditNameModal";
 import SignInModal from "./pages/SignInModal";
 import { clearCurrentUser, loadCurrentUser, type CurrentUser } from "./lib/session";
 
-// Root component: navbar on top, the ingredients page, and the sign-in dialog.
+// Root component: header on top, the ingredients page, and the sign-in dialog.
 export default function App() {
   // The signed-in user, restored from local storage on first load.
   const [user, setUser] = useState<CurrentUser | null>(loadCurrentUser);
@@ -32,8 +32,8 @@ export default function App() {
   // The Radix Theme provides colors, fonts and base styles for everything inside it.
   return (
     <Theme appearance={prefersDark ? "dark" : "light"} accentColor="blue" radius="medium">
-      {/* Top bar with the sign-in button or user menu. */}
-      <NavBar userName={user?.name} onSignIn={() => setSignInOpen(true)} onEditName={() => setEditNameOpen(true)} onLogOut={logOut} />
+      {/* Title with the signed-in status line. */}
+      <PageHeader userName={user?.name} onSignIn={() => setSignInOpen(true)} onEditName={() => setEditNameOpen(true)} onLogOut={logOut} />
       <IngredientsPage user={user} />
       <SignInModal
         open={signInOpen}
