@@ -1,4 +1,4 @@
-/* Remove the browser's default page margin so the navbar is flush with the edges. */
+/* Remove the browser's default page margin so content is flush with the edges. */
 body {
   margin: 0;
 }
@@ -11,16 +11,6 @@ body {
 /* In light mode, a very slightly gray page background (surfaces stay white). */
 .radix-themes.light {
   --color-background: #f5f5f5;
-}
-
-/* Sticky top bar with a subtle shadow, following the theme's panel color. */
-.navbar {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  height: 56px;
-  background: var(--color-panel-solid);
-  box-shadow: 0 1px 4px var(--black-a4);
 }
 
 /* Small, bold, all-caps table column headers at 80% opacity. */

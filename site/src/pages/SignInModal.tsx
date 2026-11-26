@@ -121,13 +121,15 @@ export default function SignInModal({ open, onClose, onSignedIn }: SignInModalPr
                   <Callout.Text>{failure}</Callout.Text>
                 </Callout.Root>
               )}
-              <Button type="submit" size="3" loading={loading}>
-                Continue
-              </Button>
-              {/* Bottom cancel button that dismisses the dialog. */}
-              <Button type="button" variant="soft" color="gray" size="3" onClick={onClose} disabled={loading}>
-                Cancel
-              </Button>
+              {/* Side-by-side action buttons: cancel dismisses the dialog, continue submits. */}
+              <Flex gap="3" justify="end">
+                <Button type="button" variant="soft" color="gray" size="3" onClick={onClose} disabled={loading}>
+                  Cancel
+                </Button>
+                <Button type="submit" size="3" loading={loading}>
+                  Continue
+                </Button>
+              </Flex>
             </Flex>
           </form>
         ) : (
@@ -144,16 +146,18 @@ export default function SignInModal({ open, onClose, onSignedIn }: SignInModalPr
                   <Callout.Text>{failure}</Callout.Text>
                 </Callout.Root>
               )}
-              <Button type="submit" size="3" loading={loading} disabled={!name.trim()}>
-                Sign Up
-              </Button>
-              <Button type="button" variant="soft" color="gray" size="3" onClick={changeNumber} disabled={loading}>
-                Back
-              </Button>
-              {/* Bottom cancel button that dismisses the dialog. */}
-              <Button type="button" variant="soft" color="gray" size="3" onClick={onClose} disabled={loading}>
-                Cancel
-              </Button>
+              {/* Side-by-side action buttons: cancel and back on the left, sign up on the right. */}
+              <Flex gap="3" justify="end">
+                <Button type="button" variant="soft" color="gray" size="3" onClick={onClose} disabled={loading}>
+                  Cancel
+                </Button>
+                <Button type="button" variant="soft" color="gray" size="3" onClick={changeNumber} disabled={loading}>
+                  Back
+                </Button>
+                <Button type="submit" size="3" loading={loading} disabled={!name.trim()}>
+                  Sign Up
+                </Button>
+              </Flex>
             </Flex>
           </form>
         )}
