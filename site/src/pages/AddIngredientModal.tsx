@@ -88,13 +88,15 @@ export default function AddIngredientModal({ open, user, onClose, onCreated }: A
                 <Callout.Text>{failure}</Callout.Text>
               </Callout.Root>
             )}
-            <Button type="submit" size="3" loading={loading} disabled={!category || !name.trim()}>
-              Add ingredient
-            </Button>
-            {/* Bottom cancel button that dismisses the dialog. */}
-            <Button type="button" variant="soft" color="gray" size="3" onClick={onClose} disabled={loading}>
-              Cancel
-            </Button>
+            {/* Right-aligned cancel and submit buttons, side by side like the other dialogs. */}
+            <Flex gap="3" justify="end">
+              <Button type="button" variant="soft" color="gray" onClick={onClose} disabled={loading}>
+                Cancel
+              </Button>
+              <Button type="submit" loading={loading} disabled={!category || !name.trim()}>
+                Add ingredient
+              </Button>
+            </Flex>
           </Flex>
         </form>
       </Dialog.Content>
