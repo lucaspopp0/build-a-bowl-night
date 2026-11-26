@@ -1,5 +1,5 @@
 // Radix components, icons and the ingredient helpers used to render one table per category.
-import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
+import { MdDelete, MdEdit } from "react-icons/md";
 import { Box, Flex, Heading, IconButton, Link, Table, Text } from "@radix-ui/themes";
 import { groupByCategory, pluralizeCategory, type Ingredient } from "../lib/ingredients";
 
@@ -53,7 +53,7 @@ export default function IngredientTable({ ingredients, currentPhone, onEdit, onD
                   <Table.ColumnHeaderCell className="header-cell">Ingredient</Table.ColumnHeaderCell>
                   <Table.ColumnHeaderCell className="header-cell">Brought by</Table.ColumnHeaderCell>
                   {/* Narrow column reserved for the edit and delete buttons. */}
-                  {currentPhone && <Table.ColumnHeaderCell style={{ width: 80 }} />}
+                  {currentPhone && <Table.ColumnHeaderCell style={{ width: 112 }} />}
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -69,12 +69,12 @@ export default function IngredientTable({ ingredients, currentPhone, onEdit, onD
                       // Pencil and trash buttons, shown only on the signed-in user's own rows.
                       <Table.Cell justify="end" style={{ whiteSpace: "nowrap" }}>
                         {item.phone === currentPhone && (
-                          <Flex justify="end" gap="1">
-                            <IconButton size="1" variant="ghost" color="gray" aria-label={`Edit ${item.name}`} onClick={() => onEdit?.(item)}>
-                              <Pencil1Icon />
+                          <Flex justify="end" gap="2">
+                            <IconButton size="2" variant="ghost" color="gray" aria-label={`Edit ${item.name}`} onClick={() => onEdit?.(item)}>
+                              <MdEdit size={20} />
                             </IconButton>
-                            <IconButton size="1" variant="ghost" color="gray" aria-label={`Delete ${item.name}`} onClick={() => onDelete?.(item)}>
-                              <TrashIcon />
+                            <IconButton size="2" variant="ghost" color="gray" aria-label={`Delete ${item.name}`} onClick={() => onDelete?.(item)}>
+                              <MdDelete size={20} />
                             </IconButton>
                           </Flex>
                         )}
