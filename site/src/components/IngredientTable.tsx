@@ -69,7 +69,7 @@ export default function IngredientTable({ ingredients, currentPhone, onEdit, onD
                       // Pencil and trash buttons, shown only on the signed-in user's own rows.
                       <Table.Cell justify="end" style={{ whiteSpace: "nowrap" }}>
                         {item.phone === currentPhone && (
-                          <Flex justify="end" gap="4">
+                          <Flex justify="end" gap="2">
                             <IconButton size="2" variant="ghost" color="gray" aria-label={`Edit ${item.name}`} onClick={() => onEdit?.(item)}>
                               <Pencil1Icon width={20} height={20} />
                             </IconButton>
