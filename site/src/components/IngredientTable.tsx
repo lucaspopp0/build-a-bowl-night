@@ -1,5 +1,5 @@
 // Radix components, icons and the ingredient helpers used to render one table per category.
-import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
+import { MdDelete, MdEdit } from "react-icons/md";
 import { Box, Flex, Heading, IconButton, Link, Table, Text } from "@radix-ui/themes";
 import { groupByCategory, pluralizeCategory, type Ingredient } from "../lib/ingredients";
 
@@ -71,10 +71,10 @@ export default function IngredientTable({ ingredients, currentPhone, onEdit, onD
                         {item.phone === currentPhone && (
                           <Flex justify="end" gap="2">
                             <IconButton size="2" variant="ghost" color="gray" aria-label={`Edit ${item.name}`} onClick={() => onEdit?.(item)}>
-                              <Pencil1Icon width={20} height={20} />
+                              <MdEdit size={20} />
                             </IconButton>
                             <IconButton size="2" variant="ghost" color="gray" aria-label={`Delete ${item.name}`} onClick={() => onDelete?.(item)}>
-                              <TrashIcon width={20} height={20} />
+                              <MdDelete size={20} />
                             </IconButton>
                           </Flex>
                         )}
