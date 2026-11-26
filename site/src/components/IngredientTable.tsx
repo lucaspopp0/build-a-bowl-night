@@ -53,7 +53,7 @@ export default function IngredientTable({ ingredients, currentPhone, onEdit, onD
                   <Table.ColumnHeaderCell className="header-cell">Ingredient</Table.ColumnHeaderCell>
                   <Table.ColumnHeaderCell className="header-cell">Brought by</Table.ColumnHeaderCell>
                   {/* Narrow column reserved for the edit and delete buttons. */}
-                  {currentPhone && <Table.ColumnHeaderCell style={{ width: 80 }} />}
+                  {currentPhone && <Table.ColumnHeaderCell style={{ width: 112 }} />}
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -69,12 +69,12 @@ export default function IngredientTable({ ingredients, currentPhone, onEdit, onD
                       // Pencil and trash buttons, shown only on the signed-in user's own rows.
                       <Table.Cell justify="end" style={{ whiteSpace: "nowrap" }}>
                         {item.phone === currentPhone && (
-                          <Flex justify="end" gap="1">
-                            <IconButton size="1" variant="ghost" color="gray" aria-label={`Edit ${item.name}`} onClick={() => onEdit?.(item)}>
-                              <Pencil1Icon />
+                          <Flex justify="end" gap="4">
+                            <IconButton size="2" variant="ghost" color="gray" aria-label={`Edit ${item.name}`} onClick={() => onEdit?.(item)}>
+                              <Pencil1Icon width={20} height={20} />
                             </IconButton>
-                            <IconButton size="1" variant="ghost" color="gray" aria-label={`Delete ${item.name}`} onClick={() => onDelete?.(item)}>
-                              <TrashIcon />
+                            <IconButton size="2" variant="ghost" color="gray" aria-label={`Delete ${item.name}`} onClick={() => onDelete?.(item)}>
+                              <TrashIcon width={20} height={20} />
                             </IconButton>
                           </Flex>
                         )}
