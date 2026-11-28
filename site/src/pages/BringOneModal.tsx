@@ -1,7 +1,8 @@
 // React state and the Radix components that make up the bring-one dialog.
 import { useEffect, useState, type FormEvent } from "react";
-import { Button, Callout, Dialog, Flex, TextField } from "@radix-ui/themes";
+import { Button, TextField } from "@radix-ui/themes";
 import Field from "../components/Field";
+import Modal from "../components/Modal";
 import { createIngredient } from "../lib/api";
 import type { CurrentUser } from "../lib/session";
 
@@ -59,31 +60,29 @@ export default function BringOneModal({ open, category, user, onClose, onCreated
     }
   };
 
-  // Dialog titled with the fixed category, containing a name field, and a submit button.
+  // Modal titled with the fixed category, containing a name field and cancel/submit buttons.
   return (
-    <Dialog.Root open={open} onOpenChange={(next) => !next && !loading && onClose()}>
-      <Dialog.Content maxWidth="400px" aria-describedby={undefined}>
-        <Dialog.Title>Bring a {category.toLowerCase()}</Dialog.Title>
-        <form onSubmit={submit} noValidate>
-          <Flex direction="column" gap="4">
-            <Field label={category}>
-              <TextField.Root autoFocus value={name} disabled={loading} onChange={(e) => setName(e.target.value)} />
-            </Field>
-            {failure && (
-              <Callout.Root color="red" size="1">
-                <Callout.Text>{failure}</Callout.Text>
-              </Callout.Root>
-            )}
-            <Button type="submit" size="3" loading={loading} disabled={!name.trim()}>
-              Add {category.toLowerCase()}
-            </Button>
-            {/* Bottom cancel button that dismisses the dialog. */}
-            <Button type="button" variant="soft" color="gray" size="3" onClick={onClose} disabled={loading}>
-              Cancel
-            </Button>
-          </Flex>
-        </form>
-      </Dialog.Content>
-    </Dialog.Root>
+    <Modal
+      open={open}
+      title={`Bring a ${category.toLowerCase()}`}
+      onClose={onClose}
+      busy={loading}
+      onSubmit={submit}
+      error={failure}
+      actions={
+        <>
+          <Button type="button" variant="soft" color="gray" onClick={onClose} disabled={loading}>
+            Cancel
+          </Button>
+          <Button type="submit" loading={loading} disabled={!name.trim()}>
+            Add {category.toLowerCase()}
+          </Button>
+        </>
+      }
+    >
+      <Field label={category}>
+        <TextField.Root autoFocus value={name} disabled={loading} onChange={(e) => setName(e.target.value)} />
+      </Field>
+    </Modal>
   );
 }

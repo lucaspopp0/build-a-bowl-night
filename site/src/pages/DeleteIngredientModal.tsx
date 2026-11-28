@@ -1,6 +1,7 @@
 // React state and the Radix components that make up the delete-confirmation dialog.
 import { useEffect, useState } from "react";
-import { AlertDialog, Button, Callout, Flex } from "@radix-ui/themes";
+import { Button } from "@radix-ui/themes";
+import Modal from "../components/Modal";
 import { deleteIngredient } from "../lib/api";
 import type { Ingredient } from "../lib/ingredients";
 
@@ -52,16 +53,15 @@ export default function DeleteIngredientModal({ ingredient, onClose, onDeleted }
 
   // Confirmation question with No and Yes buttons.
   return (
-    <AlertDialog.Root open={ingredient !== null} onOpenChange={(next) => !next && !loading && onClose()}>
-      <AlertDialog.Content maxWidth="400px">
-        <AlertDialog.Title>Delete ingredient?</AlertDialog.Title>
-        <AlertDialog.Description size="2">Are you sure you want to delete {(ingredient ?? lastIngredient)?.name}?</AlertDialog.Description>
-        {failure && (
-          <Callout.Root color="red" size="1" mt="3">
-            <Callout.Text>{failure}</Callout.Text>
-          </Callout.Root>
-        )}
-        <Flex gap="3" mt="4" justify="end">
+    <Modal
+      open={ingredient !== null}
+      title="Delete ingredient?"
+      description={`Are you sure you want to delete ${(ingredient ?? lastIngredient)?.name}?`}
+      onClose={onClose}
+      busy={loading}
+      error={failure}
+      actions={
+        <>
           <Button variant="soft" color="gray" onClick={onClose} disabled={loading}>
             No
           </Button>
@@ -69,8 +69,8 @@ export default function DeleteIngredientModal({ ingredient, onClose, onDeleted }
           <Button color="red" onClick={confirm} loading={loading}>
             Yes
           </Button>
-        </Flex>
-      </AlertDialog.Content>
-    </AlertDialog.Root>
+        </>
+      }
+    />
   );
 }
