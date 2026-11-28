@@ -40,3 +40,16 @@ body {
 .ingredient-table :is(th, td):last-child {
   padding-right: 0;
 }
+
+/* Never scroll horizontally: clip Radix's scroll container and let long text wrap inside its cell. */
+.ingredient-table,
+.ingredient-table .rt-ScrollAreaViewport {
+  overflow-x: hidden !important;
+}
+.ingredient-table :is(th, td) {
+  overflow-wrap: anywhere;
+}
+.ingredient-table .rt-ScrollAreaViewport > div {
+  min-width: 0 !important;
+  width: 100%;
+}
