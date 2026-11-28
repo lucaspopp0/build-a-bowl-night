@@ -1,7 +1,8 @@
 // React state and the Radix components that make up the sign-in dialog.
 import { useEffect, useState, type FormEvent } from "react";
-import { Button, Callout, Dialog, Flex, Text, TextField } from "@radix-ui/themes";
+import { Button, Text, TextField } from "@radix-ui/themes";
 import Field from "../components/Field";
+import Modal from "../components/Modal";
 import PhoneNumberField from "../components/PhoneNumberField";
 import { createUser, findUser } from "../lib/api";
 import { normalizePhone } from "../lib/phone";
@@ -108,60 +109,53 @@ export default function SignInModal({ open, onClose, onSignedIn }: SignInModalPr
   }, [open]);
 
   // Phone step first; once the number is unknown, the name step replaces it.
-  return (
-    <Dialog.Root open={open} onOpenChange={(next) => !next && !loading && onClose()}>
-      <Dialog.Content maxWidth="400px" aria-describedby={undefined}>
-        <Dialog.Title>Sign in</Dialog.Title>
-        {newUserPhone === null ? (
-          <form onSubmit={submitPhone} noValidate>
-            <Flex direction="column" gap="4">
-              <PhoneNumberField value={phoneInput} onChange={setPhoneInput} error={phoneError} disabled={loading} />
-              {failure && (
-                <Callout.Root color="red" size="1">
-                  <Callout.Text>{failure}</Callout.Text>
-                </Callout.Root>
-              )}
-              {/* Side-by-side action buttons: cancel dismisses the dialog, continue submits. */}
-              <Flex gap="3" justify="end">
-                <Button type="button" variant="soft" color="gray" size="3" onClick={onClose} disabled={loading}>
-                  Cancel
-                </Button>
-                <Button type="submit" size="3" loading={loading}>
-                  Continue
-                </Button>
-              </Flex>
-            </Flex>
-          </form>
-        ) : (
-          <form onSubmit={submitName} noValidate>
-            <Flex direction="column" gap="4">
-              <Text color="gray">
-                We don't know {newUserPhone} yet. What's your name?
-              </Text>
-              <Field label="Your name">
-                <TextField.Root autoComplete="name" autoFocus value={name} disabled={loading} onChange={(e) => setName(e.target.value)} />
-              </Field>
-              {failure && (
-                <Callout.Root color="red" size="1">
-                  <Callout.Text>{failure}</Callout.Text>
-                </Callout.Root>
-              )}
-              {/* Side-by-side action buttons: cancel and back on the left, sign up on the right. */}
-              <Flex gap="3" justify="end">
-                <Button type="button" variant="soft" color="gray" size="3" onClick={onClose} disabled={loading}>
-                  Cancel
-                </Button>
-                <Button type="button" variant="soft" color="gray" size="3" onClick={changeNumber} disabled={loading}>
-                  Back
-                </Button>
-                <Button type="submit" size="3" loading={loading} disabled={!name.trim()}>
-                  Sign Up
-                </Button>
-              </Flex>
-            </Flex>
-          </form>
-        )}
-      </Dialog.Content>
-    </Dialog.Root>
+  return newUserPhone === null ? (
+    <Modal
+      open={open}
+      title="Sign in"
+      onClose={onClose}
+      busy={loading}
+      onSubmit={submitPhone}
+      error={failure}
+      actions={
+        <>
+          <Button type="button" variant="soft" color="gray" onClick={onClose} disabled={loading}>
+            Cancel
+          </Button>
+          <Button type="submit" loading={loading}>
+            Continue
+          </Button>
+        </>
+      }
+    >
+      <PhoneNumberField value={phoneInput} onChange={setPhoneInput} error={phoneError} disabled={loading} />
+    </Modal>
+  ) : (
+    <Modal
+      open={open}
+      title="Sign in"
+      onClose={onClose}
+      busy={loading}
+      onSubmit={submitName}
+      error={failure}
+      actions={
+        <>
+          <Button type="button" variant="soft" color="gray" onClick={onClose} disabled={loading}>
+            Cancel
+          </Button>
+          <Button type="button" variant="soft" color="gray" onClick={changeNumber} disabled={loading}>
+            Back
+          </Button>
+          <Button type="submit" loading={loading} disabled={!name.trim()}>
+            Sign Up
+          </Button>
+        </>
+      }
+    >
+      <Text color="gray">We don't know {newUserPhone} yet. What's your name?</Text>
+      <Field label="Your name">
+        <TextField.Root autoComplete="name" autoFocus value={name} disabled={loading} onChange={(e) => setName(e.target.value)} />
+      </Field>
+    </Modal>
   );
 }

@@ -1,7 +1,8 @@
 // React state and the Radix components that make up the edit-ingredient dialog.
 import { useEffect, useState, type FormEvent } from "react";
-import { Button, Callout, Dialog, Flex, Select, TextField } from "@radix-ui/themes";
+import { Button, Select, TextField } from "@radix-ui/themes";
 import Field from "../components/Field";
+import Modal from "../components/Modal";
 import { updateIngredient } from "../lib/api";
 import { INGREDIENT_CATEGORIES, type Ingredient } from "../lib/ingredients";
 
@@ -53,42 +54,39 @@ export default function EditIngredientModal({ ingredient, onClose, onSaved }: Ed
 
   // Category dropdown and name field, with cancel and save buttons.
   return (
-    <Dialog.Root open={ingredient !== null} onOpenChange={(next) => !next && !loading && onClose()}>
-      <Dialog.Content maxWidth="400px" aria-describedby={undefined}>
-        <Dialog.Title>Edit ingredient</Dialog.Title>
-        <form onSubmit={submit} noValidate>
-          <Flex direction="column" gap="4">
-            <Field label="Category">
-              <Select.Root value={category} onValueChange={setCategory} disabled={loading}>
-                <Select.Trigger aria-label="Category" style={{ width: "100%" }} />
-                <Select.Content>
-                  {INGREDIENT_CATEGORIES.map((c) => (
-                    <Select.Item key={c} value={c}>
-                      {c}
-                    </Select.Item>
-                  ))}
-                </Select.Content>
-              </Select.Root>
-            </Field>
-            <Field label="Ingredient">
-              <TextField.Root value={name} disabled={loading} onChange={(e) => setName(e.target.value)} />
-            </Field>
-            {failure && (
-              <Callout.Root color="red" size="1">
-                <Callout.Text>{failure}</Callout.Text>
-              </Callout.Root>
-            )}
-            <Flex gap="3" justify="end">
-              <Button type="button" variant="soft" color="gray" onClick={onClose} disabled={loading}>
-                Cancel
-              </Button>
-              <Button type="submit" loading={loading} disabled={!category || !name.trim()}>
-                Save
-              </Button>
-            </Flex>
-          </Flex>
-        </form>
-      </Dialog.Content>
-    </Dialog.Root>
+    <Modal
+      open={ingredient !== null}
+      title="Edit ingredient"
+      onClose={onClose}
+      busy={loading}
+      onSubmit={submit}
+      error={failure}
+      actions={
+        <>
+          <Button type="button" variant="soft" color="gray" onClick={onClose} disabled={loading}>
+            Cancel
+          </Button>
+          <Button type="submit" loading={loading} disabled={!category || !name.trim()}>
+            Save
+          </Button>
+        </>
+      }
+    >
+      <Field label="Category">
+        <Select.Root value={category} onValueChange={setCategory} disabled={loading}>
+          <Select.Trigger aria-label="Category" style={{ width: "100%" }} />
+          <Select.Content>
+            {INGREDIENT_CATEGORIES.map((c) => (
+              <Select.Item key={c} value={c}>
+                {c}
+              </Select.Item>
+            ))}
+          </Select.Content>
+        </Select.Root>
+      </Field>
+      <Field label="Ingredient">
+        <TextField.Root value={name} disabled={loading} onChange={(e) => setName(e.target.value)} />
+      </Field>
+    </Modal>
   );
 }

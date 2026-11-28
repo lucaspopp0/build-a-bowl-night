@@ -1,7 +1,8 @@
 // React state and the Radix components that make up the edit-name dialog.
 import { useEffect, useState, type FormEvent } from "react";
-import { Button, Callout, Dialog, Flex, TextField } from "@radix-ui/themes";
+import { Button, TextField } from "@radix-ui/themes";
 import Field from "../components/Field";
+import Modal from "../components/Modal";
 import { createUser } from "../lib/api";
 import { saveCurrentUser, type CurrentUser } from "../lib/session";
 
@@ -57,30 +58,29 @@ export default function EditNameModal({ user, open, onClose, onSaved }: EditName
     }
   };
 
-  // A single name field with save and cancel buttons.
+  // A single name field with cancel and save buttons.
   return (
-    <Dialog.Root open={open} onOpenChange={(next) => !next && !loading && onClose()}>
-      <Dialog.Content maxWidth="400px" aria-describedby={undefined}>
-        <Dialog.Title>Edit name</Dialog.Title>
-        <form onSubmit={submit} noValidate>
-          <Flex direction="column" gap="4">
-            <Field label="Your name">
-              <TextField.Root autoComplete="name" autoFocus value={name} disabled={loading} onChange={(e) => setTyped(e.target.value)} />
-            </Field>
-            {failure && (
-              <Callout.Root color="red" size="1">
-                <Callout.Text>{failure}</Callout.Text>
-              </Callout.Root>
-            )}
-            <Button type="submit" size="3" loading={loading} disabled={!name.trim()}>
-              Save
-            </Button>
-            <Button type="button" variant="soft" color="gray" size="3" onClick={onClose} disabled={loading}>
-              Cancel
-            </Button>
-          </Flex>
-        </form>
-      </Dialog.Content>
-    </Dialog.Root>
+    <Modal
+      open={open}
+      title="Edit name"
+      onClose={onClose}
+      busy={loading}
+      onSubmit={submit}
+      error={failure}
+      actions={
+        <>
+          <Button type="button" variant="soft" color="gray" onClick={onClose} disabled={loading}>
+            Cancel
+          </Button>
+          <Button type="submit" loading={loading} disabled={!name.trim()}>
+            Save
+          </Button>
+        </>
+      }
+    >
+      <Field label="Your name">
+        <TextField.Root autoComplete="name" autoFocus value={name} disabled={loading} onChange={(e) => setTyped(e.target.value)} />
+      </Field>
+    </Modal>
   );
 }
