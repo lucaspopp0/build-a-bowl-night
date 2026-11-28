@@ -40,3 +40,8 @@ body {
 .ingredient-table :is(th, td):last-child {
   padding-right: 0;
 }
+
+/* Ghost icon buttons bleed outward by their own padding (1.5 * space-1), so reserve that much room to avoid horizontal scroll. */
+.ingredient-table :is(th, td).actions-cell {
+  padding-right: calc(var(--space-1) * 1.5);
+}

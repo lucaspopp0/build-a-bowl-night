@@ -53,7 +53,7 @@ export default function IngredientTable({ ingredients, currentPhone, onEdit, onD
                   <Table.ColumnHeaderCell className="header-cell">Ingredient</Table.ColumnHeaderCell>
                   <Table.ColumnHeaderCell className="header-cell">Brought by</Table.ColumnHeaderCell>
                   {/* Narrow column reserved for the edit and delete buttons. */}
-                  {currentPhone && <Table.ColumnHeaderCell style={{ width: 112 }} />}
+                  {currentPhone && <Table.ColumnHeaderCell className="actions-cell" style={{ width: 112 }} />}
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -67,7 +67,7 @@ export default function IngredientTable({ ingredients, currentPhone, onEdit, onD
                     </Table.Cell>
                     {currentPhone && (
                       // Pencil and trash buttons, shown only on the signed-in user's own rows.
-                      <Table.Cell justify="end" style={{ whiteSpace: "nowrap" }}>
+                      <Table.Cell className="actions-cell" justify="end" style={{ whiteSpace: "nowrap" }}>
                         {item.phone === currentPhone && (
                           <Flex justify="end" gap="2">
                             <IconButton size="2" variant="ghost" color="gray" aria-label={`Edit ${item.name}`} onClick={() => onEdit?.(item)}>
