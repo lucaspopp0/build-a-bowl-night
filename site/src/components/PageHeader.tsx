@@ -42,7 +42,7 @@ export default function PageHeader({ userName, onSignIn, onEditName, onLogOut }:
                 Signed in as <Text weight="bold">{userName}</Text>
               </Text>
               <Button variant="soft" color="gray" size="1" onClick={onEditName}>
-                edit username
+                edit name
               </Button>
               <Button variant="soft" color="gray" size="1" onClick={onLogOut}>
                 logout
