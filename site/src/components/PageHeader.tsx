@@ -1,5 +1,10 @@
 // Radix components used to build the page header and its signed-in status line.
 import { Button, Container, Flex, Heading, Link, Text } from "@radix-ui/themes";
+// Icon shown next to links that leave the site.
+import { ExternalLinkIcon } from "@radix-ui/react-icons";
+
+// Address of the event's Partiful page.
+const PARTIFUL_URL = "https://partiful.com/e/FYr9aQWNWEZX2Q9hshEh?c=qOMivMPb";
 
 // Props: the signed-in user's name (if any) and the sign-in, edit-name and log-out handlers.
 interface PageHeaderProps {
@@ -18,6 +23,12 @@ export default function PageHeader({ userName, onSignIn, onEditName, onLogOut }:
         <Heading as="h1" size="7">
           Build-a-Bowl Night
         </Heading>
+        {/* Link to the Partiful event page, opening in a new tab, with an external-link icon. */}
+        <Text as="p" size="3" mt="2">
+          <Link href={PARTIFUL_URL} target="_blank" rel="noopener noreferrer">
+            View Partiful event <ExternalLinkIcon style={{ verticalAlign: "middle" }} />
+          </Link>
+        </Text>
         <Flex align="center" gap="3" wrap="wrap" mt="2">
           {!userName ? (
             // Signed out: the "sign in" words are a link that opens the sign-in dialog.
